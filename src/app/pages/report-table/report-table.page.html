@@ -1,0 +1,300 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="report-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/reports"
+        text=""
+        icon="arrow-back-outline">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">
+      <h2>التقرير الشامل</h2>
+      <p>عرض الجداول المحددة في تقرير واحد</p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="report-content">
+  <main class="report-page" dir="rtl">
+
+    <section class="report-heading">
+      <ion-icon name="document-text-outline"></ion-icon>
+
+      <div>
+        <h1>تقرير عمليات التسجيل</h1>
+
+      </div>
+    </section>
+
+    <ion-searchbar
+      class="report-search"
+      placeholder="البحث داخل التقرير"
+      [(ngModel)]="searchTerm"
+      [debounce]="250">
+    </ion-searchbar>
+    <ion-card
+  class="empty-state-card"
+  *ngIf="!hasAnyData">
+
+  <ion-card-content class="empty-state">
+    <ion-icon name="document-outline"></ion-icon>
+
+    <h3>لا توجد بيانات</h3>
+
+    <p>
+      لا توجد سجلات ضمن الفترة والفئات المحددة.
+    </p>
+
+    <ion-button
+      fill="outline"
+      routerLink="/reports">
+      تغيير خيارات التقرير
+    </ion-button>
+  </ion-card-content>
+
+</ion-card>
+    <!-- جدول الموظفين -->
+    <ion-card
+      class="table-card"
+      *ngIf="isSelected('employees')">
+
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="people-outline"></ion-icon>
+          جدول الموظفين
+        </ion-card-title>
+
+        <ion-card-subtitle>
+          عدد السجلات: {{ filteredEmployees.length }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="table-scroll">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>الرقم الوظيفي</th>
+                <th>اسم الموظف</th>
+                <th>الإدارة</th>
+                <th>وقت التسجيل</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of filteredEmployees">
+                <td>{{ row.employeeId || '-' }}</td>
+                <td>{{ row.employeeName || '-' }}</td>
+                <td>{{ row.department || '-' }}</td>
+                <td>{{ formatDate(row.time) }}</td>
+              </tr>
+
+              <tr *ngIf="filteredEmployees.length === 0">
+                <td colspan="4" class="empty-cell">
+                  لا توجد بيانات موظفين مطابقة.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- جدول المراجعين -->
+    <ion-card
+      class="table-card"
+      *ngIf="isSelected('visitors')">
+
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-outline"></ion-icon>
+          جدول المراجعين
+        </ion-card-title>
+
+        <ion-card-subtitle>
+          عدد السجلات: {{ filteredVisitors.length }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="table-scroll">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>رقم الهوية</th>
+                <th>الموظف المزار</th>
+                <th>سبب الزيارة</th>
+                <th>وقت التسجيل</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of filteredVisitors">
+                <td>{{ row.visitorName || row.name || '-' }}</td>
+                <td>{{ row.visitorId || row.nationalId || '-' }}</td>
+                <td>{{ row.employeeName || '-' }}</td>
+                <td>{{ row.visitReason || '-' }}</td>
+                <td>{{ formatDate(row.time) }}</td>
+              </tr>
+
+              <tr *ngIf="filteredVisitors.length === 0">
+                <td colspan="5" class="empty-cell">
+                  لا توجد بيانات مراجعين مطابقة.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- جدول المتدربين -->
+    <ion-card
+      class="table-card"
+      *ngIf="isSelected('trainees')">
+
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="school-outline"></ion-icon>
+          جدول المتدربين
+        </ion-card-title>
+
+        <ion-card-subtitle>
+          عدد السجلات: {{ filteredTrainees.length }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="table-scroll">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>رقم الهوية</th>
+                <th>الجهة التعليمية</th>
+                <th>الإدارة</th>
+                <th>وقت التسجيل</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of filteredTrainees">
+                <td>{{ row.traineeName || row.name || '-' }}</td>
+                <td>{{ row.nationalId || '-' }}</td>
+                <td>{{ row.education || '-' }}</td>
+                <td>{{ row.department || '-' }}</td>
+                <td>{{ formatDate(row.time) }}</td>
+              </tr>
+
+              <tr *ngIf="filteredTrainees.length === 0">
+                <td colspan="5" class="empty-cell">
+                  لا توجد بيانات متدربين مطابقة.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- جدول المرافقين -->
+    <ion-card
+      class="table-card"
+      *ngIf="isSelected('companions')">
+
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-add-outline"></ion-icon>
+          جدول المرافقين
+        </ion-card-title>
+
+        <ion-card-subtitle>
+          عدد السجلات: {{ filteredCompanions.length }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="table-scroll">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>رقم الهوية</th>
+                <th>نوع المرافق</th>
+                <th>الإدارة</th>
+                <th>وقت التسجيل</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of filteredCompanions">
+                <td>{{ row.name || '-' }}</td>
+                <td>{{ row.nationalId || '-' }}</td>
+                <td>{{ row.companionType || '-' }}</td>
+                <td>{{ row.department || '-' }}</td>
+                <td>{{ formatDate(row.time) }}</td>
+              </tr>
+
+              <tr *ngIf="filteredCompanions.length === 0">
+                <td colspan="5" class="empty-cell">
+                  لا توجد بيانات مرافقين مطابقة.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="report-actions" *ngIf="hasAnyData">
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        class="export-button"
+        (click)="exportReport()">
+        <ion-icon
+          name="download-outline"
+          slot="start">
+        </ion-icon>
+
+        تصدير التقرير
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        class="print-button"
+        (click)="printReport()">
+        <ion-icon
+          name="print-outline"
+          slot="start">
+        </ion-icon>
+
+        طباعة التقرير
+      </ion-button>
+
+    </div>
+
+  </main>
+</ion-content>
+
+<ion-tab-bar slot="bottom" class="bottom-tabs no-print">
+
+  <ion-tab-button routerLink="/home">
+    <ion-icon name="options-outline"></ion-icon>
+    <ion-label>لوحة المراقبة</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button routerLink="/reports" selected="true">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <ion-label>التقارير</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button routerLink="/contact">
+    <ion-icon name="chatbubble-outline"></ion-icon>
+    <ion-label>تواصل</ion-label>
+  </ion-tab-button>
+
+</ion-tab-bar>

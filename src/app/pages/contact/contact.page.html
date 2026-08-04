@@ -1,0 +1,119 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="contact-toolbar">
+
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/home"
+        text=""
+        icon="arrow-forward-outline">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">
+      <h2>تواصل</h2>
+      <p>الدعم والمساعدة</p>
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="contact-content">
+
+  <main class="contact-page" dir="rtl">
+
+    <section class="intro-section">
+      <h1>كيف يمكننا مساعدتك؟</h1>
+
+      <p>
+        اختر الجهة المناسبة للتواصل معها حسب نوع الاستفسار أو المشكلة.
+      </p>
+    </section>
+
+    <section class="contacts-list">
+
+      <ion-card
+        class="contact-card"
+        *ngFor="let contact of contacts">
+
+        <ion-card-content>
+
+          <div class="contact-card-layout">
+
+            <div class="contact-info">
+
+              <h2>{{ contact.title }}</h2>
+
+              <p>{{ contact.desc }}</p>
+
+              <a
+                class="phone-row"
+                [href]="'tel:' + contact.phone">
+
+                <span>{{ contact.phone }}</span>
+
+                <ion-icon name="call-outline"></ion-icon>
+
+              </a>
+
+            </div>
+
+            <div class="logo-container">
+
+              <img
+                [src]="contact.logo"
+                [alt]="contact.title"
+                class="contact-logo"
+              />
+
+            </div>
+
+          </div>
+
+        </ion-card-content>
+
+      </ion-card>
+
+    </section>
+
+    <ion-card class="notice-card">
+      <ion-card-content>
+
+        <ion-icon name="information-circle-outline"></ion-icon>
+
+        <div>
+          <h3>ملاحظة</h3>
+
+          <p>
+            يرجى التواصل مع الجهة المناسبة لضمان معالجة الطلب بشكل أسرع.
+          </p>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </main>
+
+</ion-content>
+
+<ion-footer class="ion-no-border">
+
+  <ion-tab-bar class="bottom-tabs">
+
+    <ion-tab-button routerLink="/home">
+      <ion-icon name="options-outline"></ion-icon>
+      <ion-label>لوحة المراقبة</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button routerLink="/reports">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <ion-label>التقارير</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button routerLink="/contact" selected="true">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+      <ion-label>تواصل</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-footer>

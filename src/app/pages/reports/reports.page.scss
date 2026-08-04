@@ -1,0 +1,306 @@
+:host {
+  display: block;
+}
+
+.reports-toolbar {
+  --background: linear-gradient(
+    90deg,
+    #0077b6 0%,
+    #2a9d8f 100%
+  );
+
+  --color: #ffffff;
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+
+  h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+  }
+}
+
+ion-content.reports-content {
+  --background: #f3f6fa;
+  --color: #1f2d3d;
+}
+
+.reports-page {
+  width: 100%;
+  max-width: 700px;
+  min-height: 100%;
+
+  margin: 0 auto;
+  padding: 18px 16px 30px;
+
+  color: #1f2d3d;
+}
+
+.filter-card {
+  margin: 0;
+  border-radius: 22px;
+
+  background: #ffffff;
+  box-shadow: 0 7px 24px rgba(31, 45, 61, 0.08);
+
+  ion-card-title {
+    color: #0077b6;
+    font-size: 21px;
+    font-weight: 700;
+  }
+
+  ion-card-subtitle {
+    margin-top: 6px;
+    color: #5d6978;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+.filter-item {
+  --background: #f8fafc;
+  --color: #1f2d3d;
+  --border-radius: 14px;
+
+  margin-bottom: 16px;
+  padding: 8px 4px;
+
+  border: 1px solid #e1e7ed;
+  border-radius: 14px;
+
+  ion-icon {
+    color: #2a9d8f;
+    font-size: 22px;
+  }
+
+  ion-select {
+    width: 100%;
+    color: #1f2d3d;
+    font-size: 17px;
+    font-weight: 500;
+    padding-top: 10px;
+  }
+
+  /* عنوان الفترة والفئات */
+  ion-select::part(label) {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1f2d3d;
+  }
+
+  /* النص المختار */
+  ion-select::part(text) {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #1f2d3d;
+  }
+}
+
+.validation-message {
+  display: block;
+
+  margin: -4px 4px 12px;
+
+  color: #c62828;
+  font-size: 13px;
+}
+
+.show-report-button {
+  height: 52px;
+  margin-top: 20px;
+
+  --background: linear-gradient(
+    90deg,
+    #2a9d8f 0%,
+    #0077b6 100%
+  );
+
+  --color: #ffffff;
+  --border-radius: 14px;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.summary-section {
+  margin-top: 26px;
+
+  h3 {
+    margin: 0 0 16px;
+
+    color: #1f2d3d;
+    font-size: 19px;
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-card {
+  min-height: 108px;
+  margin: 0;
+
+  border: 1px solid #e1e7ed;
+  border-radius: 18px;
+
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(31, 45, 61, 0.06);
+
+  ion-card-content {
+    min-height: 108px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stat-number {
+    color: #0077b6;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .stat-label {
+    margin-top: 4px;
+
+    color: #1f2d3d;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.total-card {
+  grid-column: 1 / -1;
+
+  border: none;
+
+  background: linear-gradient(
+    90deg,
+    #0077b6 0%,
+    #2a9d8f 100%
+  );
+
+  .stat-number,
+  .stat-label {
+    color: #ffffff;
+  }
+}
+
+.bottom-tabs {
+  --background: #ffffff;
+
+  border-top: 1px solid #e1e7ed;
+
+  ion-tab-button {
+    --color: #687384;
+    --color-selected: #0077b6;
+  }
+}
+
+@media (min-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .total-card {
+    grid-column: 1 / -1;
+  }
+
+.date-range-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  direction: rtl;
+}
+
+.date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 16px;
+
+  border: 1px solid #e1e7ed;
+  border-radius: 14px;
+
+  background: #f8fafc;
+}
+
+.date-title {
+  color: #1f2d3d;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+ion-datetime-button {
+  align-self: stretch;
+}
+
+ion-datetime-button::part(native) {
+  width: 100%;
+  min-height: 46px;
+
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #1f2d3d;
+
+  font-size: 16px;
+  text-align: center;
+ }
+}
+.category-field{
+  margin-top:20px;
+}
+
+.category-title{
+  font-size:20px;
+  font-weight:700;
+  color:#1f2d3d;
+
+  margin-bottom:12px;
+  margin-right:6px;
+
+  text-align:right;
+}
+
+.custom-select{
+
+  --min-height:56px;
+  --padding-start:16px;
+  --padding-end:16px;
+
+  border:1px solid #e6e6e6;
+  border-radius:14px;
+
+  font-size:16px;
+
+  width:100%;
+}
+
+.custom-select ion-select{
+  width:100%;
+  font-size:16px;
+}
+.reports-toolbar ion-title {
+  transform: translateX(-25px);
+}

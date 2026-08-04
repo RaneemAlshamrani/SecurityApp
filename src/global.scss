@@ -1,37 +1,129 @@
 /*
  * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+// ===== تنسيق موحّد لصفحات التسجيل (محصور بكلاس reg-page) =====
+
+.reg-page {
+  --background: #eef1f5;
+}
+
+.reg-page .title {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.reg-page .title h2 {
+  font-weight: 700;
+  font-size: 21px;
+  color: #1c1c1e;
+  margin-bottom: 6px;
+}
+
+.reg-page .title p {
+  color: #9aa5b1;
+  font-size: 14px;
+}
+
+// البطاقات (الحقول)
+.reg-page ion-item {
+  --background: #f2f4f7;
+  --border-radius: 14px;
+  --border-color: transparent;
+  --border-width: 0;
+  --padding-start: 16px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --inner-padding-end: 16px;
+  --min-height: 60px;
+  border-radius: 14px;
+}
+
+// عنوان الحقل المنفصل (label يدوي)
+.reg-page .field-block {
+  margin-bottom: 16px;
+}
+
+.reg-page .field-label {
+  display: block;
+  font-weight: 800;
+  font-size: 17px;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.reg-page .field-block ion-item {
+  margin-bottom: 0;
+}
+
+// نص المدخل نفسه (اللي يكتبه المستخدم) والمثال
+.reg-page ion-input,
+.reg-page ion-textarea {
+  font-size: 15px;
+  --placeholder-color: #a9b0bb;
+  --placeholder-opacity: 1;
+  color: #1c1c1e;
+}
+
+// بطاقة الباركود
+.reg-page .barcode-card {
+  --background: #f2f4f7;
+  border-radius: 16px;
+  box-shadow: none;
+  margin-bottom: 24px;
+}
+
+.reg-page .barcode-card ion-card-content {
+  text-align: center;
+  padding: 24px 16px;
+}
+
+.reg-page .barcode-icon {
+  font-size: 32px;
+  color: #1a56c4;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.reg-page .barcode-card span {
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  color: #1c1c1e !important;
+}
+
+// زر التأكيد
+.reg-page .confirm-btn {
+  --background: linear-gradient(90deg, #2a9d8f, #2166c4);
+  --border-radius: 14px;
+  --box-shadow: none;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
+  margin-top: 14px;
+  text-transform: none;
+}
+
+// زر "إضافة مرافق آخر"
+.reg-page .add-btn {
+  --border-radius: 14px;
+  --border-color: #2a9d8f;
+  --color: #2a9d8f;
+  font-weight: 700;
+  height: 50px;
+  margin-top: 10px;
+}

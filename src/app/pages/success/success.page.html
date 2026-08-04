@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true" class="success-page">
+  <main class="success-screen" dir="rtl">
+
+    <section class="brand-section">
+      <img
+        src="assets/images/amana-logo.png"
+        alt="شعار أمانة جدة"
+        class="amana-logo"
+      />
+    </section>
+
+    <section class="success-card">
+      <div class="icon-container">
+        <ion-icon name="checkmark-circle-outline" class="success-icon"></ion-icon>
+      </div>
+
+      <h1>تمت العملية بنجاح</h1>
+
+      <p class="success-message">
+        تم تسجيل الحركة بنجاح<br />
+        في بوابة رقم 3
+      </p>
+
+      <ion-button 
+        expand="block" 
+        class="home-button"
+        (click)="goToHome()">
+        العودة للرئيسية
+      </ion-button>
+    </section>
+
+  </main>
+</ion-content>

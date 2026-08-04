@@ -1,0 +1,189 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="reports-toolbar">
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/home"
+        text=""
+        icon="arrow-forward-outline">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center">
+      <h2>التقارير</h2>
+      <p>تقرير شامل لجميع العمليات</p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="reports-content">
+  <main class="reports-page" dir="rtl">
+
+    <ion-card class="filter-card">
+      <ion-card-header>
+        <ion-card-title>إعداد التقرير</ion-card-title>
+        <ion-card-subtitle>
+          حدد الفئات التي تريد إضافتها إلى التقرير
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <div class="date-range-section">
+
+  <div class="date-field">
+    <span class="date-title">من</span>
+
+    <ion-datetime-button datetime="fromDatePicker">
+    </ion-datetime-button>
+  </div>
+
+  <div class="date-field">
+    <span class="date-title">إلى</span>
+
+    <ion-datetime-button datetime="toDatePicker">
+    </ion-datetime-button>
+  </div>
+
+</div>
+
+<!-- تقويم تاريخ البداية -->
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+      id="fromDatePicker"
+      presentation="date"
+      locale="ar-SA"
+      first-day-of-week="0"
+      [(ngModel)]="fromDate"
+      [max]="toDate"
+      show-default-buttons="true"
+      done-text="تم"
+      cancel-text="إلغاء">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+<!-- تقويم تاريخ النهاية -->
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime
+      id="toDatePicker"
+      presentation="date"
+      locale="ar-SA"
+      first-day-of-week="0"
+      [(ngModel)]="toDate"
+      [min]="fromDate"
+      show-default-buttons="true"
+      done-text="تم"
+      cancel-text="إلغاء">
+    </ion-datetime>
+  </ng-template>
+</ion-modal>
+
+       <div class="category-field">
+
+  <div class="category-title">
+    الفئات
+  </div>
+
+  <ion-item class="custom-select" lines="none">
+    <ion-select
+      multiple="true"
+      interface="popover"
+      [(ngModel)]="selectedCategories"
+      placeholder="حدد الفئات">
+      <ion-select-option value="employees">الموظفون</ion-select-option>
+      <ion-select-option value="visitors">المراجعون</ion-select-option>
+      <ion-select-option value="trainees">المتدربون</ion-select-option>
+      <ion-select-option value="companions">المرافقون</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+</div>
+        <ion-note
+          *ngIf="selectedCategories.length === 0"
+          class="validation-message">
+          يجب اختيار فئة واحدة على الأقل.
+        </ion-note>
+
+        <ion-button
+          expand="block"
+          class="show-report-button"
+          [disabled]="selectedCategories.length === 0"
+          (click)="showReport()">
+          <ion-icon
+            name="document-text-outline"
+            slot="start">
+          </ion-icon>
+
+          عرض التقرير
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ملخص التقرير -->
+    <section class="summary-section">
+      <h3>ملخص التسجيلات</h3>
+
+      <div class="stats-grid">
+
+        <ion-card class="stat-card total-card">
+          <ion-card-content>
+            <span class="stat-number">{{ totalCount }}</span>
+            <span class="stat-label">إجمالي المسجلين</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <span class="stat-number">{{ employeesCount }}</span>
+            <span class="stat-label">الموظفون</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <span class="stat-number">{{ visitorsCount }}</span>
+            <span class="stat-label">المراجعون</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <span class="stat-number">{{ traineesCount }}</span>
+            <span class="stat-label">المتدربون</span>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card">
+          <ion-card-content>
+            <span class="stat-number">{{ companionsCount }}</span>
+            <span class="stat-label">المرافقون</span>
+          </ion-card-content>
+        </ion-card>
+
+      </div>
+    </section>
+
+  </main>
+</ion-content>
+
+<ion-tab-bar slot="bottom" class="bottom-tabs">
+
+  <ion-tab-button routerLink="/home">
+    <ion-icon name="options-outline"></ion-icon>
+    <ion-label>لوحة المراقبة</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button routerLink="/reports" selected="true">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <ion-label>التقارير</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button routerLink="/contact">
+    <ion-icon name="chatbubble-outline"></ion-icon>
+    <ion-label>تواصل</ion-label>
+  </ion-tab-button>
+
+</ion-tab-bar>

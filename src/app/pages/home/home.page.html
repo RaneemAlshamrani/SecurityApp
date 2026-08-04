@@ -1,0 +1,74 @@
+<ion-content [fullscreen]="true" class="home-page">
+  
+  <!-- rectangular pure css header -->
+  <div class="header-banner">
+    <div class="user-info">
+      <p class="welcome-label">أهلاً بك</p>
+      <h1 class="user-name">أحمد محمد</h1>
+      <p class="gate-info">بوابة رقم 3</p>
+    </div>
+  </div>
+
+  <!-- sub-header centered gray date -->
+  <div class="date-strip">
+    <span>الاربعاء 27 يوليو 2026 - 10:30 صباحاً</span>
+  </div>
+
+  <div class="page-container">
+
+    <!-- direct category navigation button -->
+    <ion-button expand="block" class="category-btn" (click)="goToCategory()">
+      <ion-icon name="log-in-outline" slot="start"></ion-icon>
+      <span>اختر فئة الدخول</span>
+    </ion-button>
+
+    <!-- recent activity section -->
+    <section class="recent-section">
+      <div class="section-header">
+        <ion-icon name="time-outline" class="section-icon"></ion-icon>
+        <h2>آخر العمليات</h2>
+      </div>
+
+      <!-- activity item 1 -->
+      <div class="activity-card">
+        <div class="card-right">
+          <div class="avatar-box">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div class="details">
+            <div class="type-row">
+              <span class="status-dot"></span>
+              <span class="role-title">مراجع</span>
+            </div>
+            <span class="action-label">دخول</span>
+          </div>
+        </div>
+        <div class="card-left">
+          <span class="timestamp">10:30 ص</span>
+        </div>
+      </div>
+
+      <!-- activity item 2 -->
+      <div class="activity-card">
+        <div class="card-right">
+          <div class="avatar-box">
+            <ion-icon name="briefcase-outline"></ion-icon>
+          </div>
+          <div class="details">
+            <div class="type-row">
+              <span class="status-dot"></span>
+              <span class="role-title">موظف</span>
+            </div>
+            <span class="action-label">دخول</span>
+          </div>
+        </div>
+        <div class="card-left">
+          <span class="timestamp">10:30 ص</span>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/home" icon="arrow-forward-outline" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>تسجيل موظف</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding reg-page">
+
+  <div class="title">
+    <h2>أدخل بيانات الموظف</h2>
+    <p>يرجى تعبئة البيانات</p>
+  </div>
+
+  <ion-card class="barcode-card" button="true" (click)="scanBarcode()">
+    <ion-card-content>
+      <div class="barcode-content">
+        <ion-icon name="qr-code-outline" class="barcode-icon"></ion-icon>
+        <span>مسح الباركود</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="field-block">
+    <label class="field-label">الرقم الوظيفي</label>
+    <ion-item>
+      <ion-input placeholder="أدخل الرقم الوظيفي" [(ngModel)]="employeeId"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="field-block">
+    <label class="field-label">اسم الموظف</label>
+    <ion-item>
+      <ion-input placeholder="أدخل اسم الموظف" [(ngModel)]="employeeName"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="field-block">
+    <label class="field-label">الإدارة</label>
+    <ion-item>
+      <ion-input placeholder="أدخل الإدارة" [(ngModel)]="department"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="field-block">
+    <label class="field-label">ملاحظات</label>
+    <ion-item>
+      <ion-textarea placeholder="اكتب الملاحظات" [(ngModel)]="notes"></ion-textarea>
+    </ion-item>
+  </div>
+
+  <ion-button expand="block" class="confirm-btn" (click)="saveEmployee()">تأكيد</ion-button>
+
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+  <ion-tab-button routerLink="/home">
+    <ion-icon name="options-outline"></ion-icon>
+    <ion-label>لوحة المراقبة</ion-label>
+  </ion-tab-button>
+  <ion-tab-button routerLink="/reports">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <ion-label>التقارير</ion-label>
+  </ion-tab-button>
+  <ion-tab-button routerLink="/contact">
+    <ion-icon name="chatbubble-outline"></ion-icon>
+    <ion-label>تواصل</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>
