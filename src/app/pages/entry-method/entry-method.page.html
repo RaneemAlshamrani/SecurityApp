@@ -1,0 +1,61 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+      <ion-back-button
+        defaultHref="/home"
+        icon="arrow-forward-outline"
+        text="">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="page-title">
+      طريقة التسجيل
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card
+    class="barcode-card"
+    button="true"
+    (click)="scanBarcode()">
+
+    <ion-card-content>
+
+      <ion-icon
+        name="qr-code-outline"
+        class="barcode-icon">
+      </ion-icon>
+
+      <h3>مسح الباركود</h3>
+
+      <p>اضغط لفتح الكاميرا</p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card
+    class="manual-card"
+    button="true"
+    (click)="chooseCategory()">
+
+    <ion-card-content>
+
+      <ion-icon
+        name="create-outline"
+        class="manual-icon">
+      </ion-icon>
+
+      <h3>التسجيل اليدوي</h3>
+
+      <p>اختر فئة الدخول</p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

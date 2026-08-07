@@ -17,6 +17,13 @@ export const routes: Routes = [
       import('./pages/home/home.page').then((m) => m.HomePage),
   },
   {
+    path: 'entry-method',
+    loadComponent: () =>
+      import('./pages/entry-method/entry-method.page').then(
+        (m) => m.EntryMethodPage
+      ),
+  },
+  {
     path: 'register-employee',
     loadComponent: () =>
       import('./pages/register-employee/register-employee.page').then(
