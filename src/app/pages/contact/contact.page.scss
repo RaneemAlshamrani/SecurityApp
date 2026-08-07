@@ -3,246 +3,258 @@
   font-family: Tahoma, Arial, sans-serif;
 }
 
-/* الهيدر */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .contact-toolbar {
   --background: linear-gradient(
     90deg,
     #0077b6 0%,
     #2a9d8f 100%
   );
-
   --color: #ffffff;
+  min-height: 64px;
+  position: relative;
+
+  ion-buttons {
+    position: relative;
+    z-index: 10;
+    padding-inline-start: 4px;
+  }
 
   ion-back-button {
     --color: #ffffff;
+    --icon-font-size: 26px;
   }
 
   ion-title {
-    transform: translateX(-20px);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    padding: 0 48px;
+    margin: 0;
+    text-align: center;
+    pointer-events: none;
   }
 
   h2 {
     margin: 0;
-
     color: #ffffff;
-    font-size: clamp(18px, 4vw, 22px);
+    font-size: 20px;
     font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
   }
 
   p {
-    margin: 4px 0 0;
-
-    color: rgba(255, 255, 255, 0.9);
-    font-size: clamp(11px, 2.5vw, 13px);
+    margin: 2px 0 0;
+    color: rgba(255, 255, 255, 0.93);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
   }
 }
 
-/* خلفية الصفحة */
+/* =========================================================
+   PAGE CONTENT & INTRO
+   ========================================================= */
+
 ion-content.contact-content {
   --background: #f3f6fa;
   --color: #1f2d3d;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 14px;
+  --padding-bottom: 16px;
 }
 
-/* الحاوية الرئيسية */
-.contact-page {
-  width: 100%;
-  max-width: 760px;
-  min-height: 100%;
-
-  margin: 0 auto;
-  padding: clamp(16px, 4vw, 26px);
-}
-
-/* مقدمة الصفحة */
 .intro-section {
-  margin-bottom: clamp(18px, 4vw, 26px);
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 12px;
   text-align: right;
 
   h1 {
-    margin: 0 0 8px;
-
+    margin: 0 0 4px;
     color: #1f2d3d;
-    font-size: clamp(22px, 5vw, 28px);
+    font-size: clamp(20px, 4.5vw, 24px);
     font-weight: 700;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
   p {
     margin: 0;
-
     color: #687384;
-    font-size: clamp(13px, 3vw, 15px);
-    line-height: 1.8;
+    font-size: clamp(12.5px, 3vw, 13.5px);
+    line-height: 1.5;
   }
 }
 
-/* قائمة الكروت */
 .contacts-list {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 3vw, 20px);
+  gap: 12px;
 }
 
-/* كارد التواصل */
+/* =========================================================
+   CONTACT CARD
+   ========================================================= */
+
 .contact-card {
   width: 100%;
   margin: 0;
-
   border: none;
-  border-radius: clamp(18px, 4vw, 24px);
-
+  border-radius: 18px;
   background: #ffffff;
-  box-shadow: 0 6px 20px rgba(31, 45, 61, 0.07);
-
-  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(31, 45, 61, 0.06);
 
   ion-card-content {
-    padding: clamp(18px, 4vw, 26px);
+    padding: 14px 16px;
   }
 }
 
-/* توزيع النص واللوقو */
 .contact-card-layout {
   width: 100%;
-
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1fr)
-    clamp(125px, 32vw, 170px);
-
+  display: flex;
   align-items: center;
-  gap: clamp(12px, 3vw, 24px);
-
+  justify-content: space-between;
+  gap: 14px;
   direction: rtl;
 }
 
-/* النص */
 .contact-info {
+  flex: 1;
   min-width: 0;
   text-align: right;
 
   h2 {
-    margin: 0 0 10px;
-
+    margin: 0 0 4px;
     color: #1f2d3d;
-    font-size: clamp(19px, 4vw, 23px);
+    font-size: clamp(16px, 3.8vw, 19px);
     font-weight: 700;
-    line-height: 1.5;
+    line-height: 1.3;
   }
 
   p {
-    margin: 0 0 14px;
-
+    margin: 0 0 8px;
     color: #687384;
-    font-size: clamp(13px, 3vw, 15px);
-    line-height: 1.9;
+    font-size: clamp(12px, 2.8vw, 13px);
+    line-height: 1.5;
   }
 }
 
-/* مساحة اللوقو */
-.logo-container {
-  width: clamp(125px, 32vw, 170px);
-  min-width: clamp(125px, 32vw, 170px);
+/* =========================================================
+   ICON CONTAINER (مقاس متناسق وتوسيط دقيق)
+   ========================================================= */
 
+.logo-container {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  min-height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  overflow: visible;
-
-  border: none;
   background: transparent;
+  flex-shrink: 0;
+
+  .main-contact-icon {
+    font-size: 38px;
+    color: #0077b6;
+    display: block;
+  }
 }
 
-/* الصورة نفسها */
-.contact-logo {
-  display: block;
+/* =========================================================
+   PHONE & NOTICE
+   ========================================================= */
 
-  width: 150%;
-  max-width: none;
-  height: auto;
-
-  object-fit: contain;
-  object-position: center;
-
-  transform: none;
-}
-
-/* رقم الاتصال */
 .phone-row {
   width: fit-content;
-
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-
+  gap: 6px;
   color: #0077b6;
-
-  font-size: clamp(14px, 3vw, 17px);
+  font-size: 15px;
   font-weight: 700;
-
   text-decoration: none;
   direction: ltr;
 
   ion-icon {
     flex-shrink: 0;
-
     color: #2a9d8f;
-    font-size: clamp(21px, 5vw, 25px);
+    font-size: 20px;
+  }
+
+  &:active {
+    opacity: 0.65;
   }
 }
 
-/* كارد الملاحظة */
 .notice-card {
-  margin: clamp(16px, 4vw, 22px) 0 0;
-
+  width: 100%;
+  max-width: 720px;
+  margin: 12px auto 0;
   border: none;
-  border-radius: 18px;
-
+  border-radius: 16px;
   background: #f2fbf9;
   box-shadow: none;
 
   ion-card-content {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-
-    padding: clamp(14px, 3vw, 18px);
-
+    gap: 8px;
+    padding: 10px 12px;
     direction: rtl;
   }
 
   ion-icon {
     flex-shrink: 0;
-
+    margin-top: 1px;
     color: #2a9d8f;
-    font-size: clamp(23px, 5vw, 28px);
+    font-size: 22px;
+  }
+
+  div {
+    min-width: 0;
+    flex: 1;
+    text-align: right;
   }
 
   h3 {
-    margin: 0 0 4px;
-
+    margin: 0 0 2px;
     color: #1f2d3d;
-    font-size: clamp(14px, 3vw, 16px);
+    font-size: 13.5px;
     font-weight: 700;
   }
 
   p {
     margin: 0;
-
     color: #687384;
-    font-size: clamp(12px, 2.8vw, 14px);
-    line-height: 1.7;
+    font-size: 12px;
+    line-height: 1.45;
   }
 }
 
-/* البار السفلي */
+/* =========================================================
+   BOTTOM TABS (البار السفلي)
+   ========================================================= */
+
+ion-footer {
+  background: #ffffff;
+}
+
 .bottom-tabs {
   --background: #ffffff;
-
-  min-height: 64px;
-
+  height: 56px;
   border-top: 1px solid #e1e7ed;
 
   ion-tab-button {
@@ -251,99 +263,13 @@ ion-content.contact-content {
     --color-selected: #0077b6;
 
     ion-icon {
-      font-size: 23px;
-      margin-bottom: 3px;
+      font-size: 22px;
+      margin-bottom: 2px;
     }
 
     ion-label {
       font-size: 11px;
       font-weight: 600;
     }
-  }
-}
-
-/* الجوال */
-@media (max-width: 430px) {
-  .contact-page {
-    padding: 20px 14px 28px;
-  }
-
-  .contact-card {
-    ion-card-content {
-      padding: 18px;
-    }
-  }
-
-  .contact-card-layout {
-    grid-template-columns:
-      minmax(0, 1fr)
-      125px;
-
-    gap: 10px;
-  }
-
-  .logo-container {
-    width: 125px;
-    min-width: 125px;
-  }
-
-  .contact-logo {
-    width: 155%;
-    max-width: none;
-    height: auto;
-  }
-
-  .contact-info h2 {
-    font-size: 18px;
-  }
-
-  .contact-info p {
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  .phone-row {
-    font-size: 14px;
-  }
-}
-
-/* الشاشات الضيقة جدًا */
-@media (max-width: 350px) {
-  .contact-card-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .logo-container {
-    width: 125px;
-    min-width: 125px;
-
-    margin: 0 auto;
-
-    order: -1;
-  }
-
-  .contact-logo {
-    width: 165%;
-    height: auto;
-  }
-
-  .contact-info {
-    text-align: center;
-  }
-
-  .phone-row {
-    margin: 0 auto;
-  }
-}
-
-/* الشاشات الكبيرة */
-@media (min-width: 900px) {
-  .contact-page {
-    max-width: 1000px;
-  }
-
-  .contacts-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

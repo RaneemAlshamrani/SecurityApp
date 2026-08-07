@@ -26,14 +26,16 @@ import {
   documentTextOutline,
   chatbubbleOutline,
   callOutline,
-  informationCircleOutline
+  informationCircleOutline,
+  headsetOutline,
+  shieldCheckmarkOutline
 } from 'ionicons/icons';
 
 interface ContactItem {
   title: string;
   desc: string;
   phone: string;
-  logo: string;
+  icon: string;
 }
 
 @Component({
@@ -41,7 +43,6 @@ interface ContactItem {
   templateUrl: './contact.page.html',
   styleUrls: ['./contact.page.scss'],
   standalone: true,
-
   imports: [
     CommonModule,
     RouterLink,
@@ -66,14 +67,14 @@ export class ContactPage {
     {
       title: 'الدعم الفني',
       desc: 'لحل المشكلات التقنية والاستفسارات المتعلقة باستخدام النظام.',
-      phone: '06537825514',
-      logo: 'assets/images/support-logo.png'
+      phone: '0653782514',
+      icon: 'headset-outline'
     },
     {
       title: 'إدارة الأمن والسلامة',
       desc: 'للاستفسارات والملاحظات المتعلقة بإجراءات الأمن والسلامة.',
       phone: '0923764362',
-      logo: 'assets/images/security-logo.png'
+      icon: 'shield-checkmark-outline'
     }
   ];
 
@@ -84,7 +85,9 @@ export class ContactPage {
       documentTextOutline,
       chatbubbleOutline,
       callOutline,
-      informationCircleOutline
+      informationCircleOutline,
+      headsetOutline,
+      shieldCheckmarkOutline
     });
   }
 }

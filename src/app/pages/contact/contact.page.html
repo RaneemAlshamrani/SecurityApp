@@ -23,10 +23,7 @@
 
     <section class="intro-section">
       <h1>كيف يمكننا مساعدتك؟</h1>
-
-      <p>
-        اختر الجهة المناسبة للتواصل معها حسب نوع الاستفسار أو المشكلة.
-      </p>
+      <p>اختر الجهة المناسبة للتواصل معها حسب نوع الاستفسار أو المشكلة.</p>
     </section>
 
     <section class="contacts-list">
@@ -40,31 +37,19 @@
           <div class="contact-card-layout">
 
             <div class="contact-info">
-
               <h2>{{ contact.title }}</h2>
-
               <p>{{ contact.desc }}</p>
 
               <a
                 class="phone-row"
                 [href]="'tel:' + contact.phone">
-
                 <span>{{ contact.phone }}</span>
-
                 <ion-icon name="call-outline"></ion-icon>
-
               </a>
-
             </div>
 
             <div class="logo-container">
-
-              <img
-                [src]="contact.logo"
-                [alt]="contact.title"
-                class="contact-logo"
-              />
-
+              <ion-icon [name]="contact.icon" class="main-contact-icon"></ion-icon>
             </div>
 
           </div>
@@ -82,10 +67,7 @@
 
         <div>
           <h3>ملاحظة</h3>
-
-          <p>
-            يرجى التواصل مع الجهة المناسبة لضمان معالجة الطلب بشكل أسرع.
-          </p>
+          <p>يرجى التواصل مع الجهة المناسبة لضمان معالجة الطلب بشكل أسرع.</p>
         </div>
 
       </ion-card-content>
