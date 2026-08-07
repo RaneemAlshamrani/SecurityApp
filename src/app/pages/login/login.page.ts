@@ -1,42 +1,58 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { 
-  IonContent, 
-  IonItem, 
-  IonInput, 
-  IonButton, 
-  IonIcon, 
+
+import {
+  IonContent,
+  IonItem,
+  IonInput,
+  IonButton,
+  IonIcon,
   IonCheckbox,
-  IonText
+  IonText,
+  IonCard,
+  IonImg
 } from '@ionic/angular/standalone';
+
 import { addIcons } from 'ionicons';
-import { personOutline, lockClosedOutline } from 'ionicons/icons';
+
+import {
+  personOutline,
+  lockClosedOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
+
   imports: [
     FormsModule,
-    IonContent, 
-    IonItem, 
-    IonInput, 
-    IonButton, 
-    IonIcon, 
+    RouterLink,
+    IonContent,
+    IonItem,
+    IonInput,
+    IonButton,
+    IonIcon,
     IonCheckbox,
-    IonText
+    IonText,
+    IonCard,
+    IonImg
   ],
 })
 export class LoginPage {
+
   username = '';
   password = '';
   rememberMe = false;
-  errorMessage = ''; // error validation state
+  errorMessage = '';
 
   constructor(private router: Router) {
-    addIcons({ personOutline, lockClosedOutline });
+    addIcons({
+      personOutline,
+      lockClosedOutline
+    });
   }
 
   login(event?: Event): void {
@@ -44,10 +60,8 @@ export class LoginPage {
       event.preventDefault();
     }
 
-    // reset error state
     this.errorMessage = '';
 
-    // validation checks
     if (!this.username.trim()) {
       this.errorMessage = 'يرجى إدخال اسم المستخدم';
       return;
@@ -63,7 +77,10 @@ export class LoginPage {
       return;
     }
 
-    // mock route transition
     this.router.navigateByUrl('/home');
+  }
+
+  openForgotPassword(): void {
+    this.router.navigateByUrl('/forgot-password');
   }
 }

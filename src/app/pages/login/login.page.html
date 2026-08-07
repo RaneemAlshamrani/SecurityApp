@@ -1,19 +1,27 @@
 <ion-content [fullscreen]="true" class="login-page">
   <main class="login-screen" dir="rtl">
 
-    <section class="brand-section">
-      <img
-        src="assets/images/amana-logo.png"
-        alt="شعار أمانة جدة"
-        class="amana-logo"
-      />
-    </section>
+    <ion-card class="brand-section">
+
+  <ion-img
+    src="assets/images/login-background.jpg"
+    class="background-image">
+  </ion-img>
+
+  <ion-card class="background-overlay"></ion-card>
+
+  <ion-img
+    src="assets/images/amana-logo.png"
+    class="amana-logo">
+  </ion-img>
+
+</ion-card>
 
     <section class="login-card">
-      <h1>تسجيل الدخول</h1>
+      <h1>مرحبًا بك</h1>
 
       <p class="welcome-text">
-        مرحبًا بك، يرجى تسجيل الدخول<br />
+         يرجى تسجيل الدخول<br />
         لمتابعة استخدام النظام
       </p>
 
@@ -26,7 +34,12 @@
             placeholder="اسم المستخدم"
             [(ngModel)]="username"
           ></ion-input>
-          <ion-icon name="person-outline" slot="end" class="bar-icon"></ion-icon>
+
+          <ion-icon
+            name="person-outline"
+            slot="end"
+            class="bar-icon">
+          </ion-icon>
         </ion-item>
 
         <ion-item class="custom-input-bar" lines="none">
@@ -36,29 +49,47 @@
             placeholder="••••••••"
             [(ngModel)]="password"
           ></ion-input>
-          <ion-icon name="lock-closed-outline" slot="end" class="bar-icon"></ion-icon>
+
+          <ion-icon
+            name="lock-closed-outline"
+            slot="end"
+            class="bar-icon">
+          </ion-icon>
         </ion-item>
 
-        <!-- validation error msg -->
         @if (errorMessage) {
           <ion-text color="danger" class="error-msg">
             <p>{{ errorMessage }}</p>
           </ion-text>
         }
 
-        <div class="remember-row">
-          <ion-checkbox 
-            [(ngModel)]="rememberMe" 
-            name="rememberMe" 
-            justify="start" 
-            labelPlacement="start">
-            تذكرني
-          </ion-checkbox>
+        <div class="login-options-row">
+
+          <div class="remember-row">
+            <ion-checkbox
+              [(ngModel)]="rememberMe"
+              name="rememberMe"
+              justify="start"
+              labelPlacement="start">
+              تذكرني
+            </ion-checkbox>
+          </div>
+
+ <ion-button
+  type="button"
+  fill="solid"
+  size="small"
+  class="forgot-password-button"
+  routerLink="/forgot-password"
+  routerDirection="forward">
+  هل نسيت كلمة السر؟
+</ion-button>
+
         </div>
 
-        <ion-button 
-          type="submit" 
-          expand="block" 
+        <ion-button
+          type="submit"
+          expand="block"
           class="login-button">
           تسجيل دخول
         </ion-button>

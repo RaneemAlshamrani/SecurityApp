@@ -66,8 +66,24 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/success/success.page').then((m) => m.SuccessPage),
   },
+  
   {
+  path: 'forgot-password',
+  loadComponent: () =>
+    import('./pages/forgot-password/forgot-password.page')
+      .then(m => m.ForgotPasswordPage)
+ },
+{
+  path: 'reset-password',
+  loadComponent: () =>
+    import('./pages/reset-password/reset-password.page')
+      .then((m) => m.ResetPasswordPage),
+},
+
+{
     path: '**',
     redirectTo: 'login',
   },
+
+
 ];

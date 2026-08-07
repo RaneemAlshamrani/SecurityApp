@@ -1,4 +1,4 @@
-:host {
+host {
   display: block;
   width: 100%;
   height: 100%;
@@ -32,32 +32,100 @@ ion-content.login-page {
   align-items: center;
   justify-content: center;
 
-  padding: 35px 24px 75px;
+  margin: 0;
+  padding: 0;
 
   overflow: hidden;
 
-  background-color: #0077b6;
-  background-image: url("/assets/images/login-background.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
+  border-radius: 0;
+  box-shadow: none;
+
+  background: #0077b6;
 }
 
-/*  اللوقو */
-.amana-logo {
+/* صورة الخلفية */
+ion-img.background-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 0;
+
+  &::part(image) {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center 80%;
+  }
+}
+
+/* طبقة الألوان فوق الصورة */
+.background-overlay {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+
+  z-index: 1;
+
+  border-radius: 0;
+  box-shadow: none;
+
+  background:
+    linear-gradient(
+      rgba(0, 119, 182, 0.22),
+      rgba(42, 157, 143, 0.18)
+    );
+
+  pointer-events: none;
+}
+
+/* شعار الأمانة */
+ion-img.amana-logo {
   width: 190px;
   max-width: 60%;
   height: auto;
-
-  display: block;
-  object-fit: contain;
 
   position: relative;
   z-index: 2;
 
   transform: translateY(-5px);
+
+  &::part(image) {
+    width: 100%;
+    height: auto;
+
+    object-fit: contain;
+  }
 }
 
+@media (max-width: 370px) {
+  .brand-section {
+    height: 350px;
+    min-height: 350px;
+  }
+
+  ion-img.amana-logo {
+    width: 165px;
+  }
+
+  ion-img.background-image::part(image) {
+    object-position: center 80%;
+  }
+}
+
+@media (min-width: 768px) {
+  .brand-section {
+    height: clamp(380px, 42dvh, 460px);
+    max-height: 460px;
+  }
+}
 /* القسم الأبيض */
 .login-card {
   width: 100%;
@@ -67,6 +135,7 @@ ion-content.login-page {
   z-index: 3;
 
   margin-top: -36px;
+
   padding:
     clamp(38px, 6vw, 48px)
     clamp(22px, 7vw, 30px)
@@ -76,7 +145,6 @@ ion-content.login-page {
   border-radius: 42px 42px 0 0;
 
   text-align: center;
-
   box-sizing: border-box;
 
   h1 {
@@ -101,11 +169,10 @@ ion-content.login-page {
   }
 }
 
-/* يمنع الحقول من التمدد بشكل مبالغ فيه على اللابتوب */
+/* الفورم */
 .login-form {
   width: 100%;
   max-width: 560px;
-
   margin: 0 auto;
 }
 
@@ -127,7 +194,6 @@ ion-item.custom-input-bar {
   margin-bottom: 20px;
 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
-
   box-sizing: border-box;
 
   ion-input {
@@ -150,15 +216,24 @@ ion-item.custom-input-bar {
   }
 }
 
-/* تذكرني */
-.remember-row {
+/* صف تذكرني ونسيت كلمة السر */
+.login-options-row {
   width: 100%;
-
-  margin-top: 6px;
-  padding-right: 7px;
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-top: 6px;
+}
+
+/* تذكرني */
+.remember-row {
+  display: flex;
+  align-items: center;
+
+  padding-right: 7px;
 
   box-sizing: border-box;
 
@@ -177,6 +252,47 @@ ion-item.custom-input-bar {
     }
   }
 }
+
+ion-button.forgot-password-button {
+  --background: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+  min-height: 36px;
+  height: 36px;
+  margin: 0;
+
+  --padding-start: 12px;
+  --padding-end: 12px;
+
+  font-size: clamp(13px, 3.5vw, 15px);
+  font-weight: 700;
+  text-transform: none;
+}
+
+/* الحد الرمادي */
+ion-button.forgot-password-button::part(native) {
+  border: 1.5px solid #c5cbd1;
+  border-radius: 12px;
+}
+
+/* الكلام الملون */
+ion-button.forgot-password-button::part(native) {
+  background-color: #ffffff;
+
+  background-image: linear-gradient(
+    90deg,
+    #2a9d8f 0%,
+    #0077b6 100%
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 
 /* زر تسجيل الدخول */
 ion-button.login-button {
@@ -221,7 +337,6 @@ ion-button.login-button {
     min-height: 350px;
   }
 
-  /* اللوقو بقي بنفس إعدادك السابق للشاشة الصغيرة */
   .amana-logo {
     width: 165px;
   }
@@ -247,6 +362,14 @@ ion-button.login-button {
     }
   }
 
+  .login-options-row {
+    gap: 5px;
+  }
+
+  ion-button.forgot-password-button {
+    font-size: 12px;
+  }
+
   ion-button.login-button {
     margin-top: 45px;
   }
@@ -263,4 +386,6 @@ ion-button.login-button {
     padding-right: 40px;
     padding-left: 40px;
   }
+
+
 }
