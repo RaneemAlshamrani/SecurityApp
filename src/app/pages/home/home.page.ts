@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { 
-  IonContent, 
-  IonButton, 
-  IonIcon 
+
+import {
+  IonContent,
+  IonButton,
+  IonIcon
 } from '@ionic/angular/standalone';
+
 import { addIcons } from 'ionicons';
-import { 
-  logInOutline, 
-  timeOutline, 
-  personOutline, 
-  briefcaseOutline 
+
+import {
+  logInOutline,
+  timeOutline,
+  personOutline,
+  briefcaseOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -19,24 +22,26 @@ import {
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    IonButton, 
+    IonContent,
+    IonButton,
     IonIcon
   ],
 })
 export class HomePage {
 
   constructor(private router: Router) {
-    addIcons({ 
-      logInOutline, 
-      timeOutline, 
-      personOutline, 
-      briefcaseOutline 
+
+    addIcons({
+      logInOutline,
+      timeOutline,
+      personOutline,
+      briefcaseOutline
     });
+
   }
 
-    goToCategory(): void {
-    // navigate to main register page (employee)
-    this.router.navigateByUrl('/register-employee');
+  goToEntryMethod(): void {
+    this.router.navigateByUrl('/entry-method');
   }
+
 }

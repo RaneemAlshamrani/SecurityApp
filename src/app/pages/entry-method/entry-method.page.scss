@@ -1,0 +1,135 @@
+.page {
+  --background: #F3F6FA;
+  padding: 20px;
+}
+
+/* ---------- Header ---------- */
+
+ion-toolbar {
+  --background: linear-gradient(90deg, #2E73B7 0%, #4FA89A 100%);
+  --color: #ffffff;
+  --min-height: 72px;
+  position: relative;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  text-align: center;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+ion-back-button {
+  --color: #ffffff;
+}
+
+/* ---------- Title ---------- */
+
+.title-section {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.title-section h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1F2D3D;
+}
+
+.title-section p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #7A7A7A;
+}
+
+/* ---------- Cards ---------- */
+
+.barcode-card,
+.manual-card {
+  border-radius: 18px;
+  border: 1px solid #DFF6FF;
+  box-shadow: 0 4px 14px rgba(0, 119, 182, 0.08);
+  margin-bottom: 22px;
+}
+
+.barcode-card ion-card-content,
+.manual-card ion-card-content {
+  text-align: center;
+  padding: 28px 20px;
+}
+
+.barcode-icon,
+.manual-icon {
+  font-size: 52px;
+  color: #0077B6;
+  margin-bottom: 10px;
+}
+
+.barcode-card h3,
+.manual-card h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1F2D3D;
+}
+
+.barcode-card p,
+.manual-card p {
+  margin-top: 8px;
+  color: #7A7A7A;
+  font-size: 14px;
+}
+
+.barcode-card:hover,
+.manual-card:hover {
+  transform: translateY(-2px);
+  transition: .25s;
+}
+
+/* ---------- Dropdown ---------- */
+
+.category-list {
+  width: calc(100% - 30px);
+  margin: -8px auto 22px;
+  background: #ffffff;
+  border: 1px solid #DFF6FF;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 119, 182, 0.08);
+}
+
+.category-list ion-button {
+  --color: #1F2D3D;
+  --background: transparent;
+  --background-hover: #F3F6FA;
+  --border-radius: 0;
+  --justify-content: flex-start;
+  --padding-start: 18px;
+  --padding-end: 18px;
+
+  width: 100%;
+  height: 56px;
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.category-list ion-button ion-icon {
+  font-size: 22px;
+  color: #0077B6;
+  margin-inline-end: 12px;
+}
+
+.category-list ion-button.selected {
+  --background: #EAF5FF;
+  --color: #0077B6;
+}
+
+.category-list ion-button:not(:last-child) {
+  border-bottom: 1px solid #E5EEF7;
+}

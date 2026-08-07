@@ -1,0 +1,163 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button
+        fill="clear"
+        (click)="goToPage('/home')">
+
+        <ion-icon
+          slot="icon-only"
+          name="arrow-forward-outline">
+        </ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title class="page-title">
+      طريقة التسجيل
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [fullscreen]="true" class="page">
+
+  <!-- Barcode -->
+
+  <ion-card
+    class="barcode-card"
+    button="true"
+    (click)="scanBarcode()">
+
+    <ion-card-content>
+
+      <ion-icon
+        name="qr-code-outline"
+        class="barcode-icon">
+      </ion-icon>
+
+      <h3>مسح الباركود</h3>
+
+      <p>اضغط لفتح الكاميرا</p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  <!-- Manual -->
+
+  <ion-card
+    class="manual-card"
+    button="true"
+    (click)="showCategories = !showCategories">
+
+    <ion-card-content>
+
+      <div class="manual-header">
+
+        <div class="manual-info">
+
+          <ion-icon
+            name="create-outline"
+            class="manual-icon">
+          </ion-icon>
+
+          <h3>التسجيل اليدوي</h3>
+
+          <p>اختر فئة الدخول</p>
+
+        </div>
+
+        <ion-icon
+          class="arrow-icon"
+          [name]="showCategories ? 'chevron-up-outline' : 'chevron-down-outline'">
+        </ion-icon>
+
+      </div>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  @if (showCategories) {
+
+    <div class="category-list">
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        [class.selected]="selectedCategory === 'employee'"
+        (click)="selectCategory('/register-employee','employee')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'employee'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
+        موظف
+
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        [class.selected]="selectedCategory === 'trainee'"
+        (click)="selectCategory('/register-trainee','trainee')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'trainee'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
+        متدرب
+
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        [class.selected]="selectedCategory === 'visitor'"
+        (click)="selectCategory('/register-visitor','visitor')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'visitor'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
+        مراجع
+
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        [class.selected]="selectedCategory === 'companion'"
+        (click)="selectCategory('/register-companion','companion')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'companion'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
+        مرافق
+
+      </ion-button>
+
+    </div>
+
+  }
+
+</ion-content>
