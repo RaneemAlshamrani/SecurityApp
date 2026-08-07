@@ -23,7 +23,9 @@ import {
   createOutline,
   chevronDownOutline,
   chevronUpOutline,
-  arrowForwardOutline
+  arrowForwardOutline,
+  radioButtonOn,
+  radioButtonOff
 } from 'ionicons/icons';
 
 @Component({
@@ -49,6 +51,8 @@ export class EntryMethodPage {
 
   showCategories = false;
 
+  selectedCategory = '';
+
   constructor(private router: Router) {
 
     addIcons({
@@ -56,7 +60,9 @@ export class EntryMethodPage {
       createOutline,
       chevronDownOutline,
       chevronUpOutline,
-      arrowForwardOutline
+      arrowForwardOutline,
+      radioButtonOn,
+      radioButtonOff
     });
 
   }
@@ -94,9 +100,26 @@ export class EntryMethodPage {
 
   }
 
+  selectCategory(path: string, category: string): void {
+
+    this.selectedCategory = category;
+
+    setTimeout(() => {
+
+      this.showCategories = false;
+      this.selectedCategory = '';
+      this.router.navigateByUrl(path);
+
+    }, 700);
+
+  }
+
   goToPage(path: string): void {
+
     this.showCategories = false;
+    this.selectedCategory = '';
     this.router.navigateByUrl(path);
+
   }
 
 }

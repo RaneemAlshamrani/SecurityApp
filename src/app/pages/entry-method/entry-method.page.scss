@@ -107,14 +107,27 @@ ion-back-button {
   --background: transparent;
   --background-hover: #F3F6FA;
   --border-radius: 0;
+  --justify-content: flex-start;
+  --padding-start: 18px;
+  --padding-end: 18px;
 
   width: 100%;
   height: 56px;
   margin: 0;
 
-  justify-content: flex-end;
   font-size: 18px;
   font-weight: 600;
+}
+
+.category-list ion-button ion-icon {
+  font-size: 22px;
+  color: #0077B6;
+  margin-inline-end: 12px;
+}
+
+.category-list ion-button.selected {
+  --background: #EAF5FF;
+  --color: #0077B6;
 }
 
 .category-list ion-button:not(:last-child) {

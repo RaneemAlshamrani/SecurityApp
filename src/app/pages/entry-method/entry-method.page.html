@@ -27,7 +27,7 @@
 
 <ion-content [fullscreen]="true" class="page">
 
-  <!-- مسح الباركود -->
+  <!-- Barcode -->
 
   <ion-card
     class="barcode-card"
@@ -49,7 +49,7 @@
 
   </ion-card>
 
-  <!-- التسجيل اليدوي -->
+  <!-- Manual -->
 
   <ion-card
     class="manual-card"
@@ -74,8 +74,8 @@
         </div>
 
         <ion-icon
-          [name]="showCategories ? 'chevron-up-outline' : 'chevron-down-outline'"
-          class="arrow-icon">
+          class="arrow-icon"
+          [name]="showCategories ? 'chevron-up-outline' : 'chevron-down-outline'">
         </ion-icon>
 
       </div>
@@ -91,29 +91,69 @@
       <ion-button
         fill="clear"
         expand="block"
-        (click)="goToPage('/register-employee')">
+        [class.selected]="selectedCategory === 'employee'"
+        (click)="selectCategory('/register-employee','employee')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'employee'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
         موظف
+
       </ion-button>
 
       <ion-button
         fill="clear"
         expand="block"
-        (click)="goToPage('/register-trainee')">
+        [class.selected]="selectedCategory === 'trainee'"
+        (click)="selectCategory('/register-trainee','trainee')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'trainee'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
         متدرب
+
       </ion-button>
 
       <ion-button
         fill="clear"
         expand="block"
-        (click)="goToPage('/register-visitor')">
+        [class.selected]="selectedCategory === 'visitor'"
+        (click)="selectCategory('/register-visitor','visitor')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'visitor'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
         مراجع
+
       </ion-button>
 
       <ion-button
         fill="clear"
         expand="block"
-        (click)="goToPage('/register-companion')">
+        [class.selected]="selectedCategory === 'companion'"
+        (click)="selectCategory('/register-companion','companion')">
+
+        <ion-icon
+          slot="start"
+          [name]="selectedCategory === 'companion'
+            ? 'radio-button-on'
+            : 'radio-button-off'">
+        </ion-icon>
+
         مرافق
+
       </ion-button>
 
     </div>
