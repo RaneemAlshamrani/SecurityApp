@@ -4,15 +4,32 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from '../../services/registration.service';
 import { addIcons } from 'ionicons';
-import { arrowForwardOutline, qrCodeOutline } from 'ionicons/icons';
 
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-  IonItem, IonInput, IonTextarea, IonButton, IonCard, IonCardContent,
-  IonTabBar, IonTabButton, IonIcon, IonLabel
-} from '@ionic/angular/standalone';
+  arrowBackOutline,
+  arrowForwardOutline,
+  gridOutline,
+  barChartOutline,
+  callOutline
+} from 'ionicons/icons';
 
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonButton,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonNote
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-register-visitor',
@@ -20,10 +37,25 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
   styleUrls: ['./register-visitor.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonItem, IonInput, IonTextarea, IonButton, IonCard, IonCardContent,
-    IonTabBar, IonTabButton, IonIcon, IonLabel
+    CommonModule,
+    FormsModule,
+    RouterLink,
+
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonItem,
+    IonInput,
+    IonTextarea,
+    IonButton,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+    IonNote
   ]
 })
 export class RegisterVisitorPage {
@@ -35,43 +67,88 @@ export class RegisterVisitorPage {
   employeeName = '';
   visitReason = '';
 
+  submitted = false;
+
   constructor(
     private router: Router,
     private registrationService: RegistrationService
   ) {
-    addIcons({ arrowForwardOutline, qrCodeOutline });
+
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline,
+      gridOutline,
+      barChartOutline,
+      callOutline
+    });
+
   }
 
-  async scanBarcode() {
-    try {
-      const support = await BarcodeScanner.isSupported();
-      if (!support.supported) { alert('الجهاز لا يدعم الباركود'); return; }
-      const permission = await BarcodeScanner.requestPermissions();
-      if (permission.camera !== 'granted') { alert('يرجى السماح باستخدام الكاميرا'); return; }
-      const result = await BarcodeScanner.scan();
-      if (result.barcodes.length > 0) {
-        this.visitorId = result.barcodes[0].displayValue ?? '';
-      }
-    } catch (error) {
-      console.error(error);
-      alert('تعذر قراءة الباركود');
-    }
+  isVisitorIdValid(): boolean {
+    return /^[0-9]+$/.test(this.visitorId);
   }
 
-  saveVisitor() {
-    if (!this.visitorId.trim() || !this.visitorName.trim() || !this.employeeName.trim()) {
-      alert('الرجاء تعبئة جميع الحقول المطلوبة');
+  isVisitorNameValid(): boolean {
+    return !/[0-9]/.test(this.visitorName);
+  }
+
+  isVisitorPhoneValid(): boolean {
+    return /^[0-9]+$/.test(this.visitorPhone);
+  }
+
+  isEmailValid(): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.visitorEmail);
+  }
+
+  isEmployeeNameValid(): boolean {
+    return !/[0-9]/.test(this.employeeName);
+  }
+
+  isVisitReasonValid(): boolean {
+    return !/[0-9]/.test(this.visitReason);
+  }
+
+  saveVisitor(): void {
+
+    this.submitted = true;
+
+    if (
+      !this.visitorId.trim() ||
+      !this.isVisitorIdValid() ||
+
+      !this.visitorName.trim() ||
+      !this.isVisitorNameValid() ||
+
+      !this.visitorPhone.trim() ||
+      !this.isVisitorPhoneValid() ||
+
+      !this.visitorEmail.trim() ||
+      !this.isEmailValid() ||
+
+      !this.employeeName.trim() ||
+      !this.isEmployeeNameValid() ||
+
+      !this.visitReason.trim() ||
+      !this.isVisitReasonValid()
+    ) {
       return;
     }
+
     this.registrationService.addVisitor({
+
       visitorId: this.visitorId,
       visitorName: this.visitorName,
       visitorPhone: this.visitorPhone,
       visitorEmail: this.visitorEmail,
       employeeName: this.employeeName,
       visitReason: this.visitReason
+
     });
+
+    this.submitted = false;
+
     this.router.navigateByUrl('/success');
+
   }
 
 }

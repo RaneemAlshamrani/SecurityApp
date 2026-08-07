@@ -1,86 +1,301 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
+
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/home" icon="arrow-forward-outline" text=""></ion-back-button>
+      <ion-back-button
+        defaultHref="/home"
+        icon="arrow-forward-outline"
+        text="">
+      </ion-back-button>
     </ion-buttons>
-    <ion-title>تسجيل مرافق</ion-title>
+
+    <div class="header-content">
+      <h2>تسجيل مرافق</h2>
+      <p>يرجى تعبئة البيانات</p>
+    </div>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding reg-page">
 
-  <div class="title">
-    <h2>أدخل بيانات المرافق</h2>
-    <p>يرجى تعبئة البيانات</p>
-  </div>
+<div *ngFor="let companion of companions; let i = index">
 
-  <div *ngFor="let companion of companions; let i = index">
+  <div class="companion-header">
 
-    <h3 class="companion-title">المرافق {{ i + 1 }}</h3>
+    <h3 class="companion-title">
+      المرافق {{ i + 1 }}
+    </h3>
 
-    <div class="field-block">
-      <label class="field-label">اسم المرافق</label>
-      <ion-item>
-        <ion-input placeholder="أدخل اسم المرافق" [(ngModel)]="companion.name"></ion-input>
-      </ion-item>
-    </div>
+    <ion-button
+      *ngIf="i > 0"
+      fill="clear"
+      color="danger"
+      size="small"
+      (click)="removeCompanion(i)">
 
-    <div class="field-block">
-      <label class="field-label">رقم الهوية</label>
-      <ion-item>
-        <ion-input placeholder="أدخل رقم الهوية" [(ngModel)]="companion.nationalId"></ion-input>
-      </ion-item>
-    </div>
+      <ion-icon name="remove-circle-outline"></ion-icon>
+      إزالة المرافق
 
-    <div class="field-block">
-      <label class="field-label">اسم المراجع الأساسي</label>
-      <ion-item>
-        <ion-input placeholder="أدخل اسم المراجع الأساسي" [(ngModel)]="companion.visitorName"></ion-input>
-      </ion-item>
-    </div>
-
-    <div class="field-block">
-      <label class="field-label">رقم المراجعة</label>
-      <ion-item>
-        <ion-input placeholder="أدخل رقم المراجعة" [(ngModel)]="companion.visitNumber"></ion-input>
-      </ion-item>
-    </div>
-
-    <div class="field-block">
-      <label class="field-label">نوع المرافق</label>
-      <ion-item>
-        <ion-input placeholder="أدخل نوع المرافق" [(ngModel)]="companion.companionType"></ion-input>
-      </ion-item>
-    </div>
-
-    <div class="field-block">
-      <label class="field-label">الإدارة</label>
-      <ion-item>
-        <ion-input placeholder="أدخل الإدارة" [(ngModel)]="companion.department"></ion-input>
-      </ion-item>
-    </div>
-
-    <div class="companion-divider"></div>
+    </ion-button>
 
   </div>
 
-  <ion-button expand="block" fill="outline" class="add-btn" (click)="addCompanion()">+ إضافة مرافق آخر</ion-button>
+<div class="field-block">
 
-  <ion-button expand="block" class="confirm-btn" (click)="save()">تأكيد</ion-button>
+<label class="field-label">
+اسم المرافق
+<span class="required">*</span>
+</label>
+
+<ion-item>
+
+<ion-input
+placeholder="أدخل اسم المرافق"
+[(ngModel)]="companion.name">
+</ion-input>
+
+</ion-item>
+
+<ion-note
+color="danger"
+*ngIf="submitted && !companion.name.trim()">
+
+اسم المرافق مطلوب
+
+</ion-note>
+
+<ion-note
+color="danger"
+*ngIf="submitted && companion.name && companion.name.match('[0-9]')">
+
+لا يمكن إدخال أرقام في اسم المرافق
+
+</ion-note>
+
+</div>
+
+<div class="field-block">
+
+<label class="field-label">
+رقم الهوية
+<span class="required">*</span>
+</label>
+
+<ion-item>
+
+<ion-input
+placeholder="أدخل رقم الهوية"
+[(ngModel)]="companion.nationalId">
+</ion-input>
+
+</ion-item>
+
+<ion-note
+color="danger"
+*ngIf="submitted && !companion.nationalId.trim()">
+
+رقم الهوية مطلوب
+
+</ion-note>
+
+<ion-note
+color="danger"
+*ngIf="submitted && companion.nationalId && !companion.nationalId.match('^[0-9]+$')">
+
+رقم الهوية يجب أن يحتوي على أرقام فقط
+
+</ion-note>
+
+</div>
+
+<div class="field-block">
+
+<label class="field-label">
+اسم المراجع الأساسي
+<span class="required">*</span>
+</label>
+
+<ion-item>
+
+<ion-input
+placeholder="أدخل اسم المراجع الأساسي"
+[(ngModel)]="companion.visitorName">
+</ion-input>
+
+</ion-item>
+
+<ion-note
+color="danger"
+*ngIf="submitted && !companion.visitorName.trim()">
+
+اسم المراجع الأساسي مطلوب
+
+</ion-note>
+
+<ion-note
+color="danger"
+*ngIf="submitted && companion.visitorName && companion.visitorName.match('[0-9]')">
+
+لا يمكن إدخال أرقام في اسم المراجع الأساسي
+
+</ion-note>
+
+</div>
+
+<div class="field-block">
+
+<label class="field-label">
+رقم المراجعة
+<span class="required">*</span>
+</label>
+
+<ion-item>
+
+<ion-input
+placeholder="أدخل رقم المراجعة"
+[(ngModel)]="companion.visitNumber">
+</ion-input>
+
+</ion-item>
+
+<ion-note
+color="danger"
+*ngIf="submitted && !companion.visitNumber.trim()">
+
+رقم المراجعة مطلوب
+
+</ion-note>
+
+<ion-note
+color="danger"
+*ngIf="submitted && companion.visitNumber && !companion.visitNumber.match('^[0-9]+$')">
+
+رقم المراجعة يجب أن يحتوي على أرقام فقط
+
+</ion-note>
+
+</div>
+
+<div class="field-block">
+
+  <label class="field-label">
+    نوع المرافق
+    <span class="required">*</span>
+  </label>
+
+  <ion-item>
+
+    <ion-input
+      placeholder="أدخل نوع المرافق"
+      [(ngModel)]="companion.companionType">
+    </ion-input>
+
+  </ion-item>
+
+  <ion-note
+    color="danger"
+    *ngIf="submitted && !companion.companionType.trim()">
+
+    نوع المرافق مطلوب
+
+  </ion-note>
+
+  <ion-note
+    color="danger"
+    *ngIf="submitted && companion.companionType && companion.companionType.match('[0-9]')">
+
+    لا يمكن إدخال أرقام في نوع المرافق
+
+  </ion-note>
+
+</div>
+
+<div class="field-block">
+
+  <label class="field-label">
+    الإدارة
+    <span class="required">*</span>
+  </label>
+
+  <ion-item>
+
+    <ion-select
+      interface="popover"
+      placeholder="اختر الإدارة"
+      [(ngModel)]="companion.department">
+
+      <ion-select-option value="الموارد البشرية">الموارد البشرية</ion-select-option>
+      <ion-select-option value="الإدارة المالية">الإدارة المالية</ion-select-option>
+      <ion-select-option value="تقنية المعلومات">تقنية المعلومات</ion-select-option>
+      <ion-select-option value="إدارة المشاريع">إدارة المشاريع</ion-select-option>
+      <ion-select-option value="الاستثمار">الاستثمار</ion-select-option>
+      <ion-select-option value="الصحة العامة">الصحة العامة</ion-select-option>
+      <ion-select-option value="النظافة">النظافة</ion-select-option>
+      <ion-select-option value="الرقابة">الرقابة</ion-select-option>
+      <ion-select-option value="التراخيص">التراخيص</ion-select-option>
+      <ion-select-option value="خدمة العملاء">خدمة العملاء</ion-select-option>
+      <ion-select-option value="التخطيط الحضري">التخطيط الحضري</ion-select-option>
+      <ion-select-option value="الأراضي والممتلكات">الأراضي والممتلكات</ion-select-option>
+      <ion-select-option value="الإعلام والاتصال المؤسسي">الإعلام والاتصال المؤسسي</ion-select-option>
+      <ion-select-option value="الطوارئ والأزمات">الطوارئ والأزمات</ion-select-option>
+
+    </ion-select>
+
+  </ion-item>
+
+  <ion-note
+    color="danger"
+    *ngIf="submitted && !companion.department">
+
+    يرجى اختيار الإدارة
+
+  </ion-note>
+
+</div>
+
+<div class="companion-divider"></div>
+
+</div>
+
+<ion-button
+  expand="block"
+  fill="outline"
+  class="add-btn"
+  (click)="addCompanion()">
+
+  <ion-icon slot="start" name="add-outline"></ion-icon>
+
+  إضافة مرافق آخر
+
+</ion-button>
+
+<ion-button
+  expand="block"
+  class="confirm-btn"
+  (click)="save()">
+
+  تأكيد
+
+</ion-button>
 
 </ion-content>
 
 <ion-tab-bar slot="bottom">
+
   <ion-tab-button routerLink="/home">
-    <ion-icon name="options-outline"></ion-icon>
+    <ion-icon name="grid-outline"></ion-icon>
     <ion-label>لوحة المراقبة</ion-label>
   </ion-tab-button>
+
   <ion-tab-button routerLink="/reports">
-    <ion-icon name="document-text-outline"></ion-icon>
+    <ion-icon name="bar-chart-outline"></ion-icon>
     <ion-label>التقارير</ion-label>
   </ion-tab-button>
+
   <ion-tab-button routerLink="/contact">
-    <ion-icon name="chatbubble-outline"></ion-icon>
+    <ion-icon name="call-outline"></ion-icon>
     <ion-label>تواصل</ion-label>
   </ion-tab-button>
+
 </ion-tab-bar>

@@ -1,160 +1,88 @@
-/* ===========================
-   Page
-=========================== */
-
-.page {
-  --background: #F3F6FA;
+ion-content {
+  --background: #f5f7fb;
 }
 
-/* ===========================
-   Title
-=========================== */
+/* ---------- Header ---------- */
 
-.title-section {
+ion-toolbar {
+  --background: linear-gradient(90deg, #2E73B7 0%, #4FA89A 100%);
+  --color: #ffffff;
+  --min-height: 95px;
+  position: relative;
+}
+
+ion-back-button {
+  --color: #ffffff;
+}
+
+.header-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
   text-align: center;
-  margin: 30px 0 26px;
 }
 
-.title-section h2 {
-  font-size: 30px;
+.header-content h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 26px;
   font-weight: 700;
-  color: #1F2D3D;
+  line-height: 1.2;
+}
+
+.header-content p {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+}
+
+/* ---------- Fields ---------- */
+
+.field-block {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
   margin-bottom: 8px;
-}
-
-.title-section p {
-  font-size: 15px;
-  color: #7A7A7A;
-}
-
-/* ===========================
-   Barcode Card
-=========================== */
-
-.barcode-card {
-  background: #FFFFFF;
-  border: 2px solid #DFF6FF;
-  border-radius: 16px;
-  box-shadow: none;
-  margin-bottom: 24px;
-  transition: .2s;
-}
-
-.barcode-card:hover {
-  border-color: #0077B6;
-}
-
-.barcode-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 0;
-}
-
-.barcode-icon {
-  font-size: 42px;
-  color: #0077B6;
-  margin-bottom: 8px;
-}
-
-.barcode-content span {
   font-size: 16px;
-  font-weight: 600;
-  color: #1F2D3D;
+  font-weight: 700;
+  color: #123d73;
 }
 
-/* ===========================
-   Inputs
-=========================== */
+.required {
+  color: #e53935;
+  margin-right: 4px;
+}
 
 ion-item {
-  --background: #FFFFFF;
-  --border-color: #DFF6FF;
-  --border-radius: 14px;
-  --highlight-color-focused: #0077B6;
-
-  margin-bottom: 18px;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  --background: #ffffff;
+  border: 1px solid #e5e9ef;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
-ion-input {
-  --padding-top: 10px;
-  --padding-bottom: 10px;
-}
-
-/* ===========================
-   Companion
-=========================== */
-
-.companion-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1F2D3D;
-  margin: 28px 0 16px;
-}
-
-.companion-divider {
-  height: 1px;
-  background: #DFF6FF;
-  margin: 24px 0;
-}
-
-/* ===========================
-   Buttons
-=========================== */
-
-ion-button {
-  height: 54px;
-  margin-top: 18px;
-  font-size: 16px;
-  font-weight: 600;
-  --border-radius: 14px;
-}
-
-/* زر إضافة مرافق */
-
-.add-btn {
-  --background: #FFFFFF;
-  --border-color: #7BC67E;
-  --color: #7BC67E;
-}
-
-/* زر تأكيد */
+/* ---------- Button ---------- */
 
 .confirm-btn {
-
-  --background: transparent;
-  --color: white;
-  overflow: hidden;
-
-  background: linear-gradient(
-    90deg,
-    #0077B6 0%,
-    #2A9D8F 100%
-  );
-
-  border-radius: 14px;
-
-  box-shadow:
-    0 6px 18px rgba(0,119,182,.25);
+  margin-top: 25px;
+  --background: linear-gradient(90deg, #58c2b2, #2f6fd5);
+  --border-radius: 12px;
+  height: 52px;
+  font-size: 17px;
+  font-weight: bold;
 }
 
-/* ===========================
-   Bottom Navigation
-=========================== */
+/* ---------- Bottom Navigation ---------- */
 
 ion-tab-bar {
-  --background: #FFFFFF;
-  border-top: 1px solid #DFF6FF;
+  --background: #ffffff;
+  border-top: 1px solid #e5e9ef;
 }
 
 ion-tab-button {
-  --color: #7A7A7A;
-  --color-selected: #0077B6;
-}
-
-ion-icon {
-  color: #1F2D3D;
+  --color: #7d8ca3;
+  --color-selected: #2f6fd5;
 }

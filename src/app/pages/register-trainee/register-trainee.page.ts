@@ -4,15 +4,33 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from '../../services/registration.service';
 import { addIcons } from 'ionicons';
-import { arrowForwardOutline, qrCodeOutline, optionsOutline, documentTextOutline, chatbubbleOutline } from 'ionicons/icons';
 
 import {
-  IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-  IonItem, IonInput, IonButton, IonCard, IonCardContent,
-  IonTabBar, IonTabButton, IonIcon, IonLabel
-} from '@ionic/angular/standalone';
+  arrowForwardOutline,
+  gridOutline,
+  barChartOutline,
+  callOutline
+} from 'ionicons/icons';
 
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import {
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonBackButton,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonButton,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonNote
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-register-trainee',
@@ -20,10 +38,27 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
   styleUrls: ['./register-trainee.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, RouterLink,
-    IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton,
-    IonItem, IonInput, IonButton, IonCard, IonCardContent,
-    IonTabBar, IonTabButton, IonIcon, IonLabel
+    CommonModule,
+    FormsModule,
+    RouterLink,
+
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonBackButton,
+    IonItem,
+    IonInput,
+    IonTextarea,
+    IonButton,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+    IonSelect,
+    IonSelectOption,
+    IonNote
   ]
 })
 export class RegisterTraineePage {
@@ -32,59 +67,66 @@ export class RegisterTraineePage {
   nationalId = '';
   education = '';
   department = '';
+  notes = '';
+
+  submitted = false;
 
   constructor(
     private router: Router,
     private registrationService: RegistrationService
   ) {
-    addIcons({ arrowForwardOutline, qrCodeOutline, optionsOutline, documentTextOutline, chatbubbleOutline });
+
+    addIcons({
+      arrowForwardOutline,
+      gridOutline,
+      barChartOutline,
+      callOutline
+    });
+
   }
 
-  async scanBarcode() {
-    try {
-      const permissions = await BarcodeScanner.requestPermissions();
-      if (permissions.camera !== 'granted') { alert('يرجى السماح باستخدام الكاميرا'); return; }
-      const result = await BarcodeScanner.scan();
-      if (result.barcodes.length > 0) {
-        this.nationalId = result.barcodes[0].rawValue ?? result.barcodes[0].displayValue ?? '';
-      }
-    } catch (error) {
-      console.error(error);
-      alert('حدث خطأ أثناء مسح الباركود');
-    }
+  isTraineeNameValid(): boolean {
+    return !/[0-9]/.test(this.traineeName);
   }
 
-  save() {
-    if (!this.traineeName.trim() || !this.nationalId.trim() || !this.education.trim() || !this.department.trim()) {
-      alert('الرجاء تعبئة جميع الحقول');
-      return;
-    }
+  isNationalIdValid(): boolean {
+    return /^[0-9]+$/.test(this.nationalId);
+  }
 
-    if (!/^[\u0600-\u06FFa-zA-Z\s]+$/.test(this.traineeName)) {
-      alert('اسم المتدرب يجب أن يحتوي على أحرف فقط');
-      return;
-    }
-    if (!/^[0-9]+$/.test(this.nationalId)) {
-      alert('رقم الهوية يجب أن يحتوي على أرقام فقط');
-      return;
-    }
-    if (!/^[\u0600-\u06FFa-zA-Z\s]+$/.test(this.education)) {
-      alert('الجهة التعليمية يجب أن تحتوي على أحرف فقط');
-      return;
-    }
-    if (!/^[\u0600-\u06FFa-zA-Z\s]+$/.test(this.department)) {
-      alert('الإدارة يجب أن تحتوي على أحرف فقط');
+  isEducationValid(): boolean {
+    return !/[0-9]/.test(this.education);
+  }
+
+  save(): void {
+
+    this.submitted = true;
+
+    if (
+      !this.traineeName.trim() ||
+      !this.isTraineeNameValid() ||
+      !this.nationalId.trim() ||
+      !this.isNationalIdValid() ||
+      !this.education.trim() ||
+      !this.isEducationValid() ||
+      !this.department
+    ) {
       return;
     }
 
     this.registrationService.addTrainee({
+
       traineeName: this.traineeName,
       nationalId: this.nationalId,
       education: this.education,
-      department: this.department
+      department: this.department,
+      notes: this.notes
+
     });
 
+    this.submitted = false;
+
     this.router.navigateByUrl('/success');
+
   }
 
 }
