@@ -12,16 +12,18 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonBackButton
+  IonButton
 } from '@ionic/angular/standalone';
 
-import { ActionSheetController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { addIcons } from 'ionicons';
 
 import {
   qrCodeOutline,
-  createOutline
+  createOutline,
+  chevronDownOutline,
+  chevronUpOutline,
+  arrowForwardOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -40,19 +42,21 @@ import {
     IonToolbar,
     IonTitle,
     IonButtons,
-    IonBackButton
+    IonButton
   ]
 })
 export class EntryMethodPage {
 
-  constructor(
-    private router: Router,
-    private actionSheetCtrl: ActionSheetController
-  ) {
+  showCategories = false;
+
+  constructor(private router: Router) {
 
     addIcons({
       qrCodeOutline,
-      createOutline
+      createOutline,
+      chevronDownOutline,
+      chevronUpOutline,
+      arrowForwardOutline
     });
 
   }
@@ -90,45 +94,9 @@ export class EntryMethodPage {
 
   }
 
-  async chooseCategory() {
-
-    const sheet = await this.actionSheetCtrl.create({
-
-      header: 'اختر فئة الدخول',
-
-      buttons: [
-
-        {
-          text: '👨‍💼 موظف',
-          handler: () => this.router.navigateByUrl('/register-employee')
-        },
-
-        {
-          text: '👤 مراجع',
-          handler: () => this.router.navigateByUrl('/register-visitor')
-        },
-
-        {
-          text: '🎓 متدرب',
-          handler: () => this.router.navigateByUrl('/register-trainee')
-        },
-
-        {
-          text: '👥 مرافق',
-          handler: () => this.router.navigateByUrl('/register-companion')
-        },
-
-        {
-          text: 'إلغاء',
-          role: 'cancel'
-        }
-
-      ]
-
-    });
-
-    await sheet.present();
-
+  goToPage(path: string): void {
+    this.showCategories = false;
+    this.router.navigateByUrl(path);
   }
 
 }

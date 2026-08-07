@@ -1,12 +1,20 @@
 <ion-header class="ion-no-border">
+
   <ion-toolbar>
 
     <ion-buttons slot="end">
-      <ion-back-button
-        defaultHref="/home"
-        icon="arrow-forward-outline"
-        text="">
-      </ion-back-button>
+
+      <ion-button
+        fill="clear"
+        (click)="goToPage('/home')">
+
+        <ion-icon
+          slot="icon-only"
+          name="arrow-forward-outline">
+        </ion-icon>
+
+      </ion-button>
+
     </ion-buttons>
 
     <ion-title class="page-title">
@@ -14,9 +22,12 @@
     </ion-title>
 
   </ion-toolbar>
+
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="page">
+
+  <!-- مسح الباركود -->
 
   <ion-card
     class="barcode-card"
@@ -38,24 +49,75 @@
 
   </ion-card>
 
+  <!-- التسجيل اليدوي -->
+
   <ion-card
     class="manual-card"
     button="true"
-    (click)="chooseCategory()">
+    (click)="showCategories = !showCategories">
 
     <ion-card-content>
 
-      <ion-icon
-        name="create-outline"
-        class="manual-icon">
-      </ion-icon>
+      <div class="manual-header">
 
-      <h3>التسجيل اليدوي</h3>
+        <div class="manual-info">
 
-      <p>اختر فئة الدخول</p>
+          <ion-icon
+            name="create-outline"
+            class="manual-icon">
+          </ion-icon>
+
+          <h3>التسجيل اليدوي</h3>
+
+          <p>اختر فئة الدخول</p>
+
+        </div>
+
+        <ion-icon
+          [name]="showCategories ? 'chevron-up-outline' : 'chevron-down-outline'"
+          class="arrow-icon">
+        </ion-icon>
+
+      </div>
 
     </ion-card-content>
 
   </ion-card>
+
+  @if (showCategories) {
+
+    <div class="category-list">
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        (click)="goToPage('/register-employee')">
+        موظف
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        (click)="goToPage('/register-trainee')">
+        متدرب
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        (click)="goToPage('/register-visitor')">
+        مراجع
+      </ion-button>
+
+      <ion-button
+        fill="clear"
+        expand="block"
+        (click)="goToPage('/register-companion')">
+        مرافق
+      </ion-button>
+
+    </div>
+
+  }
 
 </ion-content>
