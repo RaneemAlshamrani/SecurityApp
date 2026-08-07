@@ -1,71 +1,215 @@
 <ion-header class="ion-no-border">
+
   <ion-toolbar>
+
     <ion-buttons slot="end">
-      <ion-back-button defaultHref="/home" icon="arrow-forward-outline" text=""></ion-back-button>
+      <ion-back-button
+        defaultHref="/home"
+        icon="arrow-forward-outline"
+        text="">
+      </ion-back-button>
     </ion-buttons>
-    <ion-title>تسجيل موظف</ion-title>
+
+    <div class="header-content">
+      <h2>تسجيل موظف</h2>
+      <p>يرجى تعبئة البيانات</p>
+    </div>
+
   </ion-toolbar>
+
 </ion-header>
 
 <ion-content class="ion-padding reg-page">
 
-  <div class="title">
-    <h2>أدخل بيانات الموظف</h2>
-    <p>يرجى تعبئة البيانات</p>
-  </div>
-
-  <ion-card class="barcode-card" button="true" (click)="scanBarcode()">
-    <ion-card-content>
-      <div class="barcode-content">
-        <ion-icon name="qr-code-outline" class="barcode-icon"></ion-icon>
-        <span>مسح الباركود</span>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  <!-- الرقم الوظيفي -->
 
   <div class="field-block">
-    <label class="field-label">الرقم الوظيفي</label>
+
+    <label class="field-label">
+      الرقم الوظيفي
+      <span class="required">*</span>
+    </label>
+
     <ion-item>
-      <ion-input placeholder="أدخل الرقم الوظيفي" [(ngModel)]="employeeId"></ion-input>
+      <ion-input
+        placeholder="أدخل الرقم الوظيفي"
+        [(ngModel)]="employeeId">
+      </ion-input>
     </ion-item>
+
+    @if (submitted && !employeeId.trim()) {
+      <ion-note color="danger">
+        الرقم الوظيفي مطلوب
+      </ion-note>
+    }
+
+    @if (submitted && employeeId && !isEmployeeIdValid()) {
+      <ion-note color="danger">
+        الرقم الوظيفي يجب أن يحتوي على أرقام فقط
+      </ion-note>
+    }
+
   </div>
+
+  <!-- اسم الموظف -->
 
   <div class="field-block">
-    <label class="field-label">اسم الموظف</label>
+
+    <label class="field-label">
+      اسم الموظف
+      <span class="required">*</span>
+    </label>
+
     <ion-item>
-      <ion-input placeholder="أدخل اسم الموظف" [(ngModel)]="employeeName"></ion-input>
+      <ion-input
+        placeholder="أدخل اسم الموظف"
+        [(ngModel)]="employeeName">
+      </ion-input>
     </ion-item>
+
+    @if (submitted && !employeeName.trim()) {
+      <ion-note color="danger">
+        اسم الموظف مطلوب
+      </ion-note>
+    }
+
+    @if (submitted && employeeName && !isEmployeeNameValid()) {
+      <ion-note color="danger">
+        لا يمكن إدخال أرقام في اسم الموظف
+      </ion-note>
+    }
+
   </div>
+
+  <!-- الإدارة -->
 
   <div class="field-block">
-    <label class="field-label">الإدارة</label>
+
+    <label class="field-label">
+      الإدارة
+      <span class="required">*</span>
+    </label>
+
     <ion-item>
-      <ion-input placeholder="أدخل الإدارة" [(ngModel)]="department"></ion-input>
+
+      <ion-select
+        interface="popover"
+        placeholder="اختر الإدارة"
+        [(ngModel)]="department">
+
+        <ion-select-option value="الموارد البشرية">
+          الموارد البشرية
+        </ion-select-option>
+
+        <ion-select-option value="الإدارة المالية">
+          الإدارة المالية
+        </ion-select-option>
+
+        <ion-select-option value="تقنية المعلومات">
+          تقنية المعلومات
+        </ion-select-option>
+
+        <ion-select-option value="إدارة المشاريع">
+          إدارة المشاريع
+        </ion-select-option>
+
+        <ion-select-option value="الاستثمار">
+          الاستثمار
+        </ion-select-option>
+
+        <ion-select-option value="الصحة العامة">
+          الصحة العامة
+        </ion-select-option>
+
+        <ion-select-option value="النظافة">
+          النظافة
+        </ion-select-option>
+
+        <ion-select-option value="الرقابة">
+          الرقابة
+        </ion-select-option>
+
+        <ion-select-option value="التراخيص">
+          التراخيص
+        </ion-select-option>
+
+        <ion-select-option value="خدمة العملاء">
+          خدمة العملاء
+        </ion-select-option>
+
+        <ion-select-option value="التخطيط الحضري">
+          التخطيط الحضري
+        </ion-select-option>
+
+        <ion-select-option value="الأراضي والممتلكات">
+          الأراضي والممتلكات
+        </ion-select-option>
+
+        <ion-select-option value="الإعلام والاتصال المؤسسي">
+          الإعلام والاتصال المؤسسي
+        </ion-select-option>
+
+        <ion-select-option value="الطوارئ والأزمات">
+          الطوارئ والأزمات
+        </ion-select-option>
+
+      </ion-select>
+
     </ion-item>
+
+    @if (submitted && !department) {
+      <ion-note color="danger">
+        يرجى اختيار الإدارة
+      </ion-note>
+    }
+
   </div>
+
+  <!-- الملاحظات -->
 
   <div class="field-block">
-    <label class="field-label">ملاحظات</label>
+
+    <label class="field-label">
+      ملاحظات
+    </label>
+
     <ion-item>
-      <ion-textarea placeholder="اكتب الملاحظات" [(ngModel)]="notes"></ion-textarea>
+
+      <ion-textarea
+        placeholder="اكتب الملاحظات"
+        [(ngModel)]="notes">
+      </ion-textarea>
+
     </ion-item>
+
   </div>
 
-  <ion-button expand="block" class="confirm-btn" (click)="saveEmployee()">تأكيد</ion-button>
+  <ion-button
+    expand="block"
+    class="confirm-btn"
+    (click)="saveEmployee()">
+
+    تأكيد
+
+  </ion-button>
 
 </ion-content>
 
 <ion-tab-bar slot="bottom">
+
   <ion-tab-button routerLink="/home">
-    <ion-icon name="options-outline"></ion-icon>
+    <ion-icon name="grid-outline"></ion-icon>
     <ion-label>لوحة المراقبة</ion-label>
   </ion-tab-button>
+
   <ion-tab-button routerLink="/reports">
-    <ion-icon name="document-text-outline"></ion-icon>
+    <ion-icon name="bar-chart-outline"></ion-icon>
     <ion-label>التقارير</ion-label>
   </ion-tab-button>
+
   <ion-tab-button routerLink="/contact">
-    <ion-icon name="chatbubble-outline"></ion-icon>
+    <ion-icon name="call-outline"></ion-icon>
     <ion-label>تواصل</ion-label>
   </ion-tab-button>
+
 </ion-tab-bar>

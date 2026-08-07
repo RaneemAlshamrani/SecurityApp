@@ -4,15 +4,34 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RegistrationService } from '../../services/registration.service';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline,arrowForwardOutline, qrCodeOutline } from 'ionicons/icons';
 
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-  IonItem, IonInput, IonTextarea, IonButton, IonCard, IonCardContent,
-  IonTabBar, IonTabButton, IonIcon, IonLabel
-} from '@ionic/angular/standalone';
+  arrowBackOutline,
+  arrowForwardOutline,
+  gridOutline,
+  barChartOutline,
+  callOutline
+} from 'ionicons/icons';
 
-import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonItem,
+  IonInput,
+  IonTextarea,
+  IonButton,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonNote
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-register-employee',
@@ -20,10 +39,27 @@ import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
   styleUrls: ['./register-employee.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule, RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonItem, IonInput, IonTextarea, IonButton, IonCard, IonCardContent,
-    IonTabBar, IonTabButton, IonIcon, IonLabel
+    CommonModule,
+    FormsModule,
+    RouterLink,
+
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonItem,
+    IonInput,
+    IonTextarea,
+    IonButton,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel,
+    IonSelect,
+    IonSelectOption,
+    IonNote
   ]
 })
 export class RegisterEmployeePage {
@@ -33,41 +69,56 @@ export class RegisterEmployeePage {
   department = '';
   notes = '';
 
+  submitted = false;
+
   constructor(
     private router: Router,
     private registrationService: RegistrationService
   ) {
-    addIcons({ arrowBackOutline, arrowForwardOutline ,qrCodeOutline });
+
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline,
+      gridOutline,
+      barChartOutline,
+      callOutline
+    });
+
   }
 
-  async scanBarcode() {
-    try {
-      const support = await BarcodeScanner.isSupported();
-      if (!support.supported) { alert('الجهاز لا يدعم الباركود'); return; }
-      const permission = await BarcodeScanner.requestPermissions();
-      if (permission.camera !== 'granted') { alert('يرجى السماح باستخدام الكاميرا'); return; }
-      const result = await BarcodeScanner.scan();
-      if (result.barcodes.length > 0) {
-        this.employeeId = result.barcodes[0].displayValue ?? '';
-      }
-    } catch (error) {
-      console.error(error);
-      alert('تعذر قراءة الباركود');
-    }
+  isEmployeeIdValid(): boolean {
+    return /^[0-9]+$/.test(this.employeeId);
   }
 
-  saveEmployee() {
-    if (!this.employeeId.trim() || !this.employeeName.trim() || !this.department.trim()) {
-      alert('الرجاء تعبئة جميع الحقول المطلوبة');
+  isEmployeeNameValid(): boolean {
+    return !/[0-9]/.test(this.employeeName);
+  }
+
+  saveEmployee(): void {
+
+    this.submitted = true;
+
+    if (
+      !this.employeeId.trim() ||
+      !this.isEmployeeIdValid() ||
+      !this.employeeName.trim() ||
+      !this.isEmployeeNameValid() ||
+      !this.department
+    ) {
       return;
     }
+
     this.registrationService.addEmployee({
       employeeId: this.employeeId,
       employeeName: this.employeeName,
       department: this.department,
       notes: this.notes
     });
+
+    this.submitted = false;
+
     this.router.navigateByUrl('/success');
+
   }
 
 }
