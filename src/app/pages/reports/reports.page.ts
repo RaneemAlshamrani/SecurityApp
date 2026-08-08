@@ -22,6 +22,9 @@ export class ReportsPage {
   fromDate = '2026-07-24';
   toDate = '2026-07-27';
 
+  // رسالة خطأ التاريخ
+  dateError = '';
+
   selectedCategories: string[] = [
     'employees',
     'visitors',
@@ -65,17 +68,34 @@ export class ReportsPage {
   }
 
   showReport(): void {
-  if (this.selectedCategories.length === 0) {
-    return;
-  }
 
-  this.router.navigate(['/report-table'], {
-    queryParams: {
-      categories: this.selectedCategories.join(','),
-      fromDate: this.fromDate,
-      toDate: this.toDate
+    // إعادة ضبط رسالة الخطأ
+    this.dateError = '';
+
+    // التحقق من صحة التاريخ
+    if (this.fromDate && this.toDate) {
+      const startDate = new Date(this.fromDate);
+      const endDate = new Date(this.toDate);
+
+      if (startDate > endDate) {
+        this.dateError =
+          'تاريخ البداية يجب أن يكون قبل تاريخ النهاية أو مساويًا له.';
+        return;
+      }
     }
-  });
 
- }
+    // التحقق من اختيار الفئات
+    if (this.selectedCategories.length === 0) {
+      return;
+    }
+
+    // الانتقال إلى صفحة التقرير
+    this.router.navigate(['/report-table'], {
+      queryParams: {
+        categories: this.selectedCategories.join(','),
+        fromDate: this.fromDate,
+        toDate: this.toDate
+      }
+    });
+  }
 }

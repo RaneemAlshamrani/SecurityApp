@@ -21,7 +21,7 @@ import { RegistrationService } from '../../services/registration.service';
   ]
 })
 export class ReportTablePage {
-
+  currentDate = new Date().toISOString();
   searchTerm = '';
 
   selectedCategories: string[] = [
@@ -39,6 +39,10 @@ export class ReportTablePage {
   trainees: any[] = [];
   companions: any[] = [];
 
+  issuerName = 'موظف النظام (قسم الأمن)';
+  issuerId = 'EMP-9082';
+  issueDate = new Date().toLocaleString('ar-SA');
+
   constructor(
     private registrationService: RegistrationService,
     private activatedRoute: ActivatedRoute
@@ -47,32 +51,33 @@ export class ReportTablePage {
   ionViewWillEnter(): void {
     this.loadSelectedCategories();
     this.loadRegistrationData();
+    this.issueDate = new Date().toLocaleString('ar-SA');
   }
 
   private loadSelectedCategories(): void {
-  const categories =
-    this.activatedRoute.snapshot.queryParamMap.get('categories');
+    const categories =
+      this.activatedRoute.snapshot.queryParamMap.get('categories');
 
-  const fromDate =
-    this.activatedRoute.snapshot.queryParamMap.get('fromDate');
+    const fromDate =
+      this.activatedRoute.snapshot.queryParamMap.get('fromDate');
 
-  const toDate =
-    this.activatedRoute.snapshot.queryParamMap.get('toDate');
+    const toDate =
+      this.activatedRoute.snapshot.queryParamMap.get('toDate');
 
-  if (categories) {
-    this.selectedCategories = categories
-      .split(',')
-      .filter(category => category.trim().length > 0);
+    if (categories) {
+      this.selectedCategories = categories
+        .split(',')
+        .filter(category => category.trim().length > 0);
+    }
+
+    if (fromDate) {
+      this.fromDate = fromDate;
+    }
+
+    if (toDate) {
+      this.toDate = toDate;
+    }
   }
-
-  if (fromDate) {
-    this.fromDate = fromDate;
-  }
-
-  if (toDate) {
-    this.toDate = toDate;
-  }
-}
 
   private loadRegistrationData(): void {
     this.employees =
@@ -93,34 +98,34 @@ export class ReportTablePage {
   }
 
   private filterRows(rows: any[]): any[] {
-  const term = this.searchTerm.trim().toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
 
-  return rows.filter(row => {
-    const rowDate = new Date(row.time);
+    return rows.filter(row => {
+      const rowDate = new Date(row.time);
 
-    let matchesDate = true;
+      let matchesDate = true;
 
-    if (!Number.isNaN(rowDate.getTime())) {
-      if (this.fromDate) {
-        const startDate = new Date(this.fromDate + 'T00:00:00');
-        matchesDate = matchesDate && rowDate >= startDate;
+      if (!Number.isNaN(rowDate.getTime())) {
+        if (this.fromDate) {
+          const startDate = new Date(this.fromDate + 'T00:00:00');
+          matchesDate = matchesDate && rowDate >= startDate;
+        }
+
+        if (this.toDate) {
+          const endDate = new Date(this.toDate + 'T23:59:59.999');
+          matchesDate = matchesDate && rowDate <= endDate;
+        }
       }
 
-      if (this.toDate) {
-        const endDate = new Date(this.toDate + 'T23:59:59.999');
-        matchesDate = matchesDate && rowDate <= endDate;
-      }
-    }
+      const matchesSearch =
+        !term ||
+        JSON.stringify(row)
+          .toLowerCase()
+          .includes(term);
 
-    const matchesSearch =
-      !term ||
-      JSON.stringify(row)
-        .toLowerCase()
-        .includes(term);
-
-    return matchesDate && matchesSearch;
-  });
-}
+      return matchesDate && matchesSearch;
+    });
+  }
 
   get filteredEmployees(): any[] {
     return this.filterRows(this.employees);
@@ -137,22 +142,22 @@ export class ReportTablePage {
   get filteredCompanions(): any[] {
     return this.filterRows(this.companions);
   }
+
   get hasAnyData(): boolean {
-  return (
-    (this.isSelected('employees') &&
-      this.filteredEmployees.length > 0) ||
+    return (
+      (this.isSelected('employees') &&
+        this.filteredEmployees.length > 0) ||
 
-    (this.isSelected('visitors') &&
-      this.filteredVisitors.length > 0) ||
+      (this.isSelected('visitors') &&
+        this.filteredVisitors.length > 0) ||
 
-    (this.isSelected('trainees') &&
-      this.filteredTrainees.length > 0) ||
+      (this.isSelected('trainees') &&
+        this.filteredTrainees.length > 0) ||
 
-    (this.isSelected('companions') &&
-      this.filteredCompanions.length > 0)
-  );
+      (this.isSelected('companions') &&
+        this.filteredCompanions.length > 0)
+    );
   }
-
 
   formatDate(value: unknown): string {
     if (!value) {
@@ -173,44 +178,11 @@ export class ReportTablePage {
   }
 
   exportReport(): void {
-    const reportData: Record<string, any[]> = {};
-
-    if (this.isSelected('employees')) {
-      reportData['employees'] = this.filteredEmployees;
-    }
-
-    if (this.isSelected('visitors')) {
-      reportData['visitors'] = this.filteredVisitors;
-    }
-
-    if (this.isSelected('trainees')) {
-      reportData['trainees'] = this.filteredTrainees;
-    }
-
-    if (this.isSelected('companions')) {
-      reportData['companions'] = this.filteredCompanions;
-    }
-
-    const fileContent = JSON.stringify(
-      reportData,
-      null,
-      2
-    );
-
-    const fileBlob = new Blob(
-      [fileContent],
-      { type: 'application/json;charset=utf-8' }
-    );
-
-    const fileUrl = URL.createObjectURL(fileBlob);
-    const downloadLink = document.createElement('a');
-
-    downloadLink.href = fileUrl;
-    downloadLink.download =
-      `registration-report-${new Date().getTime()}.json`;
-
-    downloadLink.click();
-
-    URL.revokeObjectURL(fileUrl);
+    this.issueDate = new Date().toLocaleString('ar-SA');
+    
+  
+    setTimeout(() => {
+      window.print();
+    }, 300);
   }
 }

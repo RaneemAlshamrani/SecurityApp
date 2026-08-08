@@ -28,89 +28,113 @@
 
       <ion-card-content>
 
+        <!-- التاريخ -->
         <div class="date-range-section">
 
-  <div class="date-field">
-    <span class="date-title">من</span>
+          <div class="date-field">
+            <span class="date-title">من</span>
 
-    <ion-datetime-button datetime="fromDatePicker">
-    </ion-datetime-button>
-  </div>
+            <ion-datetime-button datetime="fromDatePicker">
+            </ion-datetime-button>
+          </div>
 
-  <div class="date-field">
-    <span class="date-title">إلى</span>
+          <div class="date-field">
+            <span class="date-title">إلى</span>
 
-    <ion-datetime-button datetime="toDatePicker">
-    </ion-datetime-button>
-  </div>
+            <ion-datetime-button datetime="toDatePicker">
+            </ion-datetime-button>
+          </div>
 
-</div>
+        </div>
 
-<!-- تقويم تاريخ البداية -->
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime
-      id="fromDatePicker"
-      presentation="date"
-      locale="ar-SA"
-      first-day-of-week="0"
-      [(ngModel)]="fromDate"
-      [max]="toDate"
-      show-default-buttons="true"
-      done-text="تم"
-      cancel-text="إلغاء">
-    </ion-datetime>
-  </ng-template>
-</ion-modal>
+        <!-- رسالة خطأ التاريخ -->
+        <ion-note
+          *ngIf="dateError"
+          class="validation-message">
+          {{ dateError }}
+        </ion-note>
 
-<!-- تقويم تاريخ النهاية -->
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime
-      id="toDatePicker"
-      presentation="date"
-      locale="ar-SA"
-      first-day-of-week="0"
-      [(ngModel)]="toDate"
-      [min]="fromDate"
-      show-default-buttons="true"
-      done-text="تم"
-      cancel-text="إلغاء">
-    </ion-datetime>
-  </ng-template>
-</ion-modal>
+        <!-- تقويم تاريخ البداية -->
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              id="fromDatePicker"
+              presentation="date"
+              locale="ar-SA"
+              first-day-of-week="0"
+              [(ngModel)]="fromDate"
+              [max]="toDate"
+              show-default-buttons="true"
+              done-text="تم"
+              cancel-text="إلغاء">
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
 
-       <div class="category-field">
+        <!-- تقويم تاريخ النهاية -->
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              id="toDatePicker"
+              presentation="date"
+              locale="ar-SA"
+              first-day-of-week="0"
+              [(ngModel)]="toDate"
+              [min]="fromDate"
+              show-default-buttons="true"
+              done-text="تم"
+              cancel-text="إلغاء">
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
 
-  <div class="category-title">
-    الفئات
-  </div>
+        <!-- الفئات -->
+        <div class="category-field">
 
-  <ion-item class="custom-select" lines="none">
-    <ion-select
-      multiple="true"
-      interface="popover"
-      [(ngModel)]="selectedCategories"
-      placeholder="حدد الفئات">
-      <ion-select-option value="employees">الموظفون</ion-select-option>
-      <ion-select-option value="visitors">المراجعون</ion-select-option>
-      <ion-select-option value="trainees">المتدربون</ion-select-option>
-      <ion-select-option value="companions">المرافقون</ion-select-option>
-    </ion-select>
-  </ion-item>
+          <div class="category-title">
+            الفئات
+          </div>
 
-</div>
+          <ion-item class="custom-select" lines="none">
+            <ion-select
+              multiple="true"
+              interface="popover"
+              [(ngModel)]="selectedCategories"
+              placeholder="حدد الفئات">
+              <ion-select-option value="employees">
+                الموظفون
+              </ion-select-option>
+
+              <ion-select-option value="visitors">
+                المراجعون
+              </ion-select-option>
+
+              <ion-select-option value="trainees">
+                المتدربون
+              </ion-select-option>
+
+              <ion-select-option value="companions">
+                المرافقون
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+        </div>
+
+        <!-- رسالة الفئات -->
         <ion-note
           *ngIf="selectedCategories.length === 0"
           class="validation-message">
           يجب اختيار فئة واحدة على الأقل.
         </ion-note>
 
+        <!-- زر التقرير -->
         <ion-button
           expand="block"
           class="show-report-button"
           [disabled]="selectedCategories.length === 0"
           (click)="showReport()">
+
           <ion-icon
             name="document-text-outline"
             slot="start">
