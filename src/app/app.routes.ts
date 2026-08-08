@@ -23,34 +23,7 @@ export const routes: Routes = [
         (m) => m.EntryMethodPage
       ),
   },
-  {
-    path: 'register-employee',
-    loadComponent: () =>
-      import('./pages/register-employee/register-employee.page').then(
-        (m) => m.RegisterEmployeePage
-      ),
-  },
-  {
-    path: 'register-visitor',
-    loadComponent: () =>
-      import('./pages/register-visitor/register-visitor.page').then(
-        (m) => m.RegisterVisitorPage
-      ),
-  },
-  {
-    path: 'register-trainee',
-    loadComponent: () =>
-      import('./pages/register-trainee/register-trainee.page').then(
-        (m) => m.RegisterTraineePage
-      ),
-  },
-  {
-    path: 'register-companion',
-    loadComponent: () =>
-      import('./pages/register-companion/register-companion.page').then(
-        (m) => m.RegisterCompanionPage
-      ),
-  },
+ 
   {
     path: 'reports',
     loadComponent: () =>

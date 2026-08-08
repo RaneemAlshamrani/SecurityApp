@@ -1,5 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="report-toolbar">
+
     <ion-buttons slot="start">
       <ion-back-button
         defaultHref="/reports"
@@ -12,36 +13,133 @@
       <h2>التقرير الشامل</h2>
       <p>عرض الجداول المحددة في تقرير واحد</p>
     </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="report-content">
-  <main class="report-page" dir="rtl">
+<ion-content
+  [fullscreen]="true"
+  class="report-content">
 
-   <!-- الترويسة الرسمية (الشعار يمين والعنوان يسار) -->
-    <table class="print-header" style="display: none; width: 100%; border-collapse: collapse; margin-bottom: 20px; border-bottom: 2px solid #0077b6; padding-bottom: 10px; direction: rtl;">
+  <main
+    class="report-page"
+    dir="rtl">
+
+
+    <!-- الترويسة الرسمية -->
+
+    <table
+      class="print-header"
+      style="
+        display: none;
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #0077b6;
+        padding-bottom: 10px;
+        direction: rtl;
+      ">
+
       <tr>
-        <td style="text-align: right; vertical-align: middle; width: 110px; padding-bottom: 10px;">
-          <img src="assets/images/amana-logo.png" alt="شعار أمانة جدة" style="max-height: 55px; filter: brightness(0) saturate(100%) invert(25%) sepia(85%) saturate(2400%) hue-rotate(185deg);">
+
+        <td
+          style="
+            text-align: right;
+            vertical-align: middle;
+            width: 110px;
+            padding-bottom: 10px;
+          ">
+
+          <img
+            src="assets/images/amana-logo.png"
+            alt="شعار أمانة جدة"
+            style="
+              max-height: 55px;
+              filter:
+                brightness(0)
+                saturate(100%)
+                invert(25%)
+                sepia(85%)
+                saturate(2400%)
+                hue-rotate(185deg);
+            ">
+
         </td>
 
-        <td style="text-align: right; vertical-align: middle; padding-bottom: 10px; padding-right: 15px;">
-          <h2 style="color: #0077b6; margin: 0; font-size: 20px; font-weight: 700;">تطبيق الأمن (SecurityApp)</h2>
-          <p style="color: #667384; font-size: 13px; margin: 4px 0;">نظام تسجيل ومراقبة الموظفين والمراجعين</p>
-          <div style="font-size: 12px; color: #1f2d3d; margin-top: 4px;">
-            <span><strong>الموظف المُصدر:</strong> موظف النظام</span> | 
-            <span><strong>رقم البوابة:</strong> 3</span>
+
+        <td
+          style="
+            text-align: right;
+            vertical-align: middle;
+            padding-bottom: 10px;
+            padding-right: 15px;
+          ">
+
+          <h2
+            style="
+              color: #0077b6;
+              margin: 0;
+              font-size: 20px;
+              font-weight: 700;
+            ">
+            تطبيق الأمن (SecurityApp)
+          </h2>
+
+          <p
+            style="
+              color: #667384;
+              font-size: 13px;
+              margin: 4px 0;
+            ">
+            نظام تسجيل ومراقبة الموظفين والمراجعين
+          </p>
+
+          <div
+            style="
+              font-size: 12px;
+              color: #1f2d3d;
+              margin-top: 4px;
+            ">
+
+            <span>
+              <strong>الموظف المُصدر:</strong>
+              موظف النظام
+            </span>
+
+            |
+
+            <span>
+              <strong>رقم البوابة:</strong>
+              3
+            </span>
+
           </div>
+
         </td>
+
       </tr>
+
     </table>
 
+
+    <!-- عنوان التقرير -->
+
     <section class="report-heading">
-      <ion-icon name="document-text-outline"></ion-icon>
+
+      <ion-icon
+        name="document-text-outline">
+      </ion-icon>
+
       <div>
-        <h1>تقرير عمليات التسجيل</h1>
+        <h1>
+          تقرير عمليات التسجيل
+        </h1>
       </div>
+
     </section>
+
+
+    <!-- البحث -->
 
     <ion-searchbar
       class="report-search"
@@ -50,242 +148,634 @@
       [debounce]="250">
     </ion-searchbar>
 
+
+    <!-- لا توجد بيانات -->
+
     <ion-card
       class="empty-state-card"
       *ngIf="!hasAnyData">
-      <ion-card-content class="empty-state">
-        <ion-icon name="document-outline"></ion-icon>
-        <h3>لا توجد بيانات</h3>
-        <p>لا توجد سجلات ضمن الفترة والفئات المحددة.</p>
+
+      <ion-card-content
+        class="empty-state">
+
+        <ion-icon
+          name="document-outline">
+        </ion-icon>
+
+        <h3>
+          لا توجد بيانات
+        </h3>
+
+        <p>
+          لا توجد سجلات ضمن الفترة والفئات المحددة.
+        </p>
+
         <ion-button
           fill="outline"
           routerLink="/reports">
+
           تغيير خيارات التقرير
+
         </ion-button>
+
       </ion-card-content>
+
     </ion-card>
 
+
+    <!-- ================================================= -->
     <!-- جدول الموظفين -->
+    <!-- ================================================= -->
+
     <ion-card
       class="table-card"
       *ngIf="isSelected('employees')">
+
       <ion-card-header>
+
         <ion-card-title>
-          <ion-icon name="people-outline"></ion-icon>
+
+          <ion-icon
+            name="people-outline">
+          </ion-icon>
+
           جدول الموظفين
+
         </ion-card-title>
+
         <ion-card-subtitle>
-          عدد السجلات: {{ filteredEmployees.length }}
+          عدد السجلات:
+          {{ filteredEmployees.length }}
         </ion-card-subtitle>
+
       </ion-card-header>
 
+
       <ion-card-content>
+
         <div class="report-container">
+
           <div class="table-scroll">
+
             <table class="report-table">
+
               <thead>
+
                 <tr>
-                  <th>الرقم الوظيفي</th>
-                  <th>اسم الموظف</th>
-                  <th>الإدارة</th>
-                  <th>وقت التسجيل</th>
+
+                  <th>
+                    الرقم الوظيفي
+                  </th>
+
+                  <th>
+                    اسم الموظف
+                  </th>
+
+                  <th>
+                    الإدارة
+                  </th>
+
+                  <th>
+                    سبب عدم استخدام البطاقة
+                  </th>
+
+                  <th>
+                    وقت التسجيل
+                  </th>
+
                 </tr>
+
               </thead>
+
+
               <tbody>
-                <tr *ngFor="let row of filteredEmployees">
-                  <td>{{ row.employeeId || '-' }}</td>
-                  <td>{{ row.employeeName || '-' }}</td>
-                  <td>{{ row.department || '-' }}</td>
-                  <td>{{ formatDate(row.time) }}</td>
-                </tr>
-                <tr *ngIf="filteredEmployees.length === 0">
-                  <td colspan="4" class="empty-cell">
-                    لا توجد بيانات موظفين مطابقة.
+
+                <tr
+                  *ngFor="
+                    let row
+                    of filteredEmployees
+                  ">
+
+                  <td>
+                    {{ row.employeeId || '-' }}
                   </td>
+
+                  <td>
+                    {{ row.employeeName || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.department || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.cardReason || '-' }}
+                  </td>
+
+                  <td>
+                    {{ formatDate(row.time) }}
+                  </td>
+
                 </tr>
+
+
+                <tr
+                  *ngIf="
+                    filteredEmployees.length === 0
+                  ">
+
+                  <td
+                    colspan="5"
+                    class="empty-cell">
+
+                    لا توجد بيانات موظفين مطابقة.
+
+                  </td>
+
+                </tr>
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
+
       </ion-card-content>
+
     </ion-card>
 
+
+    <!-- ================================================= -->
     <!-- جدول المراجعين -->
+    <!-- ================================================= -->
+
     <ion-card
       class="table-card"
       *ngIf="isSelected('visitors')">
+
       <ion-card-header>
+
         <ion-card-title>
-          <ion-icon name="person-outline"></ion-icon>
+
+          <ion-icon
+            name="person-outline">
+          </ion-icon>
+
           جدول المراجعين
+
         </ion-card-title>
+
         <ion-card-subtitle>
-          عدد السجلات: {{ filteredVisitors.length }}
+          عدد السجلات:
+          {{ filteredVisitors.length }}
         </ion-card-subtitle>
+
       </ion-card-header>
 
+
       <ion-card-content>
+
         <div class="report-container">
+
           <div class="table-scroll">
+
             <table class="report-table">
+
               <thead>
+
                 <tr>
-                  <th>الاسم</th>
-                  <th>رقم الهوية</th>
-                  <th>الموظف المزار</th>
-                  <th>سبب الزيارة</th>
-                  <th>وقت التسجيل</th>
+
+                  <th>
+                    الاسم
+                  </th>
+
+                  <th>
+                    رقم الهوية
+                  </th>
+
+                  <th>
+                    رقم الجوال
+                  </th>
+
+                  <th>
+                    رقم المراجعة
+                  </th>
+
+                  <th>
+                    الإدارة
+                  </th>
+
+                  <th>
+                    وقت التسجيل
+                  </th>
+
                 </tr>
+
               </thead>
+
+
               <tbody>
-                <tr *ngFor="let row of filteredVisitors">
-                  <td>{{ row.visitorName || row.name || '-' }}</td>
-                  <td>{{ row.visitorId || row.nationalId || '-' }}</td>
-                  <td>{{ row.employeeName || '-' }}</td>
-                  <td>{{ row.visitReason || '-' }}</td>
-                  <td>{{ formatDate(row.time) }}</td>
-                </tr>
-                <tr *ngIf="filteredVisitors.length === 0">
-                  <td colspan="5" class="empty-cell">
-                    لا توجد بيانات مراجعين مطابقة.
+
+                <tr
+                  *ngFor="
+                    let row
+                    of filteredVisitors
+                  ">
+
+                  <td>
+                    {{ row.visitorName || row.name || '-' }}
                   </td>
+
+                  <td>
+                    {{ row.visitorId || row.nationalId || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.visitorPhone || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.visitNumber || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.department || '-' }}
+                  </td>
+
+                  <td>
+                    {{ formatDate(row.time) }}
+                  </td>
+
                 </tr>
+
+
+                <tr
+                  *ngIf="
+                    filteredVisitors.length === 0
+                  ">
+
+                  <td
+                    colspan="6"
+                    class="empty-cell">
+
+                    لا توجد بيانات مراجعين مطابقة.
+
+                  </td>
+
+                </tr>
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
+
       </ion-card-content>
+
     </ion-card>
 
+
+    <!-- ================================================= -->
     <!-- جدول المتدربين -->
+    <!-- ================================================= -->
+
     <ion-card
       class="table-card"
       *ngIf="isSelected('trainees')">
+
       <ion-card-header>
+
         <ion-card-title>
-          <ion-icon name="school-outline"></ion-icon>
+
+          <ion-icon
+            name="school-outline">
+          </ion-icon>
+
           جدول المتدربين
+
         </ion-card-title>
+
         <ion-card-subtitle>
-          عدد السجلات: {{ filteredTrainees.length }}
+          عدد السجلات:
+          {{ filteredTrainees.length }}
         </ion-card-subtitle>
+
       </ion-card-header>
 
+
       <ion-card-content>
+
         <div class="report-container">
+
           <div class="table-scroll">
+
             <table class="report-table">
+
               <thead>
+
                 <tr>
-                  <th>الاسم</th>
-                  <th>رقم الهوية</th>
-                  <th>الجهة التعليمية</th>
-                  <th>الإدارة</th>
-                  <th>وقت التسجيل</th>
+
+                  <th>
+                    الاسم
+                  </th>
+
+                  <th>
+                    رقم الهوية
+                  </th>
+
+                  <th>
+                    الإدارة
+                  </th>
+
+                  <th>
+                    وقت التسجيل
+                  </th>
+
                 </tr>
+
               </thead>
+
+
               <tbody>
-                <tr *ngFor="let row of filteredTrainees">
-                  <td>{{ row.traineeName || row.name || '-' }}</td>
-                  <td>{{ row.nationalId || '-' }}</td>
-                  <td>{{ row.education || '-' }}</td>
-                  <td>{{ row.department || '-' }}</td>
-                  <td>{{ formatDate(row.time) }}</td>
-                </tr>
-                <tr *ngIf="filteredTrainees.length === 0">
-                  <td colspan="5" class="empty-cell">
-                    لا توجد بيانات متدربين مطابقة.
+
+                <tr
+                  *ngFor="
+                    let row
+                    of filteredTrainees
+                  ">
+
+                  <td>
+                    {{ row.traineeName || row.name || '-' }}
                   </td>
+
+                  <td>
+                    {{ row.nationalId || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.department || '-' }}
+                  </td>
+
+                  <td>
+                    {{ formatDate(row.time) }}
+                  </td>
+
                 </tr>
+
+
+                <tr
+                  *ngIf="
+                    filteredTrainees.length === 0
+                  ">
+
+                  <td
+                    colspan="4"
+                    class="empty-cell">
+
+                    لا توجد بيانات متدربين مطابقة.
+
+                  </td>
+
+                </tr>
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
+
       </ion-card-content>
+
     </ion-card>
 
+
+    <!-- ================================================= -->
     <!-- جدول المرافقين -->
+    <!-- ================================================= -->
+
     <ion-card
       class="table-card"
       *ngIf="isSelected('companions')">
+
       <ion-card-header>
+
         <ion-card-title>
-          <ion-icon name="person-add-outline"></ion-icon>
+
+          <ion-icon
+            name="person-add-outline">
+          </ion-icon>
+
           جدول المرافقين
+
         </ion-card-title>
+
         <ion-card-subtitle>
-          عدد السجلات: {{ filteredCompanions.length }}
+          عدد السجلات:
+          {{ filteredCompanions.length }}
         </ion-card-subtitle>
+
       </ion-card-header>
 
+
       <ion-card-content>
+
         <div class="report-container">
+
           <div class="table-scroll">
+
             <table class="report-table">
+
               <thead>
+
                 <tr>
-                  <th>الاسم</th>
-                  <th>رقم الهوية</th>
-                  <th>نوع المرافق</th>
-                  <th>الإدارة</th>
-                  <th>وقت التسجيل</th>
+
+                  <th>
+                    الاسم
+                  </th>
+
+                  <th>
+                    رقم الهوية
+                  </th>
+
+                  <th>
+                    رقم المراجعة
+                  </th>
+
+                  <th>
+                    نوع المرافق
+                  </th>
+
+                  <th>
+                    الإدارة
+                  </th>
+
+                  <th>
+                    وقت التسجيل
+                  </th>
+
                 </tr>
+
               </thead>
+
+
               <tbody>
-                <tr *ngFor="let row of filteredCompanions">
-                  <td>{{ row.name || '-' }}</td>
-                  <td>{{ row.nationalId || '-' }}</td>
-                  <td>{{ row.companionType || '-' }}</td>
-                  <td>{{ row.department || '-' }}</td>
-                  <td>{{ formatDate(row.time) }}</td>
-                </tr>
-                <tr *ngIf="filteredCompanions.length === 0">
-                  <td colspan="5" class="empty-cell">
-                    لا توجد بيانات مرافقين مطابقة.
+
+                <tr
+                  *ngFor="
+                    let row
+                    of filteredCompanions
+                  ">
+
+                  <td>
+                    {{ row.name || '-' }}
                   </td>
+
+                  <td>
+                    {{ row.nationalId || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.visitNumber || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.companionType || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.department || '-' }}
+                  </td>
+
+                  <td>
+                    {{ formatDate(row.time) }}
+                  </td>
+
                 </tr>
+
+
+                <tr
+                  *ngIf="
+                    filteredCompanions.length === 0
+                  ">
+
+                  <td
+                    colspan="6"
+                    class="empty-cell">
+
+                    لا توجد بيانات مرافقين مطابقة.
+
+                  </td>
+
+                </tr>
+
               </tbody>
+
             </table>
+
           </div>
+
         </div>
+
       </ion-card-content>
+
     </ion-card>
 
-    <div class="report-actions" *ngIf="hasAnyData">
+
+    <!-- ================================================= -->
+    <!-- أزرار التقرير -->
+    <!-- ================================================= -->
+
+    <div
+      class="report-actions"
+      *ngIf="hasAnyData">
+
       <ion-button
         expand="block"
         fill="outline"
         class="export-button"
         (click)="exportReport()">
-        <ion-icon name="download-outline" slot="start"></ion-icon>
+
+        <ion-icon
+          name="download-outline"
+          slot="start">
+        </ion-icon>
+
         تصدير التقرير
+
       </ion-button>
+
 
       <ion-button
         expand="block"
         class="print-button"
         (click)="printReport()">
-        <ion-icon name="print-outline" slot="start"></ion-icon>
+
+        <ion-icon
+          name="print-outline"
+          slot="start">
+        </ion-icon>
+
         طباعة التقرير
+
       </ion-button>
+
     </div>
 
   </main>
+
 </ion-content>
 
-<ion-tab-bar slot="bottom" class="bottom-tabs no-print">
-  <ion-tab-button routerLink="/home">
-    <ion-icon name="options-outline"></ion-icon>
-    <ion-label>لوحة المراقبة</ion-label>
+
+<ion-tab-bar
+  slot="bottom"
+  class="bottom-tabs no-print">
+
+  <ion-tab-button
+    routerLink="/home">
+
+    <ion-icon
+      name="options-outline">
+    </ion-icon>
+
+    <ion-label>
+      لوحة المراقبة
+    </ion-label>
+
   </ion-tab-button>
 
-  <ion-tab-button routerLink="/reports" selected="true">
-    <ion-icon name="document-text-outline"></ion-icon>
-    <ion-label>التقارير</ion-label>
+
+  <ion-tab-button
+    routerLink="/reports"
+    selected="true">
+
+    <ion-icon
+      name="document-text-outline">
+    </ion-icon>
+
+    <ion-label>
+      التقارير
+    </ion-label>
+
   </ion-tab-button>
 
-  <ion-tab-button routerLink="/contact">
-    <ion-icon name="chatbubble-outline"></ion-icon>
-    <ion-label>تواصل</ion-label>
+
+  <ion-tab-button
+    routerLink="/contact">
+
+    <ion-icon
+      name="chatbubble-outline">
+    </ion-icon>
+
+    <ion-label>
+      تواصل
+    </ion-label>
+
   </ion-tab-button>
+
 </ion-tab-bar>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -27,7 +27,11 @@ import {
     IonIcon
   ],
 })
-export class HomePage {
+export class HomePage implements OnDestroy {
+
+  currentDateTime = '';
+
+  private dateTimeInterval: ReturnType<typeof setInterval>;
 
   constructor(private router: Router) {
 
@@ -38,10 +42,76 @@ export class HomePage {
       briefcaseOutline
     });
 
+    // عرض التاريخ والوقت مباشرة عند فتح الصفحة
+    this.updateDateTime();
+
+    // تحديث الوقت تلقائياً كل ثانية
+    this.dateTimeInterval = setInterval(() => {
+      this.updateDateTime();
+    }, 1000);
+
   }
 
+
+  /* =========================
+     تحديث التاريخ والوقت
+     ========================= */
+
+  updateDateTime(): void {
+
+    const now = new Date();
+
+    const date = now.toLocaleDateString(
+      'ar-SA-u-ca-gregory',
+      {
+        timeZone: 'Asia/Riyadh',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }
+    );
+
+    const time = now.toLocaleTimeString(
+      'ar-SA',
+      {
+        timeZone: 'Asia/Riyadh',
+        hour: '2-digit',
+        minute: '2-digit',
+
+        hour12: true
+      }
+    );
+
+    this.currentDateTime =
+      `${date} - ${time}`;
+
+  }
+
+
+  /* =========================
+     الانتقال لصفحة التسجيل
+     ========================= */
+
   goToEntryMethod(): void {
-    this.router.navigateByUrl('/entry-method');
+
+    this.router.navigateByUrl(
+      '/entry-method'
+    );
+
+  }
+
+
+  /* =========================
+     إيقاف المؤقت عند إغلاق الصفحة
+     ========================= */
+
+  ngOnDestroy(): void {
+
+    clearInterval(
+      this.dateTimeInterval
+    );
+
   }
 
 }

@@ -2,21 +2,41 @@
 
   <!-- rectangular pure css header -->
   <div class="header-banner">
+
     <div class="user-info">
-      <p class="welcome-label">أهلاً بك</p>
-      <h1 class="user-name">أحمد محمد</h1>
-      <p class="gate-info">بوابة رقم 3</p>
+
+      <p class="welcome-label">
+        أهلاً بك
+      </p>
+
+      <h1 class="user-name">
+        أحمد محمد
+      </h1>
+
+      <p class="gate-info">
+        بوابة رقم 3
+      </p>
+
     </div>
+
   </div>
 
-  <!-- sub-header centered gray date -->
+
+  <!-- التاريخ والوقت الحالي -->
+
   <div class="date-strip">
-    <span>الأربعاء 27 يوليو 2026 - 10:30 صباحاً</span>
+
+    <span>
+      {{ currentDateTime }}
+    </span>
+
   </div>
+
 
   <div class="page-container">
 
-    <!-- direct category navigation button -->
+    <!-- زر تسجيل جديد -->
+
     <ion-button
       expand="block"
       class="category-btn"
@@ -27,74 +47,167 @@
         slot="start">
       </ion-icon>
 
-      <span>اختر فئة الدخول</span>
+      <span>
+        عملية تسجيل جديدة
+      </span>
 
     </ion-button>
 
-    <!-- recent activity section -->
+
+    <!-- آخر العمليات -->
+
     <section class="recent-section">
 
       <div class="section-header">
+
         <ion-icon
           name="time-outline"
           class="section-icon">
         </ion-icon>
 
-        <h2>آخر العمليات</h2>
+        <h2>
+          آخر العمليات
+        </h2>
+
       </div>
 
-      <!-- activity item 1 -->
+
+      <!-- العملية الأولى -->
+
       <div class="activity-card">
 
         <div class="card-right">
 
           <div class="avatar-box">
-            <ion-icon name="person-outline"></ion-icon>
+
+            <ion-icon
+              name="person-outline">
+            </ion-icon>
+
           </div>
+
 
           <div class="details">
 
             <div class="type-row">
+
               <span class="status-dot"></span>
-              <span class="role-title">مراجع</span>
+
+              <span class="role-title">
+               دخول مراجع
+              </span>
+
             </div>
 
-            <span class="action-label">دخول</span>
+            <span class="person-name">
+              محمد خالد
+            </span>
 
           </div>
 
         </div>
 
+
         <div class="card-left">
-          <span class="timestamp">10:30 ص</span>
+
+          <span class="timestamp">
+            10:30 ص
+          </span>
+
         </div>
 
       </div>
 
-      <!-- activity item 2 -->
+
+      <!-- العملية الثانية -->
+
       <div class="activity-card">
 
         <div class="card-right">
 
           <div class="avatar-box">
-            <ion-icon name="briefcase-outline"></ion-icon>
+
+            <ion-icon
+              name="briefcase-outline">
+            </ion-icon>
+
           </div>
+
 
           <div class="details">
 
             <div class="type-row">
+
               <span class="status-dot"></span>
-              <span class="role-title">موظف</span>
+
+              <span class="role-title">
+                دخول موظف
+              </span>
+
             </div>
 
-            <span class="action-label">دخول</span>
+            <span class="person-name">
+              فيصل أحمد
+            </span>
 
           </div>
 
         </div>
 
+
         <div class="card-left">
-          <span class="timestamp">10:30 ص</span>
+
+          <span class="timestamp">
+            10:22 ص
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- العملية الثالثة -->
+
+      <div class="activity-card">
+
+        <div class="card-right">
+
+          <div class="avatar-box">
+
+            <ion-icon
+              name="person-outline">
+            </ion-icon>
+
+          </div>
+
+
+          <div class="details">
+
+            <div class="type-row">
+
+              <span class="status-dot"></span>
+
+              <span class="role-title">
+                دخول متدرب
+              </span>
+
+            </div>
+
+            <span class="person-name">
+              عبدالله سالم
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="card-left">
+
+          <span class="timestamp">
+            10:15 ص
+          </span>
+
         </div>
 
       </div>

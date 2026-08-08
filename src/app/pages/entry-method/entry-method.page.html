@@ -3,7 +3,6 @@
   <ion-toolbar>
 
     <ion-buttons slot="end">
-
       <ion-button
         fill="clear"
         (click)="goToPage('/home')">
@@ -14,20 +13,22 @@
         </ion-icon>
 
       </ion-button>
-
     </ion-buttons>
 
     <ion-title class="page-title">
-      طريقة التسجيل
+     عملية التسجيل
     </ion-title>
 
   </ion-toolbar>
 
 </ion-header>
 
+
 <ion-content [fullscreen]="true" class="page">
 
-  <!-- Barcode -->
+  <!-- ========================= -->
+  <!-- مسح الباركود -->
+  <!-- ========================= -->
 
   <ion-card
     class="barcode-card"
@@ -41,122 +42,880 @@
         class="barcode-icon">
       </ion-icon>
 
-      <h3>مسح الباركود</h3>
+      <ion-text class="card-title">
+        مسح الباركود
+      </ion-text>
 
-      <p>اضغط لفتح الكاميرا</p>
+      <ion-text class="card-description">
+        اضغط لفتح الكاميرا
+      </ion-text>
 
     </ion-card-content>
 
   </ion-card>
 
-  <!-- Manual -->
+
+  <!-- ========================= -->
+  <!-- التسجيل اليدوي -->
+  <!-- ========================= -->
 
   <ion-card
     class="manual-card"
     button="true"
-    (click)="showCategories = !showCategories">
+    (click)="toggleCategories()">
 
     <ion-card-content>
 
-      <div class="manual-header">
+      <ion-grid class="manual-grid">
 
-        <div class="manual-info">
+        <ion-row class="manual-row">
 
-          <ion-icon
-            name="create-outline"
-            class="manual-icon">
-          </ion-icon>
+          <ion-col class="manual-info">
 
-          <h3>التسجيل اليدوي</h3>
+            <ion-icon
+              name="create-outline"
+              class="manual-icon">
+            </ion-icon>
 
-          <p>اختر فئة الدخول</p>
+            <ion-text class="card-title">
+              التسجيل اليدوي
+            </ion-text>
 
-        </div>
+            <ion-text class="card-description">
+              اختر فئة الدخول
+            </ion-text>
 
-        <ion-icon
-          class="arrow-icon"
-          [name]="showCategories ? 'chevron-up-outline' : 'chevron-down-outline'">
-        </ion-icon>
+          </ion-col>
 
-      </div>
+          <ion-col
+            size="auto"
+            class="arrow-column">
+
+            <ion-icon
+              class="arrow-icon"
+              [name]="showCategories
+                ? 'chevron-up-outline'
+                : 'chevron-down-outline'">
+            </ion-icon>
+
+          </ion-col>
+
+        </ion-row>
+
+      </ion-grid>
 
     </ion-card-content>
 
   </ion-card>
 
+
+  <!-- ========================= -->
+  <!-- الفئات -->
+  <!-- ========================= -->
+
   @if (showCategories) {
 
-    <div class="category-list">
+    <ion-accordion-group
+      class="category-accordion"
+      [multiple]="false">
 
-      <ion-button
-        fill="clear"
-        expand="block"
-        [class.selected]="selectedCategory === 'employee'"
-        (click)="selectCategory('/register-employee','employee')">
 
-        <ion-icon
-          slot="start"
-          [name]="selectedCategory === 'employee'
-            ? 'radio-button-on'
-            : 'radio-button-off'">
-        </ion-icon>
+      <!-- ================================================= -->
+      <!-- الموظف -->
+      <!-- ================================================= -->
 
-        موظف
+      <ion-accordion value="employee">
 
-      </ion-button>
+        <ion-item
+          slot="header"
+          lines="none"
+          class="category-header">
 
-      <ion-button
-        fill="clear"
-        expand="block"
-        [class.selected]="selectedCategory === 'trainee'"
-        (click)="selectCategory('/register-trainee','trainee')">
+          <ion-label>موظف</ion-label>
 
-        <ion-icon
-          slot="start"
-          [name]="selectedCategory === 'trainee'
-            ? 'radio-button-on'
-            : 'radio-button-off'">
-        </ion-icon>
+        </ion-item>
 
-        متدرب
 
-      </ion-button>
+        <div slot="content" class="registration-section">
 
-      <ion-button
-        fill="clear"
-        expand="block"
-        [class.selected]="selectedCategory === 'visitor'"
-        (click)="selectCategory('/register-visitor','visitor')">
+          <ion-text class="form-title">
+            بيانات الموظف
+          </ion-text>
 
-        <ion-icon
-          slot="start"
-          [name]="selectedCategory === 'visitor'
-            ? 'radio-button-on'
-            : 'radio-button-off'">
-        </ion-icon>
 
-        مراجع
+          <!-- الرقم الوظيفي -->
 
-      </ion-button>
+          <div class="field-block">
 
-      <ion-button
-        fill="clear"
-        expand="block"
-        [class.selected]="selectedCategory === 'companion'"
-        (click)="selectCategory('/register-companion','companion')">
+            <ion-label class="field-label">
+              الرقم الوظيفي
+              <ion-text class="required">*</ion-text>
+            </ion-label>
 
-        <ion-icon
-          slot="start"
-          [name]="selectedCategory === 'companion'
-            ? 'radio-button-on'
-            : 'radio-button-off'">
-        </ion-icon>
+            <ion-item lines="none">
 
-        مرافق
+              <ion-input
+                placeholder="أدخل الرقم الوظيفي"
+                [(ngModel)]="employeeId">
+              </ion-input>
 
-      </ion-button>
+            </ion-item>
 
-    </div>
+            @if (submitted && !employeeId.trim()) {
+              <ion-note color="danger">
+                الرقم الوظيفي مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              employeeId &&
+              !isEmployeeIdValid()
+            ) {
+              <ion-note color="danger">
+                الرقم الوظيفي يجب أن يحتوي على أرقام فقط
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- اسم الموظف -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              اسم الموظف
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="أدخل اسم الموظف"
+                [(ngModel)]="employeeName">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !employeeName.trim()) {
+              <ion-note color="danger">
+                اسم الموظف مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              employeeName &&
+              !isEmployeeNameValid()
+            ) {
+              <ion-note color="danger">
+                لا يمكن إدخال أرقام في اسم الموظف
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- الإدارة - اختيارية -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              الإدارة
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-select
+                interface="popover"
+                placeholder="اختر الإدارة"
+                [(ngModel)]="employeeDepartment">
+
+                @for (department of departments; track department) {
+                  <ion-select-option [value]="department">
+                    {{ department }}
+                  </ion-select-option>
+                }
+
+              </ion-select>
+
+            </ion-item>
+
+          </div>
+
+
+          <!-- سبب عدم استخدام البطاقة - إجباري -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              سبب عدم استخدام البطاقة
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-textarea
+                placeholder="أدخل سبب عدم استخدام البطاقة"
+                [(ngModel)]="cardReason">
+              </ion-textarea>
+
+            </ion-item>
+
+            @if (submitted && !cardReason.trim()) {
+              <ion-note color="danger">
+                سبب عدم استخدام البطاقة مطلوب
+              </ion-note>
+            }
+
+          </div>
+
+
+          <ion-button
+            expand="block"
+            class="confirm-btn"
+            (click)="saveEmployee()">
+
+            تأكيد
+
+          </ion-button>
+
+        </div>
+
+      </ion-accordion>
+
+
+      <!-- ================================================= -->
+      <!-- المتدرب -->
+      <!-- ================================================= -->
+
+      <ion-accordion value="trainee">
+
+        <ion-item
+          slot="header"
+          lines="none"
+          class="category-header">
+
+          <ion-label>متدرب</ion-label>
+
+        </ion-item>
+
+
+        <div slot="content" class="registration-section">
+
+          <ion-text class="form-title">
+            بيانات المتدرب
+          </ion-text>
+
+
+          <!-- الاسم -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              الاسم
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="أدخل اسم المتدرب"
+                [(ngModel)]="traineeName">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !traineeName.trim()) {
+              <ion-note color="danger">
+                اسم المتدرب مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              traineeName &&
+              !isTraineeNameValid()
+            ) {
+              <ion-note color="danger">
+                لا يمكن إدخال أرقام في اسم المتدرب
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- رقم الهوية -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              رقم الهوية
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="أدخل رقم الهوية"
+                [(ngModel)]="traineeNationalId">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !traineeNationalId.trim()) {
+              <ion-note color="danger">
+                رقم الهوية مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              traineeNationalId &&
+              !isTraineeNationalIdValid()
+            ) {
+              <ion-note color="danger">
+                رقم الهوية يجب أن يحتوي على أرقام فقط
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- الإدارة - اختيارية -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              الإدارة
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-select
+                interface="popover"
+                placeholder="اختر الإدارة"
+                [(ngModel)]="traineeDepartment">
+
+                @for (department of departments; track department) {
+                  <ion-select-option [value]="department">
+                    {{ department }}
+                  </ion-select-option>
+                }
+
+              </ion-select>
+
+            </ion-item>
+
+          </div>
+
+
+          <!-- ملاحظات -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              ملاحظات
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-textarea
+                placeholder="اكتب الملاحظات"
+                [(ngModel)]="traineeNotes">
+              </ion-textarea>
+
+            </ion-item>
+
+          </div>
+
+
+          <ion-button
+            expand="block"
+            class="confirm-btn"
+            (click)="saveTrainee()">
+
+            تأكيد
+
+          </ion-button>
+
+        </div>
+
+      </ion-accordion>
+
+
+      <!-- ================================================= -->
+      <!-- المراجع -->
+      <!-- ================================================= -->
+
+      <ion-accordion value="visitor">
+
+        <ion-item
+          slot="header"
+          lines="none"
+          class="category-header">
+
+          <ion-label>مراجع</ion-label>
+
+        </ion-item>
+
+
+        <div slot="content" class="registration-section">
+
+          <ion-text class="form-title">
+            بيانات المراجع
+          </ion-text>
+
+
+          <!-- رقم الهوية -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              رقم الهوية
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="مثال: 1101234567"
+                [(ngModel)]="visitorId">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !visitorId.trim()) {
+              <ion-note color="danger">
+                رقم الهوية مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              visitorId &&
+              !isVisitorIdValid()
+            ) {
+              <ion-note color="danger">
+                رقم الهوية يجب أن يحتوي على أرقام فقط
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- اسم المراجع -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              اسم المراجع
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="مثال: محمد خالد"
+                [(ngModel)]="visitorName">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !visitorName.trim()) {
+              <ion-note color="danger">
+                اسم المراجع مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              visitorName &&
+              !isVisitorNameValid()
+            ) {
+              <ion-note color="danger">
+                لا يمكن إدخال أرقام في اسم المراجع
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- رقم الجوال - اختياري -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              رقم الجوال
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="0551234567"
+                [(ngModel)]="visitorPhone">
+              </ion-input>
+
+            </ion-item>
+
+            @if (
+              submitted &&
+              visitorPhone.trim() &&
+              !isVisitorPhoneValid()
+            ) {
+              <ion-note color="danger">
+                رقم الجوال يجب أن يحتوي على أرقام فقط
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- رقم المراجعة -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              رقم المراجعة
+              <ion-text class="required">*</ion-text>
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-input
+                placeholder="أدخل رقم المراجعة"
+                [(ngModel)]="visitNumber">
+              </ion-input>
+
+            </ion-item>
+
+            @if (submitted && !visitNumber.trim()) {
+              <ion-note color="danger">
+                رقم المراجعة مطلوب
+              </ion-note>
+            }
+
+            @if (
+              submitted &&
+              visitNumber &&
+              !isVisitNumberValid()
+            ) {
+              <ion-note color="danger">
+                رقم المراجعة يجب أن يحتوي على أرقام فقط
+              </ion-note>
+            }
+
+          </div>
+
+
+          <!-- الإدارة - اختيارية -->
+
+          <div class="field-block">
+
+            <ion-label class="field-label">
+              الإدارة
+            </ion-label>
+
+            <ion-item lines="none">
+
+              <ion-select
+                interface="popover"
+                placeholder="اختر الإدارة"
+                [(ngModel)]="visitorDepartment">
+
+                @for (department of departments; track department) {
+                  <ion-select-option [value]="department">
+                    {{ department }}
+                  </ion-select-option>
+                }
+
+              </ion-select>
+
+            </ion-item>
+
+          </div>
+
+
+          <ion-button
+            expand="block"
+            class="confirm-btn"
+            (click)="saveVisitor()">
+
+            تأكيد
+
+          </ion-button>
+
+        </div>
+
+      </ion-accordion>
+
+
+      <!-- ================================================= -->
+      <!-- المرافق -->
+      <!-- ================================================= -->
+
+      <ion-accordion value="companion">
+
+        <ion-item
+          slot="header"
+          lines="none"
+          class="category-header">
+
+          <ion-label>مرافق</ion-label>
+
+        </ion-item>
+
+
+        <div slot="content" class="registration-section">
+
+          @for (
+            companion of companions;
+            track $index;
+            let i = $index
+          ) {
+
+            <div class="companion-header">
+
+              <ion-text class="form-title">
+                المرافق {{ i + 1 }}
+              </ion-text>
+
+              @if (i > 0) {
+
+                <ion-button
+                  fill="clear"
+                  color="danger"
+                  size="small"
+                  (click)="removeCompanion(i)">
+
+                  <ion-icon
+                    name="remove-circle-outline"
+                    slot="start">
+                  </ion-icon>
+
+                  إزالة
+
+                </ion-button>
+
+              }
+
+            </div>
+
+
+            <!-- اسم المرافق -->
+
+            <div class="field-block">
+
+              <ion-label class="field-label">
+                اسم المرافق
+                <ion-text class="required">*</ion-text>
+              </ion-label>
+
+              <ion-item lines="none">
+
+                <ion-input
+                  placeholder="أدخل اسم المرافق"
+                  [(ngModel)]="companion.name">
+                </ion-input>
+
+              </ion-item>
+
+              @if (
+                submitted &&
+                !companion.name.trim()
+              ) {
+                <ion-note color="danger">
+                  اسم المرافق مطلوب
+                </ion-note>
+              }
+
+              @if (
+                submitted &&
+                companion.name &&
+                companion.name.match('[0-9]')
+              ) {
+                <ion-note color="danger">
+                  لا يمكن إدخال أرقام في اسم المرافق
+                </ion-note>
+              }
+
+            </div>
+
+
+            <!-- رقم الهوية -->
+
+            <div class="field-block">
+
+              <ion-label class="field-label">
+                رقم الهوية
+                <ion-text class="required">*</ion-text>
+              </ion-label>
+
+              <ion-item lines="none">
+
+                <ion-input
+                  placeholder="أدخل رقم الهوية"
+                  [(ngModel)]="companion.nationalId">
+                </ion-input>
+
+              </ion-item>
+
+              @if (
+                submitted &&
+                !companion.nationalId.trim()
+              ) {
+                <ion-note color="danger">
+                  رقم الهوية مطلوب
+                </ion-note>
+              }
+
+              @if (
+                submitted &&
+                companion.nationalId &&
+                !companion.nationalId.match('^[0-9]+$')
+              ) {
+                <ion-note color="danger">
+                  رقم الهوية يجب أن يحتوي على أرقام فقط
+                </ion-note>
+              }
+
+            </div>
+
+
+            <!-- رقم المراجعة -->
+
+            <div class="field-block">
+
+              <ion-label class="field-label">
+                رقم المراجعة
+                <ion-text class="required">*</ion-text>
+              </ion-label>
+
+              <ion-item lines="none">
+
+                <ion-input
+                  placeholder="أدخل رقم المراجعة"
+                  [(ngModel)]="companion.visitNumber">
+                </ion-input>
+
+              </ion-item>
+
+              @if (
+                submitted &&
+                !companion.visitNumber.trim()
+              ) {
+                <ion-note color="danger">
+                  رقم المراجعة مطلوب
+                </ion-note>
+              }
+
+              @if (
+                submitted &&
+                companion.visitNumber &&
+                !companion.visitNumber.match('^[0-9]+$')
+              ) {
+                <ion-note color="danger">
+                  رقم المراجعة يجب أن يحتوي على أرقام فقط
+                </ion-note>
+              }
+
+            </div>
+
+
+            <!-- نوع المرافق - اختياري -->
+
+            <div class="field-block">
+
+              <ion-label class="field-label">
+                نوع المرافق
+              </ion-label>
+
+              <ion-item lines="none">
+
+                <ion-input
+                  placeholder="أدخل نوع المرافق"
+                  [(ngModel)]="companion.companionType">
+                </ion-input>
+
+              </ion-item>
+
+              @if (
+                submitted &&
+                companion.companionType &&
+                companion.companionType.match('[0-9]')
+              ) {
+                <ion-note color="danger">
+                  لا يمكن إدخال أرقام في نوع المرافق
+                </ion-note>
+              }
+
+            </div>
+
+
+            <!-- الإدارة - اختيارية -->
+
+            <div class="field-block">
+
+              <ion-label class="field-label">
+                الإدارة
+              </ion-label>
+
+              <ion-item lines="none">
+
+                <ion-select
+                  interface="popover"
+                  placeholder="اختر الإدارة"
+                  [(ngModel)]="companion.department">
+
+                  @for (department of departments; track department) {
+                    <ion-select-option [value]="department">
+                      {{ department }}
+                    </ion-select-option>
+                  }
+
+                </ion-select>
+
+              </ion-item>
+
+            </div>
+
+
+            <div class="companion-divider"></div>
+
+          }
+
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="add-btn"
+            (click)="addCompanion()">
+
+            <ion-icon
+              slot="start"
+              name="add-outline">
+            </ion-icon>
+
+            إضافة مرافق آخر
+
+          </ion-button>
+
+
+          <ion-button
+            expand="block"
+            class="confirm-btn"
+            (click)="saveCompanions()">
+
+            تأكيد
+
+          </ion-button>
+
+        </div>
+
+      </ion-accordion>
+
+    </ion-accordion-group>
 
   }
 
