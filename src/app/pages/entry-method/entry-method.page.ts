@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { RegistrationService } from '../../services/registration.service';
 
@@ -16,7 +16,10 @@ import {
   chevronUpOutline,
   arrowForwardOutline,
   addOutline,
-  removeCircleOutline
+  removeCircleOutline,
+  optionsOutline,
+  documentTextOutline,
+  chatbubbleOutline
 } from 'ionicons/icons';
 
 import {
@@ -32,7 +35,6 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonItem,
-  IonLabel,
   IonInput,
   IonTextarea,
   IonSelect,
@@ -41,7 +43,10 @@ import {
   IonText,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonTabBar,
+  IonTabButton,
+  IonLabel
 } from '@ionic/angular/standalone';
 
 
@@ -54,7 +59,7 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-
+    RouterLink,
     IonContent,
     IonCard,
     IonCardContent,
@@ -64,10 +69,8 @@ import {
     IonTitle,
     IonButtons,
     IonButton,
-
     IonAccordion,
     IonAccordionGroup,
-
     IonItem,
     IonLabel,
     IonInput,
@@ -76,10 +79,11 @@ import {
     IonSelectOption,
     IonNote,
     IonText,
-
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonTabBar,
+    IonTabButton
   ]
 })
 
@@ -175,22 +179,25 @@ export class EntryMethodPage {
   ];
 
 
-  constructor(
-    private router: Router,
-    private registrationService: RegistrationService
-  ) {
+constructor(
+  private router: Router,
+  private registrationService: RegistrationService
+) {
 
-    addIcons({
-      qrCodeOutline,
-      createOutline,
-      chevronDownOutline,
-      chevronUpOutline,
-      arrowForwardOutline,
-      addOutline,
-      removeCircleOutline
-    });
+  addIcons({
+    qrCodeOutline,
+    createOutline,
+    chevronDownOutline,
+    chevronUpOutline,
+    arrowForwardOutline,
+    addOutline,
+    removeCircleOutline,
+    optionsOutline,
+    documentTextOutline,
+    chatbubbleOutline
+  });
 
-  }
+}
 
 
   /* =========================

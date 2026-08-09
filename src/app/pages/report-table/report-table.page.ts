@@ -12,6 +12,20 @@ import {
   RegistrationService
 } from '../../services/registration.service';
 
+import { addIcons } from 'ionicons';
+import {
+  arrowBackOutline,
+  documentTextOutline,
+  documentOutline,
+  peopleOutline,
+  personOutline,
+  schoolOutline,
+  personAddOutline,
+  downloadOutline,
+  printOutline,
+  optionsOutline,
+  chatbubbleOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-report-table',
@@ -57,13 +71,29 @@ export class ReportTablePage {
 
   constructor(
 
-    public registrationService:
-      RegistrationService,
+  public registrationService:
+    RegistrationService,
 
-    private activatedRoute:
-      ActivatedRoute
+  private activatedRoute:
+    ActivatedRoute
 
-  ) {}
+) {
+
+  addIcons({
+    arrowBackOutline,
+    documentTextOutline,
+    documentOutline,
+    peopleOutline,
+    personOutline,
+    schoolOutline,
+    personAddOutline,
+    downloadOutline,
+    printOutline,
+    optionsOutline,
+    chatbubbleOutline
+  });
+
+}
 
 
   /* =========================================

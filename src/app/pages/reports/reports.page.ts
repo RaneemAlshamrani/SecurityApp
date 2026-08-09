@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { optionsOutline, documentTextOutline, chatbubbleOutline } from 'ionicons/icons';
 import {
   Router,
   RouterModule
@@ -41,13 +43,15 @@ export class ReportsPage {
   ];
 
 
-  constructor(
-    public registrationService:
-      RegistrationService,
+ constructor(
+  public registrationService:
+    RegistrationService,
 
-    private router:
-      Router
-  ) {}
+  private router:
+    Router
+) {
+  addIcons({ optionsOutline, documentTextOutline, chatbubbleOutline });
+}
 
 
   /* =========================================

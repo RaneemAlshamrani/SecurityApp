@@ -127,3 +127,10 @@
   height: 50px;
   margin-top: 10px;
 }
+
+// توحيد حجم عناوين الهيدر بكل الصفحات
+ion-toolbar ion-title h2,
+ion-toolbar .page-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}

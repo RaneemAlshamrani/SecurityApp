@@ -1,10 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   IonContent,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonTabBar,
+  IonTabButton,
+  IonLabel
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -13,7 +16,10 @@ import {
   logInOutline,
   timeOutline,
   personOutline,
-  briefcaseOutline
+  briefcaseOutline,
+  optionsOutline,
+  documentTextOutline,
+  chatbubbleOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -22,9 +28,13 @@ import {
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    RouterLink,
     IonContent,
     IonButton,
-    IonIcon
+    IonIcon,
+    IonTabBar,
+    IonTabButton,
+    IonLabel
   ],
 })
 export class HomePage implements OnDestroy {
@@ -39,7 +49,10 @@ export class HomePage implements OnDestroy {
       logInOutline,
       timeOutline,
       personOutline,
-      briefcaseOutline
+      briefcaseOutline,
+      optionsOutline,
+      documentTextOutline,
+      chatbubbleOutline
     });
 
     // عرض التاريخ والوقت مباشرة عند فتح الصفحة

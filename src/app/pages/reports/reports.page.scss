@@ -304,3 +304,13 @@ ion-datetime-button::part(native) {
 .reports-toolbar ion-title {
   transform: translateX(-25px);
 }
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+ion-content.reports-content {
+  --overflow: auto;
+}

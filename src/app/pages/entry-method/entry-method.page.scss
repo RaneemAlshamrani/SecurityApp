@@ -38,7 +38,6 @@ ion-toolbar {
 
 /* =========================
    Barcode + Manual Cards
-   مصغرة عشان البيانات تظهر أكثر
    ========================= */
 
 .barcode-card,
@@ -56,8 +55,6 @@ ion-toolbar {
 }
 
 
-/* تقليل ارتفاع الكروت */
-
 .barcode-card ion-card-content,
 .manual-card ion-card-content {
   padding: 13px 16px;
@@ -65,8 +62,6 @@ ion-toolbar {
   text-align: center;
 }
 
-
-/* الأيقونات */
 
 .barcode-icon,
 .manual-icon {
@@ -83,8 +78,6 @@ ion-toolbar {
 }
 
 
-/* العنوان */
-
 .card-title {
   display: block;
 
@@ -97,8 +90,6 @@ ion-toolbar {
 }
 
 
-/* الوصف */
-
 .card-description {
   display: block;
 
@@ -109,10 +100,6 @@ ion-toolbar {
   font-size: 12px;
 }
 
-
-/* =========================
-   Manual card
-   ========================= */
 
 /* =========================
    Manual Card
@@ -135,7 +122,6 @@ ion-toolbar {
   text-align: center;
 }
 
-/* السهم ما عاد يأخذ مساحة من المحتوى */
 .arrow-column {
   position: absolute;
 
@@ -151,10 +137,6 @@ ion-toolbar {
   padding: 0;
 }
 
-.arrow-icon {
-  font-size: 20px;
-  color: #7A7A7A;
-}
 
 /* =========================
    Category Accordion
@@ -415,4 +397,14 @@ ion-note {
       20px;
   }
 
+}
+
+
+/* =========================
+   توحيد حجم كل الأسهم (يدوي + أكورديون)
+   ========================= */
+
+.arrow-icon {
+  font-size: 28px !important;
+  color: #7A7A7A !important;
 }
