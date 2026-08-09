@@ -1,5 +1,7 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   font-family: Tahoma, Arial, sans-serif;
 }
 
@@ -17,17 +19,6 @@
   min-height: 64px;
   position: relative;
 
-  ion-buttons {
-    position: relative;
-    z-index: 10;
-    padding-inline-start: 4px;
-  }
-
-  ion-back-button {
-    --color: #ffffff;
-    --icon-font-size: 26px;
-  }
-
   ion-title {
     position: absolute;
     left: 0;
@@ -35,7 +26,7 @@
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-    padding: 0 48px;
+    padding: 0; /* تم التعديل إلى 0 */
     margin: 0;
     text-align: center;
     pointer-events: none;
@@ -61,7 +52,7 @@
 }
 
 /* =========================================================
-   PAGE CONTENT & INTRO
+   PAGE CONTENT
    ========================================================= */
 
 ion-content.contact-content {
@@ -105,7 +96,7 @@ ion-content.contact-content {
 }
 
 /* =========================================================
-   CONTACT CARD
+   CARDS
    ========================================================= */
 
 .contact-card {
@@ -151,10 +142,6 @@ ion-content.contact-content {
   }
 }
 
-/* =========================================================
-   ICON CONTAINER (مقاس متناسق وتوسيط دقيق)
-   ========================================================= */
-
 .logo-container {
   width: 50px;
   height: 50px;
@@ -172,10 +159,6 @@ ion-content.contact-content {
     display: block;
   }
 }
-
-/* =========================================================
-   PHONE & NOTICE
-   ========================================================= */
 
 .phone-row {
   width: fit-content;
@@ -245,15 +228,18 @@ ion-content.contact-content {
 }
 
 /* =========================================================
-   BOTTOM TABS (البار السفلي)
+   BOTTOM TABS (تثبيت البار السفلي)
    ========================================================= */
 
 ion-footer {
+  display: block;
   background: #ffffff;
+  flex-shrink: 0;
 }
 
 .bottom-tabs {
   --background: #ffffff;
+  --border-style: none;
   height: 56px;
   border-top: 1px solid #e1e7ed;
 
