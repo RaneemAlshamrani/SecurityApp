@@ -134,3 +134,31 @@ ion-toolbar .page-title {
   font-size: 20px !important;
   font-weight: 700 !important;
 }
+// توحيد ألوان شريط التنقل السفلي بكل الصفحات
+ion-tab-bar {
+  ion-tab-button {
+    --color: #0077b6;
+    --color-selected: #0077b6;
+
+    ion-icon {
+      font-size: 22px;
+      color: #0077b6;
+    }
+
+    ion-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #0077b6;
+    }
+
+    &.tab-selected ion-label,
+    &[selected="true"] ion-label {
+      font-weight: 800;
+    }
+
+    &.tab-selected ion-icon,
+    &[selected="true"] ion-icon {
+      font-weight: 800;
+    }
+  }
+}

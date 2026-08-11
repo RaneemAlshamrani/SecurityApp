@@ -378,5 +378,27 @@ empty-state-card {
     --border-radius: 12px;
   }
   
+  .id-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+
+  span {
+    letter-spacing: 1px;
+  }
+
+  .reveal-icon {
+    font-size: 16px;
+    color: #667384;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:hover {
+      color: #0077b6;
+    }
+  }
+}
 
 }
