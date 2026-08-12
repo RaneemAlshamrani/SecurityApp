@@ -2,31 +2,30 @@
   <main class="login-screen" dir="rtl">
 
     <ion-card class="brand-section">
+      <ion-img
+        src="assets/images/login-background.jpg"
+        class="background-image">
+      </ion-img>
 
-  <ion-img
-    src="assets/images/login-background.jpg"
-    class="background-image">
-  </ion-img>
+      <ion-card class="background-overlay"></ion-card>
 
-  <ion-card class="background-overlay"></ion-card>
-
-  <ion-img
-    src="assets/images/amana-logo.png"
-    class="amana-logo">
-  </ion-img>
-
-</ion-card>
+      <ion-img
+        src="assets/images/amana-logo.png"
+        class="amana-logo">
+      </ion-img>
+    </ion-card>
 
     <section class="login-card">
       <h1>مرحبًا بك في أمين</h1>
 
       <p class="welcome-text">
-         يرجى تسجيل الدخول<br />
+        يرجى تسجيل الدخول<br />
         لمتابعة استخدام النظام
       </p>
 
       <form class="login-form" (ngSubmit)="login($event)">
 
+        <!-- اسم المستخدم -->
         <ion-item class="custom-input-bar" lines="none">
           <ion-input
             type="text"
@@ -42,9 +41,18 @@
           </ion-icon>
         </ion-item>
 
+        <!-- كلمة المرور مع زر الإظهار والإخفاء -->
         <ion-item class="custom-input-bar" lines="none">
+          <ion-icon
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            slot="start"
+            class="bar-icon toggle-icon"
+            (click)="togglePasswordVisibility()"
+            style="cursor: pointer;">
+          </ion-icon>
+
           <ion-input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             name="password"
             placeholder="••••••••"
             [(ngModel)]="password"
@@ -75,15 +83,15 @@
             </ion-checkbox>
           </div>
 
- <ion-button
-  type="button"
-  fill="solid"
-  size="small"
-  class="forgot-password-button"
-  routerLink="/forgot-password"
-  routerDirection="forward">
-  هل نسيت كلمة السر؟
-</ion-button>
+          <ion-button
+            type="button"
+            fill="solid"
+            size="small"
+            class="forgot-password-button"
+            routerLink="/forgot-password"
+            routerDirection="forward">
+            هل نسيت كلمة السر؟
+          </ion-button>
 
         </div>
 

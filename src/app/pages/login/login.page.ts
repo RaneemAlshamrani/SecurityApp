@@ -16,7 +16,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { personOutline, lockClosedOutline } from 'ionicons/icons';
+import { personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
@@ -43,6 +43,7 @@ export class LoginPage {
   password = '';
   rememberMe = false;
   errorMessage = '';
+  showPassword = false; // متغير إظهار وإخفاء كلمة المرور
 
   constructor(
     private router: Router,
@@ -50,32 +51,33 @@ export class LoginPage {
   ) {
     addIcons({
       personOutline,
-      lockClosedOutline
+      lockClosedOutline,
+      eyeOutline,
+      eyeOffOutline
     });
   }
 
-  // التعديل 1: الفحص التلقائي فور فتح الصفحة وقبل عرض الواجهة
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
   async ionViewWillEnter(): Promise<void> {
     try {
+      // تحويل للهوم مباشرة لو فيه توكن محفوط
       const session = await this.authService.getSession();
       if (session) {
-        // إذا كان هناك جلسة نشطة، تحويل الموظف فوراً للهوم بدون عرض اللوجن
         this.router.navigateByUrl('/home', { replaceUrl: true });
       }
-    } catch (e) {
-      // لا توجد جلسة نشطة، البقاء في صفحة اللوجن
-    }
+    } catch (e) {}
   }
 
   async login(event?: Event): Promise<void> {
-    if (event) {
-      event.preventDefault();
-    }
+    if (event) event.preventDefault();
 
     this.errorMessage = '';
 
     if (!this.username.trim()) {
-      this.errorMessage = 'يرجى إدخال البريد الإلكتروني';
+      this.errorMessage = 'يرجى إدخال اسم المستخدم';
       return;
     }
 
@@ -85,17 +87,16 @@ export class LoginPage {
     }
 
     try {
-      // التعديل 2: تمرير متغير rememberMe مع بيانات الدخول
-      await this.authService.login(this.username.trim(), this.password, this.rememberMe);
-      
-      // الانتقال للـ Home بعد نجاح الدخول
+      // إرسال الاسم بدلاً من الإيميل
+      await this.authService.loginByUsername(this.username, this.password, this.rememberMe);
       this.router.navigateByUrl('/home');
     } catch (error: any) {
-      this.errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+      this.errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة';
     }
   }
 
   openForgotPassword(): void {
     this.router.navigateByUrl('/forgot-password');
   }
+
 }
