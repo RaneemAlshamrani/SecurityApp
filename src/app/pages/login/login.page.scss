@@ -126,6 +126,7 @@ ion-img.amana-logo {
     max-height: 460px;
   }
 }
+
 /* القسم الأبيض */
 .login-card {
   width: 100%;
@@ -255,6 +256,7 @@ ion-item.custom-input-bar {
 
 ion-button.forgot-password-button {
   --background: #ffffff;
+  --color: #2a9d8f;
   --border-radius: 12px;
   --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 
@@ -270,29 +272,16 @@ ion-button.forgot-password-button {
   text-transform: none;
 }
 
-/* الحد الرمادي */
+/* الحد الرمادي + إصلاح ظهور النص على الجوال */
 ion-button.forgot-password-button::part(native) {
   border: 1.5px solid #c5cbd1;
   border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #2a9d8f;
+  -webkit-text-fill-color: #2a9d8f;
 }
-
-/* الكلام الملون */
-ion-button.forgot-password-button::part(native) {
-  background-color: #ffffff;
-
-  background-image: linear-gradient(
-    90deg,
-    #2a9d8f 0%,
-    #0077b6 100%
-  );
-
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
 
 /* زر تسجيل الدخول */
 ion-button.login-button {
@@ -386,6 +375,4 @@ ion-button.login-button {
     padding-right: 40px;
     padding-left: 40px;
   }
-
-
 }

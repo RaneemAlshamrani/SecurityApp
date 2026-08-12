@@ -39,6 +39,8 @@ import {
   checkmarkCircleOutline
 } from 'ionicons/icons';
 
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.page.html',
@@ -51,7 +53,6 @@ import {
 
     IonHeader,
     IonRouterLink,
-    IonText,
     IonToolbar,
     IonButtons,
     IonBackButton,
@@ -86,7 +87,9 @@ export class ForgotPasswordPage {
 
   isLoading = false;
 
-  constructor() {
+  constructor(
+    private authService: AuthService
+  ) {
     addIcons({
       arrowForwardOutline,
       mailOutline,
@@ -95,11 +98,13 @@ export class ForgotPasswordPage {
     });
   }
 
-  sendResetLink(): void {
+  async sendResetLink(): Promise<void> {
+
     this.errorMessage = '';
     this.successMessage = '';
 
-    const normalizedEmail = this.email.trim();
+    const normalizedEmail =
+      this.email.trim().toLowerCase();
 
     if (!normalizedEmail) {
       this.errorMessage =
@@ -118,12 +123,51 @@ export class ForgotPasswordPage {
 
     this.isLoading = true;
 
-    // مؤقت إلى أن يتم ربط Supabase
-    setTimeout(() => {
-      this.isLoading = false;
+    try {
+
+      // 1. التحقق أن البريد مرتبط بحساب موظف
+      const {
+        data,
+        error
+      } =
+        await this.authService
+          .checkStaffEmail(normalizedEmail);
+
+      if (error) {
+        this.errorMessage =
+          'حدث خطأ أثناء التحقق من البريد الإلكتروني';
+        return;
+      }
+
+      if (!data?.exists) {
+        this.errorMessage =
+          'البريد الإلكتروني غير صحيح';
+        return;
+      }
+
+      // 2. إرسال رابط تغيير كلمة السر
+      const {
+        error: resetError
+      } =
+        await this.authService
+          .resetPassword(normalizedEmail);
+
+      if (resetError) {
+        this.errorMessage =
+          'تعذر إرسال رابط استعادة كلمة السر';
+        return;
+      }
 
       this.successMessage =
         'تم إرسال رابط استعادة كلمة السر إلى بريدك الإلكتروني.';
-    }, 800);
+
+    } catch {
+      this.errorMessage =
+        'حدث خطأ، يرجى المحاولة مرة أخرى';
+    }
+
+    finally {
+      this.isLoading = false;
+    }
   }
 }
