@@ -15,6 +15,7 @@ import {
 import { addIcons } from 'ionicons';
 import {
   arrowBackOutline,
+  arrowForwardOutline,
   documentTextOutline,
   documentOutline,
   peopleOutline,
@@ -24,7 +25,9 @@ import {
   downloadOutline,
   printOutline,
   optionsOutline,
-  chatbubbleOutline
+  chatbubbleOutline,
+  eyeOutline,
+  eyeOffOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -80,18 +83,21 @@ export class ReportTablePage {
 ) {
 
   addIcons({
-    arrowBackOutline,
-    documentTextOutline,
-    documentOutline,
-    peopleOutline,
-    personOutline,
-    schoolOutline,
-    personAddOutline,
-    downloadOutline,
-    printOutline,
-    optionsOutline,
-    chatbubbleOutline
-  });
+  arrowBackOutline,
+  arrowForwardOutline,
+  documentTextOutline,
+  documentOutline,
+  peopleOutline,
+  personOutline,
+  schoolOutline,
+  personAddOutline,
+  downloadOutline,
+  printOutline,
+  optionsOutline,
+  chatbubbleOutline,
+  eyeOutline,
+  eyeOffOutline
+});
 
 }
 
@@ -342,6 +348,44 @@ export class ReportTablePage {
     );
 
   }
+
+  /* =========================================
+   إخفاء / إظهار رقم الهوية
+   ========================================= */
+
+private revealedIds = new Set<string>();
+
+toggleIdVisibility(key: string): void {
+
+  if (this.revealedIds.has(key)) {
+
+    this.revealedIds.delete(key);
+
+  } else {
+
+    this.revealedIds.add(key);
+
+  }
+
+}
+
+isIdRevealed(key: string): boolean {
+
+  return this.revealedIds.has(key);
+
+}
+
+maskNationalId(value: unknown): string {
+
+  if (!value) {
+
+    return '-';
+
+  }
+
+  return '••••••••••';
+
+}
 
 
   get hasAnyData(): boolean {

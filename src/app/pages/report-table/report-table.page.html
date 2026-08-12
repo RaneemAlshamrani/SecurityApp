@@ -82,7 +82,7 @@
               font-size: 20px;
               font-weight: 700;
             ">
-            تطبيق الأمن (SecurityApp)
+           أمين للخدمات الأمنية في أمانة جدة
           </h2>
 
           <p
@@ -379,34 +379,36 @@
               <tbody>
 
                 <tr
-                  *ngFor="
-                    let row
-                    of filteredVisitors
-                  ">
+  *ngFor="
+    let row
+    of filteredVisitors;
+    let i = index
+  ">
 
-                  <td>
-                    {{ row.visitorName || row.name || '-' }}
-                  </td>
+  <td>
+    {{ row.visitorName || row.name || '-' }}
+  </td>
 
-                  <td>
-                    {{ row.visitorId || row.nationalId || '-' }}
-                  </td>
+  <td class="id-cell">
+    <span>
+      {{
+        isIdRevealed('visitor-' + i)
+          ? (row.visitorId || row.nationalId || '-')
+          : maskNationalId(row.visitorId || row.nationalId)
+      }}
+    </span>
 
-                  <td>
-                    {{ row.visitorPhone || '-' }}
-                  </td>
+    <ion-icon
+      *ngIf="row.visitorId || row.nationalId"
+      class="reveal-icon no-print"
+      [name]="isIdRevealed('visitor-' + i) ? 'eye-off-outline' : 'eye-outline'"
+      (click)="toggleIdVisibility('visitor-' + i)">
+    </ion-icon>
+  </td>
 
-                  <td>
-                    {{ row.visitNumber || '-' }}
-                  </td>
-
-                  <td>
-                    {{ row.department || '-' }}
-                  </td>
-
-                  <td>
-                    {{ formatDate(row.time) }}
-                  </td>
+  <td>
+    {{ row.visitorPhone || '-' }}
+  </td>
 
                 </tr>
 
@@ -503,26 +505,36 @@
               <tbody>
 
                 <tr
-                  *ngFor="
-                    let row
-                    of filteredTrainees
-                  ">
+  *ngFor="
+    let row
+    of filteredTrainees;
+    let i = index
+  ">
 
-                  <td>
-                    {{ row.traineeName || row.name || '-' }}
-                  </td>
+  <td>
+    {{ row.traineeName || row.name || '-' }}
+  </td>
 
-                  <td>
-                    {{ row.nationalId || '-' }}
-                  </td>
+  <td class="id-cell">
+    <span>
+      {{
+        isIdRevealed('trainee-' + i)
+          ? (row.nationalId || '-')
+          : maskNationalId(row.nationalId)
+      }}
+    </span>
 
-                  <td>
-                    {{ row.department || '-' }}
-                  </td>
+    <ion-icon
+      *ngIf="row.nationalId"
+      class="reveal-icon no-print"
+      [name]="isIdRevealed('trainee-' + i) ? 'eye-off-outline' : 'eye-outline'"
+      (click)="toggleIdVisibility('trainee-' + i)">
+    </ion-icon>
+  </td>
 
-                  <td>
-                    {{ formatDate(row.time) }}
-                  </td>
+  <td>
+    {{ row.department || '-' }}
+  </td>
 
                 </tr>
 
@@ -627,34 +639,37 @@
               <tbody>
 
                 <tr
-                  *ngFor="
-                    let row
-                    of filteredCompanions
-                  ">
+  *ngFor="
+    let row
+    of filteredCompanions;
+    let i = index
+  ">
 
-                  <td>
-                    {{ row.name || '-' }}
-                  </td>
+  <td>
+    {{ row.name || '-' }}
+  </td>
 
-                  <td>
-                    {{ row.nationalId || '-' }}
-                  </td>
+  <td class="id-cell">
+    <span>
+      {{
+        isIdRevealed('companion-' + i)
+          ? (row.nationalId || '-')
+          : maskNationalId(row.nationalId)
+      }}
+    </span>
 
-                  <td>
-                    {{ row.visitNumber || '-' }}
-                  </td>
+    <ion-icon
+      *ngIf="row.nationalId"
+      class="reveal-icon no-print"
+      [name]="isIdRevealed('companion-' + i) ? 'eye-off-outline' : 'eye-outline'"
+      (click)="toggleIdVisibility('companion-' + i)">
+    </ion-icon>
+  </td>
 
-                  <td>
-                    {{ row.companionType || '-' }}
-                  </td>
-
-                  <td>
-                    {{ row.department || '-' }}
-                  </td>
-
-                  <td>
-                    {{ formatDate(row.time) }}
-                  </td>
+  <td>
+    {{ row.visitNumber || '-' }}
+  </td>
+  
 
                 </tr>
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth';
 
 import {
   IonContent,
@@ -15,18 +16,13 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-
-import {
-  personOutline,
-  lockClosedOutline
-} from 'ionicons/icons';
+import { personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-
   imports: [
     FormsModule,
     RouterLink,
@@ -47,18 +43,36 @@ export class LoginPage {
   password = '';
   rememberMe = false;
   errorMessage = '';
+  showPassword = false; // متغير إظهار وإخفاء كلمة المرور
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
     addIcons({
       personOutline,
-      lockClosedOutline
+      lockClosedOutline,
+      eyeOutline,
+      eyeOffOutline
     });
   }
 
-  login(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  async ionViewWillEnter(): Promise<void> {
+    try {
+      // تحويل للهوم مباشرة لو فيه توكن محفوط
+      const session = await this.authService.getSession();
+      if (session) {
+        this.router.navigateByUrl('/home', { replaceUrl: true });
+      }
+    } catch (e) {}
+  }
+
+  async login(event?: Event): Promise<void> {
+    if (event) event.preventDefault();
 
     this.errorMessage = '';
 
@@ -72,15 +86,17 @@ export class LoginPage {
       return;
     }
 
-    if (this.password.length < 8) {
-      this.errorMessage = 'كلمة المرور يجب أن لا تقل عن 8 خانات';
-      return;
+    try {
+      // إرسال الاسم بدلاً من الإيميل
+      await this.authService.loginByUsername(this.username, this.password, this.rememberMe);
+      this.router.navigateByUrl('/home');
+    } catch (error: any) {
+      this.errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة';
     }
-
-    this.router.navigateByUrl('/home');
   }
 
   openForgotPassword(): void {
     this.router.navigateByUrl('/forgot-password');
   }
+
 }
