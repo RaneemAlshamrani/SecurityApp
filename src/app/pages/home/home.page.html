@@ -3,19 +3,28 @@
   <!-- rectangular pure css header -->
   <div class="header-banner">
 
-    <div class="user-info">
+    <div class="user-info" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
-      <p class="welcome-label">
-        أهلاً بك
-      </p>
+      <div>
+        <p class="welcome-label">
+          أهلاً بك
+        </p>
 
-      <h1 class="user-name">
-        أحمد محمد
-      </h1>
+        <!-- ربط اسم الموظف المجلوب من Supabase -->
+        <h1 class="user-name">
+          {{ staffName }}
+        </h1>
 
-      <p class="gate-info">
-        بوابة رقم 3
-      </p>
+        <!-- ربط رقم البوابة المجلوب من Supabase -->
+        <p class="gate-info">
+          بوابة رقم {{ gateNumber }}
+        </p>
+      </div>
+
+      <!-- زر تسجيل الخروج -->
+      <ion-button fill="clear" color="light" (click)="onLogout()">
+        <ion-icon name="log-out-outline" slot="icon-only" style="font-size: 24px;"></ion-icon>
+      </ion-button>
 
     </div>
 
@@ -94,7 +103,7 @@
               <span class="status-dot"></span>
 
               <span class="role-title">
-               دخول مراجع
+                دخول مراجع
               </span>
 
             </div>
