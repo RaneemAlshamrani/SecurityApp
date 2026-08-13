@@ -283,67 +283,71 @@ constructor(
      Barcode
      ========================= */
 
-  async scanBarcode(): Promise<void> {
+ async scanBarcode(): Promise<void> {
 
-    try {
+  try {
 
-      const support =
-        await BarcodeScanner.isSupported();
+    const support =
+      await BarcodeScanner.isSupported();
 
-
-      if (!support.supported) {
-
-        alert(
-          'الجهاز لا يدعم قراءة الباركود'
-        );
-
-        return;
-
-      }
-
-
-      const permission =
-        await BarcodeScanner.requestPermissions();
-
-
-      if (
-        permission.camera !== 'granted'
-      ) {
-
-        alert(
-          'يرجى السماح باستخدام الكاميرا'
-        );
-
-        return;
-
-      }
-
-
-      const result =
-        await BarcodeScanner.scan();
-
-
-      if (
-        result.barcodes.length > 0
-      ) {
-
-        alert(
-          'تمت قراءة الباركود بنجاح'
-        );
-
-      }
-
-    } catch (error) {
-
-      console.error(error);
+    if (!support.supported) {
 
       alert(
-        'تعذر فتح الكاميرا'
+        'الجهاز لا يدعم قراءة الباركود'
       );
+
+      return;
+    }
+
+    const permission =
+      await BarcodeScanner.requestPermissions();
+
+    if (
+      permission.camera !== 'granted'
+    ) {
+
+      alert(
+        'يرجى السماح باستخدام الكاميرا'
+      );
+
+      return;
+    }
+
+    const result =
+      await BarcodeScanner.scan();
+
+    if (
+      result.barcodes.length > 0
+    ) {
+
+
+const saved =
+  await this.registrationService
+    .addBarcodeEmployee();
+
+if (saved) {
+
+  alert('تم التسجيل بنجاح');
+
+} else {
+
+  alert('تعذر تسجيل العملية');
+
+}
 
     }
 
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      'تعذر فتح الكاميرا'
+    );
+
   }
+
+}
 
 
   /* =========================

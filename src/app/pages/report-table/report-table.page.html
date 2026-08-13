@@ -257,11 +257,11 @@
                   ">
 
                   <td>
-                    {{ row.employeeId || '-' }}
+                    {{ row.employeeId || row.employee_id || '-' }}
                   </td>
 
                   <td>
-                    {{ row.employeeName || '-' }}
+                    {{ row.employeeName || row.name || '-' }}
                   </td>
 
                   <td>
@@ -269,11 +269,11 @@
                   </td>
 
                   <td>
-                    {{ row.cardReason || '-' }}
+                    {{ row.cardReason || row.card_reason || '-' }}
                   </td>
 
                   <td>
-                    {{ formatDate(row.time) }}
+                    {{ formatDate(row.time || row.created_at) }}
                   </td>
 
                 </tr>

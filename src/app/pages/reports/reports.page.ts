@@ -30,8 +30,8 @@ import {
 
 export class ReportsPage {
 
-  fromDate = '2026-07-24';
-  toDate = '2026-07-27';
+fromDate = '';
+toDate = '';
 
   dateError = '';
 

@@ -82,6 +82,15 @@ export class ReportTablePage {
 
 ) {
 
+  this.registrationService
+  .loadEmployeesFromSupabase()
+  .then(() => {
+    console.log(
+      '👥 EMPLOYEES:',
+      this.registrationService.employees
+    );
+  });
+
   addIcons({
   arrowBackOutline,
   arrowForwardOutline,
@@ -106,15 +115,24 @@ export class ReportTablePage {
      عند دخول التقرير
      ========================================= */
 
-  ionViewWillEnter(): void {
+ionViewWillEnter(): void {
 
-    this.loadSelectedCategories();
+  this.loadSelectedCategories();
 
-    this.issueDate =
-      new Date()
-        .toLocaleString('ar-SA');
+  this.issueDate =
+    new Date()
+      .toLocaleString('ar-SA');
 
-  }
+  this.registrationService
+    .loadEmployeesFromSupabase()
+    .then(() => {
+      console.log(
+        '👥 الموظفين من Supabase:',
+        this.registrationService.employees
+      );
+    });
+
+}
 
 
   /* =========================================
@@ -248,8 +266,7 @@ export class ReportTablePage {
     return rows.filter(row => {
 
       const rowDate =
-        new Date(row.time);
-
+  new Date(row.time || row.created_at);
 
       let matchesDate =
         true;

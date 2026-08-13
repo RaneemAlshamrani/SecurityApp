@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +15,18 @@ export class RegistrationService {
 
   private loaded = false;
 
-  constructor(
-    private http: HttpClient
-  ) {
-    this.loadSavedRegistrations();
-  }
+private supabase: SupabaseClient;
 
+constructor(
+  private http: HttpClient
+) {
+  this.supabase = createClient(
+    environment.supabaseUrl,
+    environment.supabaseKey
+  );
+
+  this.loadSavedRegistrations();
+}
 
   /* =========================================
      تحميل البيانات المحفوظة
@@ -264,6 +272,110 @@ export class RegistrationService {
 
   }
 
+
+/* =========================================
+   تسجيل موظف عن طريق الباركود
+   ========================================= */
+async addBarcodeEmployee(): Promise<boolean> {
+
+const now = new Date().toISOString();
+
+const { data: { user } } = await this.supabase.auth.getUser();
+
+if (!user) {
+  console.error('لا يوجد مستخدم مسجل دخول');
+  return false;
+}
+
+const barcodeEmployee = {
+  category: 'employee',
+  name: 'أحمد محمد',
+  employee_id: '10025',
+  department_id: 4,
+  department: 'إدارة المشاريع',
+  national_id: '4567891234',
+  card_reason: 'دخول عبر الباركود',
+  created_by: user.id,
+  created_at: now
+};
+
+
+  const { data, error } =
+    await this.supabase
+      .from('registrations')
+      .insert(barcodeEmployee)
+      .select()
+      .single();
+
+  if (error) {
+
+    console.error(
+      'خطأ في تسجيل موظف الباركود:',
+      JSON.stringify(error)
+    );
+
+    return false;
+  }
+
+  // منع تكرار نفس التسجيل في القائمة المحلية
+const alreadyExists = this.employees.some(
+  employee => employee.id === data.id
+);
+
+if (!alreadyExists) {
+
+  this.employees.push({
+    ...data,
+    time: data.created_at
+  });
+
+  // حفظ التسجيل محليًا حتى يظهر في التقارير
+  this.saveRegistrations();
+
+}
+
+console.log(
+  'تم تسجيل موظف الباركود:',
+  data
+);
+
+return true;
+}
+
+async loadEmployeesFromSupabase(): Promise<void> {
+
+  const { data, error } = await this.supabase
+    .from('registrations')
+    .select('*')
+    .eq('category', 'employee');
+
+  if (error) {
+    console.error(
+      'خطأ في تحميل الموظفين من Supabase:',
+      JSON.stringify(error)
+    );
+    return;
+  }
+
+  const supabaseEmployees = (data ?? []).map(employee => ({
+    ...employee,
+    time: employee.time || employee.created_at
+  }));
+
+  const allEmployees = [
+    ...this.employees,
+    ...supabaseEmployees
+  ];
+
+this.employees = allEmployees.filter(
+  (employee, index, self) =>
+    index === self.findIndex(
+      e => e.employee_id === employee.employee_id
+    )
+);
+
+  this.saveRegistrations();
+}
 
   /* =========================================
      كل التسجيلات
