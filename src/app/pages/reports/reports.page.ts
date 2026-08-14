@@ -30,10 +30,8 @@ import {
 
 export class ReportsPage {
 
-
-fromDate = '';
-toDate = '';
-
+  fromDate = '2026-08-01';
+  toDate = '2026-08-14';
 
   dateError = '';
 
@@ -44,6 +42,7 @@ toDate = '';
     'companions'
   ];
 
+  // أضفنا مصفوفة لتخزين السجلات القادمة من قاعدة البيانات
   records: any[] = [];
 
 
@@ -57,12 +56,16 @@ toDate = '';
   addIcons({ optionsOutline, documentTextOutline, chatbubbleOutline });
 }
 
+  // يتم جلب البيانات تلقائياً أول ما تدخل الصفحة
   async ionViewWillEnter() {
     await this.fetchRecords();
   }
 
+  // دالة لجلب البيانات من جدول registrations في Supabase
+  // دالة لجلب البيانات باستخدام خدمة Supabase الجاهزة
   async fetchRecords() {
     try {
+      // استخدام دالة getReportsData المعرفة مسبقاً في الـ SupabaseService
       const data = await this.supabaseService.getReportsData();
       if (data) {
         this.records = data;
