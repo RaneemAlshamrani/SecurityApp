@@ -15,7 +15,12 @@ export class AuthService {
     environment.supabaseKey
   );
 }
-
+async login(email: string, password: string) {
+    return await this.supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+  }
   // إرسال رابط إعادة تعيين كلمة السر للإيميل
   async resetPassword(email: string) {
     return await this.supabase.auth.resetPasswordForEmail(email, {

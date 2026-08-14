@@ -82,7 +82,7 @@
               font-size: 20px;
               font-weight: 700;
             ">
-           أمين للخدمات الأمنية في أمانة جدة
+            أمين للخدمات الأمنية في أمانة جدة
           </h2>
 
           <p
@@ -307,7 +307,7 @@
     </ion-card>
 
 
-    <!-- ================================================= -->
+   <!-- ================================================= -->
     <!-- جدول المراجعين -->
     <!-- ================================================= -->
 
@@ -379,36 +379,48 @@
               <tbody>
 
                 <tr
-  *ngFor="
-    let row
-    of filteredVisitors;
-    let i = index
-  ">
+                  *ngFor="
+                    let row
+                    of filteredVisitors;
+                    let i = index
+                  ">
 
-  <td>
-    {{ row.visitorName || row.name || '-' }}
-  </td>
+                  <td>
+                    {{ row.visitorName || row.name || '-' }}
+                  </td>
 
-  <td class="id-cell">
-    <span>
-      {{
-        isIdRevealed('visitor-' + i)
-          ? (row.visitorId || row.nationalId || '-')
-          : maskNationalId(row.visitorId || row.nationalId)
-      }}
-    </span>
+                  <td class="id-cell">
+                    <span>
+                      {{
+                        isIdRevealed('visitor-' + i)
+                          ? (row.visitorId || row.national_id || row.nationalId || '-')
+                          : maskNationalId(row.visitorId || row.national_id || row.nationalId)
+                      }}
+                    </span>
 
-    <ion-icon
-      *ngIf="row.visitorId || row.nationalId"
-      class="reveal-icon no-print"
-      [name]="isIdRevealed('visitor-' + i) ? 'eye-off-outline' : 'eye-outline'"
-      (click)="toggleIdVisibility('visitor-' + i)">
-    </ion-icon>
-  </td>
+                    <ion-icon
+                      *ngIf="row.visitorId || row.national_id || row.nationalId"
+                      class="reveal-icon no-print"
+                      [name]="isIdRevealed('visitor-' + i) ? 'eye-off-outline' : 'eye-outline'"
+                      (click)="toggleIdVisibility('visitor-' + i)">
+                    </ion-icon>
+                  </td>
 
-  <td>
-    {{ row.visitorPhone || '-' }}
-  </td>
+                  <td>
+                    {{ row.visitorPhone || row.phone || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.visitNumber || row.visit_number || row.reviewNumber || '-' }}
+                  </td>
+
+                  <td>
+                    {{ row.department || '-' }}
+                  </td>
+
+                  <td>
+                    {{ formatDate(row.created_at || row.time) }}
+                  </td>
 
                 </tr>
 
@@ -439,8 +451,6 @@
       </ion-card-content>
 
     </ion-card>
-
-
     <!-- ================================================= -->
     <!-- جدول المتدربين -->
     <!-- ================================================= -->
@@ -515,25 +525,30 @@
     {{ row.traineeName || row.name || '-' }}
   </td>
 
-  <td class="id-cell">
-    <span>
-      {{
-        isIdRevealed('trainee-' + i)
-          ? (row.nationalId || '-')
-          : maskNationalId(row.nationalId)
-      }}
-    </span>
 
-    <ion-icon
-      *ngIf="row.nationalId"
-      class="reveal-icon no-print"
-      [name]="isIdRevealed('trainee-' + i) ? 'eye-off-outline' : 'eye-outline'"
-      (click)="toggleIdVisibility('trainee-' + i)">
-    </ion-icon>
-  </td>
+<td class="id-cell">
+                  <span>
+                    {{
+                      isIdRevealed('trainee-' + i)
+                        ? (row.national_id || row.nationalId || '-')
+                        : maskNationalId(row.national_id || row.nationalId)
+                    }}
+                  </span>
+
+                  <ion-icon
+                    *ngIf="row.national_id || row.nationalId"
+                    class="reveal-icon no-print"
+                    [name]="isIdRevealed('trainee-' + i) ? 'eye-off-outline' : 'eye-outline'"
+                    (click)="toggleIdVisibility('trainee-' + i)">
+                  </ion-icon>
+                </td>
 
   <td>
     {{ row.department || '-' }}
+  </td>
+
+  <td>
+    {{ formatDate(row.created_at || row.time) }}
   </td>
 
                 </tr>
@@ -649,27 +664,39 @@
     {{ row.name || '-' }}
   </td>
 
-  <td class="id-cell">
-    <span>
-      {{
-        isIdRevealed('companion-' + i)
-          ? (row.nationalId || '-')
-          : maskNationalId(row.nationalId)
-      }}
-    </span>
 
-    <ion-icon
-      *ngIf="row.nationalId"
-      class="reveal-icon no-print"
-      [name]="isIdRevealed('companion-' + i) ? 'eye-off-outline' : 'eye-outline'"
-      (click)="toggleIdVisibility('companion-' + i)">
-    </ion-icon>
+<td class="id-cell">
+                  <span>
+                    {{
+                      isIdRevealed('companion-' + i)
+                        ? (row.national_id || row.nationalId || '-')
+                        : maskNationalId(row.national_id || row.nationalId)
+                    }}
+                  </span>
+
+                  <ion-icon
+                    *ngIf="row.national_id || row.nationalId"
+                    class="reveal-icon no-print"
+                    [name]="isIdRevealed('companion-' + i) ? 'eye-off-outline' : 'eye-outline'"
+                    (click)="toggleIdVisibility('companion-' + i)">
+                  </ion-icon>
+                </td>
+
+  <td>
+    {{ row.visitNumber || row.visit_number || '-' }}
+  </td>
+  
+  <td>
+    {{ row.companionType || row.companion_type || '-' }}
   </td>
 
   <td>
-    {{ row.visitNumber || '-' }}
+    {{ row.department || '-' }}
   </td>
-  
+
+  <td>
+    {{ formatDate(row.created_at || row.time) }}
+  </td>
 
                 </tr>
 

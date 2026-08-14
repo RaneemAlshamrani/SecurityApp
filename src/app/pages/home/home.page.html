@@ -27,198 +27,76 @@
       </ion-button>
 
     </div>
-
   </div>
 
-
   <!-- التاريخ والوقت الحالي -->
-
   <div class="date-strip">
-
     <span>
       {{ currentDateTime }}
     </span>
-
   </div>
-
 
   <div class="page-container">
 
     <!-- زر تسجيل جديد -->
-
     <ion-button
       expand="block"
       class="category-btn"
       (click)="goToEntryMethod()">
-
       <ion-icon
         name="log-in-outline"
         slot="start">
       </ion-icon>
-
       <span>
         عملية تسجيل جديدة
       </span>
-
     </ion-button>
 
-
     <!-- آخر العمليات -->
-
     <section class="recent-section">
-
       <div class="section-header">
-
         <ion-icon
           name="time-outline"
           class="section-icon">
         </ion-icon>
-
         <h2>
           آخر العمليات
         </h2>
-
       </div>
 
-
-      <!-- العملية الأولى -->
-
-      <div class="activity-card">
-
+      <!-- عرض العمليات ديناميكياً باستخدام *ngFor بدلاً من الكروت الثابتة -->
+      <div class="activity-card" *ngFor="let op of latestOperations">
         <div class="card-right">
-
           <div class="avatar-box">
-
             <ion-icon
-              name="person-outline">
+              [name]="getCategoryIcon(op.category)">
             </ion-icon>
-
           </div>
 
-
           <div class="details">
-
             <div class="type-row">
-
               <span class="status-dot"></span>
-
               <span class="role-title">
                 دخول مراجع
+                {{ getCategoryTitle(op.category) }}
               </span>
-
             </div>
-
             <span class="person-name">
-              محمد خالد
+              {{ op.name }}
             </span>
-
           </div>
-
         </div>
-
 
         <div class="card-left">
-
           <span class="timestamp">
-            10:30 ص
+            {{ formatDate(op.created_at) }}
           </span>
-
         </div>
-
       </div>
 
-
-      <!-- العملية الثانية -->
-
-      <div class="activity-card">
-
-        <div class="card-right">
-
-          <div class="avatar-box">
-
-            <ion-icon
-              name="briefcase-outline">
-            </ion-icon>
-
-          </div>
-
-
-          <div class="details">
-
-            <div class="type-row">
-
-              <span class="status-dot"></span>
-
-              <span class="role-title">
-                دخول موظف
-              </span>
-
-            </div>
-
-            <span class="person-name">
-              فيصل أحمد
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div class="card-left">
-
-          <span class="timestamp">
-            10:22 ص
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <!-- العملية الثالثة -->
-
-      <div class="activity-card">
-
-        <div class="card-right">
-
-          <div class="avatar-box">
-
-            <ion-icon
-              name="person-outline">
-            </ion-icon>
-
-          </div>
-
-
-          <div class="details">
-
-            <div class="type-row">
-
-              <span class="status-dot"></span>
-
-              <span class="role-title">
-                دخول متدرب
-              </span>
-
-            </div>
-
-            <span class="person-name">
-              عبدالله سالم
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <div class="card-left">
-
-          <span class="timestamp">
-            10:15 ص
-          </span>
-
-        </div>
-
+      <!-- رسالة في حال عدم وجود عمليات -->
+      <div *ngIf="latestOperations.length === 0" class="no-data-msg" style="text-align: center; color: #888; padding: 20px;">
+        لا توجد عمليات تسجيل حتى الآن
       </div>
 
     </section>
@@ -228,7 +106,6 @@
 </ion-content>
 
 <ion-tab-bar slot="bottom" class="bottom-tabs">
-
   <ion-tab-button selected="true">
     <ion-icon name="options-outline"></ion-icon>
     <ion-label>الرئيسية</ion-label>
@@ -243,5 +120,4 @@
     <ion-icon name="chatbubble-outline"></ion-icon>
     <ion-label>تواصل</ion-label>
   </ion-tab-button>
-
 </ion-tab-bar>

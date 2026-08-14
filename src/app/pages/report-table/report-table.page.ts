@@ -9,8 +9,8 @@ import {
 } from '@angular/router';
 
 import {
-  RegistrationService
-} from '../../services/registration.service';
+  SupabaseService
+} from '../../services/supabase.services';
 
 import { addIcons } from 'ionicons';
 import {
@@ -71,111 +71,98 @@ export class ReportTablePage {
     new Date()
       .toLocaleString('ar-SA');
 
+  private allData: any[] = [];
+
 
   constructor(
 
-  public registrationService:
-    RegistrationService,
+    public supabaseService:
+      SupabaseService,
 
-  private activatedRoute:
-    ActivatedRoute
+    private activatedRoute:
+      ActivatedRoute
 
-) {
+  ) {
 
-  this.registrationService
-  .loadEmployeesFromSupabase()
-  .then(() => {
-    console.log(
-      '👥 EMPLOYEES:',
-      this.registrationService.employees
-    );
-  });
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline,
+      documentTextOutline,
+      documentOutline,
+      peopleOutline,
+      personOutline,
+      schoolOutline,
+      personAddOutline,
+      downloadOutline,
+      printOutline,
+      optionsOutline,
+      chatbubbleOutline,
+      eyeOutline,
+      eyeOffOutline
+    });
 
-  addIcons({
-  arrowBackOutline,
-  arrowForwardOutline,
-  documentTextOutline,
-  documentOutline,
-  peopleOutline,
-  personOutline,
-  schoolOutline,
-  personAddOutline,
-  downloadOutline,
-  printOutline,
-  optionsOutline,
-  chatbubbleOutline,
-  eyeOutline,
-  eyeOffOutline
-});
-
-}
+  }
 
 
   /* =========================================
      عند دخول التقرير
      ========================================= */
 
-ionViewWillEnter(): void {
+  async ionViewWillEnter(): Promise<void> {
 
-  this.loadSelectedCategories();
+    this.loadSelectedCategories();
 
-  this.issueDate =
-    new Date()
-      .toLocaleString('ar-SA');
+    this.issueDate =
+      new Date()
+        .toLocaleString('ar-SA');
 
-  this.registrationService
-    .loadEmployeesFromSupabase()
-    .then(() => {
-      console.log(
-        '👥 الموظفين من Supabase:',
-        this.registrationService.employees
-      );
-    });
+    // استدعاء دالة جلب البيانات من Supabase عند دخول الصفحة
+    await this.fetchDataFromSupabase();
 
-}
+  }
 
 
   /* =========================================
-     نقرأ البيانات مباشرة من Service
+     جلب البيانات من Supabase Service مع الترتيب
+     ========================================= */
+
+  private async fetchDataFromSupabase(): Promise<void> {
+    try {
+      const data = await this.supabaseService.getReportsData({});
+      if (data && Array.isArray(data)) {
+        this.allData = data.sort((a, b) => {
+          const dateA = new Date(b.created_at || b.time || 0).getTime();
+          const dateB = new Date(a.created_at || a.time || 0).getTime();
+          return dateA - dateB;
+        });
+      } else {
+        this.allData = [];
+      }
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+      this.allData = [];
+    }
+  }
+
+
+  /* =========================================
+     تقسيم البيانات القادمة حسب الفئات
      ========================================= */
 
   get employees(): any[] {
-
-    return (
-      this.registrationService
-        .employees ?? []
-    );
-
+    return this.allData.filter(item => item.category === 'employee' || item.category === 'employees');
   }
-
 
   get visitors(): any[] {
-
-    return (
-      this.registrationService
-        .visitors ?? []
-    );
-
+    return this.allData.filter(item => item.category === 'visitor' || item.category === 'visitors');
   }
-
 
   get trainees(): any[] {
-
-    return (
-      this.registrationService
-        .trainees ?? []
-    );
-
+    return this.allData.filter(item => item.category === 'trainee' || item.category === 'trainees');
   }
 
-
   get companions(): any[] {
-
-    return (
-      this.registrationService
-        .companions ?? []
-    );
-
+    return this.allData.filter(item => item.category === 'companion' || item.category === 'companions');
   }
 
 
@@ -266,7 +253,7 @@ ionViewWillEnter(): void {
     return rows.filter(row => {
 
       const rowDate =
-  new Date(row.time || row.created_at);
+        new Date(row.time || row.created_at);
 
       let matchesDate =
         true;
@@ -367,42 +354,43 @@ ionViewWillEnter(): void {
   }
 
   /* =========================================
-   إخفاء / إظهار رقم الهوية
-   ========================================= */
+     إخفاء / إظهار رقم الهوية
+     ========================================= */
 
-private revealedIds = new Set<string>();
+  private revealedIds = new Set<string>();
 
-toggleIdVisibility(key: string): void {
+  toggleIdVisibility(key: string): void {
 
-  if (this.revealedIds.has(key)) {
+    if (this.revealedIds.has(key)) {
 
-    this.revealedIds.delete(key);
+      this.revealedIds.delete(key);
 
-  } else {
+    } else {
 
-    this.revealedIds.add(key);
+      this.revealedIds.add(key);
 
-  }
-
-}
-
-isIdRevealed(key: string): boolean {
-
-  return this.revealedIds.has(key);
-
-}
-
-maskNationalId(value: unknown): string {
-
-  if (!value) {
-
-    return '-';
+    }
 
   }
 
-  return '••••••••••';
+  isIdRevealed(key: string): boolean {
 
-}
+    return this.revealedIds.has(key);
+
+  }
+
+  maskNationalId(value: unknown): string {
+
+    if (!value) {
+      return '-';
+    }
+    const strVal = String(value);
+    if (strVal.length > 4) {
+      return '••••' + strVal.slice(-4);
+    }
+    return '••••••••••';
+
+  }
 
 
   get hasAnyData(): boolean {

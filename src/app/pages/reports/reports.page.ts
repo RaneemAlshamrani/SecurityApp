@@ -10,8 +10,8 @@ import {
 } from '@angular/router';
 
 import {
-  RegistrationService
-} from '../../services/registration.service';
+  SupabaseService
+} from '../../services/supabase.services';
 
 
 @Component({
@@ -30,8 +30,10 @@ import {
 
 export class ReportsPage {
 
+
 fromDate = '';
 toDate = '';
+
 
   dateError = '';
 
@@ -42,10 +44,12 @@ toDate = '';
     'companions'
   ];
 
+  records: any[] = [];
 
- constructor(
-  public registrationService:
-    RegistrationService,
+
+  constructor(
+  public supabaseService:
+    SupabaseService,
 
   private router:
     Router
@@ -53,57 +57,57 @@ toDate = '';
   addIcons({ optionsOutline, documentTextOutline, chatbubbleOutline });
 }
 
+  async ionViewWillEnter() {
+    await this.fetchRecords();
+  }
+
+  async fetchRecords() {
+    try {
+      const data = await this.supabaseService.getReportsData();
+      if (data) {
+        this.records = data;
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    }
+  }
+
 
   /* =========================================
-     العدادات
-     تقرأ مباشرة من الـService
+     العدادات (تم ربطها بمصفوفة السجلات الحقيقية)
      ========================================= */
 
   get employeesCount(): number {
-
-    return this.registrationService
-      .employees
-      .length;
-
+    return this.records.filter(item => 
+      item.category === 'employees' || item.category === 'employee' || item.category === 'موظف'
+    ).length;
   }
-
 
   get visitorsCount(): number {
-
-    return this.registrationService
-      .visitors
-      .length;
-
+    return this.records.filter(item => 
+      item.category === 'visitors' || item.category === 'visitor' || item.category === 'مراجع'
+    ).length;
   }
-
 
   get traineesCount(): number {
-
-    return this.registrationService
-      .trainees
-      .length;
-
+    return this.records.filter(item => 
+      item.category === 'trainees' || item.category === 'trainee' || item.category === 'متدرب'
+    ).length;
   }
-
 
   get companionsCount(): number {
-
-    return this.registrationService
-      .companions
-      .length;
-
+    return this.records.filter(item => 
+      item.category === 'companions' || item.category === 'companion' || item.category === 'مرافق'
+    ).length;
   }
 
-
   get totalCount(): number {
-
     return (
       this.employeesCount +
       this.visitorsCount +
       this.traineesCount +
       this.companionsCount
     );
-
   }
 
 
