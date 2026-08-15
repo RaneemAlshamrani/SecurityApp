@@ -441,6 +441,109 @@ export class RegistrationService {
     }
   }
 
+/* =========================
+   تسجيل موظف عن طريق الباركود
+   ========================= */
+
+async addBarcodeEmployee(): Promise<boolean> {
+
+  const barcodeEmployee = {
+
+    category: 'employee',
+
+    employee_id: '10025',
+
+    name: 'أحمد محمد',
+
+    card_reason: 'دخول عبر الباركود',
+
+    phone: null,
+
+    visit_number: null,
+
+    department_id: 4,
+
+    notes: null,
+
+    companion_type: null,
+
+    national_id: '4567891234',
+
+    created_at:
+      new Date().toISOString()
+  };
+
+  try {
+
+    const result =
+      await this.supabaseService
+        .createRegistration(
+          barcodeEmployee
+        );
+
+    console.log(
+      'تم تسجيل موظف الباركود في Supabase:',
+      result
+    );
+
+    const localEmployee = {
+
+      ...barcodeEmployee,
+
+      employeeId:
+        barcodeEmployee.employee_id,
+
+      employeeName:
+        barcodeEmployee.name,
+
+      department:
+        barcodeEmployee.department_id,
+
+      cardReason:
+        barcodeEmployee.card_reason,
+
+      time:
+        barcodeEmployee.created_at
+    };
+
+    this.employees.push(
+      localEmployee
+    );
+
+    this.saveRegistrations();
+
+    return true;
+
+} catch (error: any) {
+
+  console.error(
+    'فشل تسجيل موظف الباركود - code:',
+    error?.code
+  );
+
+  console.error(
+    'فشل تسجيل موظف الباركود - message:',
+    error?.message
+  );
+
+  console.error(
+    'فشل تسجيل موظف الباركود - details:',
+    error?.details
+  );
+
+  console.error(
+    'فشل تسجيل موظف الباركود - hint:',
+    error?.hint
+  );
+
+  alert(
+    `خطأ: ${error?.message || 'خطأ غير معروف'}`
+  );
+
+  return false;
+}
+}
+
   getAllRegistrations(): any[] {
 
     return [

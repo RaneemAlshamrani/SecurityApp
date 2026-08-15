@@ -30,8 +30,18 @@ import {
 
 export class ReportsPage {
 
-  fromDate = '2026-08-01';
-  toDate = '2026-08-14';
+fromDate = this.getTodayDate();
+toDate = this.getTodayDate();
+
+private getTodayDate(): string {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
 
   dateError = '';
 

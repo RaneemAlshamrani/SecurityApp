@@ -127,23 +127,74 @@ export class ReportTablePage {
      ========================================= */
 
   private async fetchDataFromSupabase(): Promise<void> {
-    try {
-      const data = await this.supabaseService.getReportsData({});
-      if (data && Array.isArray(data)) {
-        this.allData = data.sort((a, b) => {
-          const dateA = new Date(b.created_at || b.time || 0).getTime();
-          const dateB = new Date(a.created_at || a.time || 0).getTime();
+
+  try {
+
+    const data =
+      await this.supabaseService
+        .getReportsData({});
+
+    console.log('REPORT DATA FROM SUPABASE:', data);
+
+    if (
+      data &&
+      Array.isArray(data)
+    ) {
+
+      this.allData =
+        data.sort((a, b) => {
+
+          const dateA =
+            new Date(
+              b.created_at ||
+              b.time ||
+              0
+            ).getTime();
+
+          const dateB =
+            new Date(
+              a.created_at ||
+              a.time ||
+              0
+            ).getTime();
+
           return dateA - dateB;
+
         });
-      } else {
-        this.allData = [];
-      }
-    } catch (error) {
-      console.error('Error fetching report data:', error);
+
+    } else {
+
       this.allData = [];
+
     }
+
+    console.log(
+      'ALL DATA:',
+      this.allData
+    );
+
+    console.log(
+      'EMPLOYEES:',
+      this.employees
+    );
+
+    console.log(
+      'VISITORS:',
+      this.visitors
+    );
+
+  } catch (error) {
+
+    console.error(
+      'Error fetching report data:',
+      error
+    );
+
+    this.allData = [];
+
   }
 
+}
 
   /* =========================================
      تقسيم البيانات القادمة حسب الفئات
@@ -250,6 +301,13 @@ export class ReportTablePage {
         .toLowerCase();
 
 
+console.log(
+  'REPORT FILTER DATES:',
+  this.fromDate,
+  this.toDate
+);
+
+
     return rows.filter(row => {
 
       const rowDate =
@@ -318,14 +376,13 @@ export class ReportTablePage {
   }
 
 
-  get filteredEmployees(): any[] {
+get filteredEmployees(): any[] {
 
-    return this.filterRows(
-      this.employees
-    );
+  return this.filterRows(
+    this.employees
+  );
 
-  }
-
+}
 
   get filteredVisitors(): any[] {
 
