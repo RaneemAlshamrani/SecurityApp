@@ -32,12 +32,24 @@
               <h2>{{ contact.title }}</h2>
               <p>{{ contact.desc }}</p>
 
-              <a
-                class="phone-row"
-                [href]="'tel:' + contact.phone">
-                <span>{{ contact.phone }}</span>
-                <ion-icon name="call-outline"></ion-icon>
-              </a>
+              <!-- منطقة خيارات التواصل (اتصال أو واتساب) -->
+              <div class="contact-actions">
+                <span class="phone-number">{{ contact.phone }}</span>
+
+                <div class="action-buttons">
+                  <!-- زر الاتصال الهاتفي -->
+                  <a [href]="contact.callLink" class="action-btn call-btn">
+                    <ion-icon name="call-outline"></ion-icon>
+                    <span>اتصال</span>
+                  </a>
+
+                  <!-- زر الواتساب -->
+                  <a [href]="contact.whatsappLink" target="_blank" class="action-btn whatsapp-btn">
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                    <span>واتساب</span>
+                  </a>
+                </div>
+              </div>
             </div>
 
             <div class="logo-container">
