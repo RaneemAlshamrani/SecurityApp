@@ -1,36 +1,38 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Observable } from 'rxjs';
+
+import { supabase } from './supabase';
 
 @Injectable({
   providedIn: 'root'
 })
 class SupabaseService {
-  private supabase: SupabaseClient;
 
-  
-  private supabaseUrl = 'https://nfznctuiqvtdodzfojki.supabase.co';
-  private supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mem5jdHVpcXZ0ZG9kemZvamtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMjk0OTIsImV4cCI6MjEwMTkwNTQ5Mn0.wxO-TZ4RK4fq11HzfYCIDydZ-7YghaDnU-ijHfMqWpY';
-
-  constructor() {
-    this.supabase = createClient(this.supabaseUrl, this.supabaseKey);
-  }
 
   /* =========================================
      1. دوال خاصة بالصفحة الرئيسية (Home)
      ========================================= */
 
   async getLatestOperations(limit: number = 3) {
-    const { data, error } = await this.supabase
-      .from('registrations') 
+
+    const { data, error } = await supabase
+      .from('registrations')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(limit);
 
+
     if (error) {
-      console.error('Error fetching latest operations:', error);
+
+      console.error(
+        'Error fetching latest operations:',
+        error
+      );
+
       throw error;
     }
+
+
     return data || [];
   }
 
@@ -45,32 +47,68 @@ class SupabaseService {
     endDate?: string;
     searchQuery?: string;
   } = {}) {
-    let query = this.supabase
+
+
+    let query = supabase
       .from('registrations')
       .select('*')
-      .order('created_at', { ascending: false }); 
+      .order('created_at', { ascending: false });
 
-    if (filters.category && filters.category !== 'all') {
-      query = query.eq('category', filters.category);
+
+    if (
+      filters.category &&
+      filters.category !== 'all'
+    ) {
+
+      query = query.eq(
+        'category',
+        filters.category
+      );
     }
+
 
     if (filters.startDate) {
-      query = query.gte('created_at', filters.startDate);
+
+      query = query.gte(
+        'created_at',
+        filters.startDate
+      );
     }
+
 
     if (filters.endDate) {
-      query = query.lte('created_at', filters.endDate);
+
+      query = query.lte(
+        'created_at',
+        filters.endDate
+      );
     }
+
 
     if (filters.searchQuery) {
-      query = query.ilike('name', `%${filters.searchQuery}%`);
+
+      query = query.ilike(
+        'name',
+      `%${filters.searchQuery}%`
+      );
     }
-    const { data, error } = await query;
+
+
+    const { data, error } =
+      await query;
+
 
     if (error) {
-      console.error('Error fetching reports data:', error);
+
+      console.error(
+        'Error fetching reports data:',
+        error
+      );
+
       throw error;
     }
+
+
     return data || [];
   }
 
@@ -80,23 +118,192 @@ class SupabaseService {
      ========================================= */
 
   onNewRegistration(): Observable<any> {
-    return new Observable((observer) => {
-      const channel = this.supabase
-        .channel('public:registrations')
-        .on(
-          'postgres_changes',
-          { event: 'INSERT', schema: 'public', table: 'registrations' },
-          (payload) => {
-            observer.next(payload);
-          }
-        )
-        .subscribe();
+  return new Observable((observer) => {
 
-      return () => {
-        this.supabase.removeChannel(channel);
-      };
-    });
+    let channel: any;
+
+    const connectRealtime = async () => {
+      try {
+
+        const { data, error } =
+          await supabase.auth.getSession();
+
+        if (error) {
+          console.error(
+            'خطأ أثناء جلب Session للـRealtime:',
+            error
+          );
+
+          observer.error(error);
+          return;
+        }
+
+        if (!data.session) {
+          console.warn(
+            'لا توجد Session، لن يتم تشغيل Realtime'
+          );
+
+          return;
+        }
+
+        // إعطاء Realtime نفس Access Token الخاص بالمستخدم
+        supabase.realtime.setAuth(
+          data.session.access_token
+        );
+
+        channel = supabase
+          .channel('public:registrations')
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'registrations'
+            },
+            (payload) => {
+              console.log(
+                'Realtime registration:',
+                payload
+              );
+
+              observer.next(payload);
+            }
+          )
+          .subscribe((status) => {
+
+            console.log(
+              'Realtime status:',
+              status
+            );
+
+          });
+
+      } catch (error) {
+
+        console.error(
+          'Realtime connection error:',
+          error
+        );
+
+        observer.error(error);
+      }
+    };
+
+    connectRealtime();
+
+
+    return () => {
+
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+
+    };
+
+  });
+}
+
+  /* =========================================
+     4. إنشاء تسجيل جديد
+     ========================================= */
+
+  async createRegistration(data: any) {
+
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+
+    if (userError) {
+
+      console.error(
+        'خطأ أثناء جلب المستخدم الحالي:',
+        userError
+      );
+
+      throw userError;
+    }
+
+
+    if (!user) {
+
+      throw new Error(
+        'لا يوجد مستخدم مسجل الدخول حاليًا'
+      );
+    }
+
+
+    const registrationData = {
+
+      ...data,
+
+      created_by:
+        user.id
+
+    };
+
+
+    console.log(
+      'البيانات المرسلة إلى Supabase:',
+      registrationData
+    );
+
+
+    const { error } = await supabase
+      .from('registrations')
+      .insert([
+        registrationData
+      ]);
+
+
+    if (error) {
+
+      console.error(
+        'خطأ أثناء الحفظ في registrations:',
+        error
+      );
+
+      throw error;
+    }
+
+
+    return registrationData;
   }
+
+
+  /* =========================================
+     5. جلب الإدارات
+     ========================================= */
+
+  async getDepartments() {
+
+    const { data, error } =
+      await supabase
+        .from('departments')
+        .select('id, name')
+        .order(
+          'name',
+          {
+            ascending: true
+          }
+        );
+
+
+    if (error) {
+
+      console.error(
+        'خطأ أثناء جلب الإدارات:',
+        error
+      );
+
+      throw error;
+    }
+
+
+    return data || [];
+  }
+
 }
 
 export { SupabaseService };

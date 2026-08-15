@@ -1,82 +1,218 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://nfznctuiqvtdodzfojki.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mem5jdHVpcXZ0ZG9kemZvamtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMjk0OTIsImV4cCI6MjEwMTkwNTQ5Mn0.wxO-TZ4RK4fq11HzfYCIDydZ-7YghaDnU-ijHfMqWpY';
+import { supabase } from './supabase';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public supabase: SupabaseClient;
 
-  constructor(private router: Router) {
-    this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-  }
 
-  async loginByUsername(username: string, password: string, rememberMe: boolean = false) {
-    // 1. استدعاء الـ Edge Function الآمنة
-    const { data, error } = await this.supabase.functions.invoke('login-by-username', {
-      body: { username: username.trim().toLowerCase(), password }
-    });
+  constructor(
+    private router: Router
+  ) {}
 
-    if (error || data?.error) {
-      throw new Error(data?.error || 'اسم المستخدم أو كلمة المرور غير صحيحة');
+
+  /* =========================================
+     تسجيل الدخول باسم المستخدم
+     ========================================= */
+
+  async loginByUsername(
+    username: string,
+    password: string,
+    rememberMe: boolean = false
+  ) {
+
+    const { data, error } =
+      await supabase.functions.invoke(
+        'login-by-username',
+        {
+          body: {
+            username:
+              username
+                .trim()
+                .toLowerCase(),
+
+            password
+          }
+        }
+      );
+
+
+    if (
+      error ||
+      data?.error
+    ) {
+
+      throw new Error(
+        data?.error ||
+        'اسم المستخدم أو كلمة المرور غير صحيحة'
+      );
     }
 
-    // 2. تعيين الجلسة (Session) في التطبيق بعد نجاح الدخول
+
+    /* تعيين الجلسة بعد نجاح الدخول */
+
     if (data?.session) {
-      await this.supabase.auth.setSession(data.session);
+
+      await supabase.auth.setSession(
+        data.session
+      );
+
     }
 
+
     if (!rememberMe) {
-      window.addEventListener('beforeunload', () => {
-        this.supabase.auth.signOut();
-      });
+
+      window.addEventListener(
+        'beforeunload',
+        () => {
+
+          supabase.auth.signOut();
+
+        }
+      );
+
     }
+
 
     return data;
   }
 
-  async login(email: string, password: string, rememberMe: boolean = false) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
 
-    if (error) throw error;
+  /* =========================================
+     تسجيل الدخول بالإيميل
+     ========================================= */
+
+  async login(
+    email: string,
+    password: string,
+    rememberMe: boolean = false
+  ) {
+
+    const { data, error } =
+      await supabase.auth
+        .signInWithPassword({
+          email,
+          password
+        });
+
+
+    if (error) {
+
+      throw error;
+
+    }
+
 
     if (!rememberMe) {
-      window.addEventListener('beforeunload', () => {
-        this.supabase.auth.signOut();
-      });
+
+      window.addEventListener(
+        'beforeunload',
+        () => {
+
+          supabase.auth.signOut();
+
+        }
+      );
+
     }
+
 
     return data;
   }
+
+
+  /* =========================================
+     جلب بيانات موظف الأمن
+     ========================================= */
 
   async getStaffProfile() {
-    const { data: { user } } = await this.supabase.auth.getUser();
-    if (!user) return null;
 
-    const { data, error } = await this.supabase
-      .from('security_staff_profiles')
-      .select('full_name, gate_number')
-      .eq('id', user.id)
-      .single();
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
 
-    if (error) return null;
+
+    if (userError) {
+
+      console.error(
+        'خطأ أثناء جلب المستخدم:',
+        userError
+      );
+
+      return null;
+    }
+
+
+    if (!user) {
+
+      return null;
+
+    }
+
+
+    const { data, error } =
+      await supabase
+        .from('security_staff_profiles')
+        .select(
+          'full_name, gate_number'
+        )
+        .eq(
+          'id',
+          user.id
+        )
+        .single();
+
+
+    if (error) {
+
+      console.error(
+        'خطأ أثناء جلب بيانات موظف الأمن:',
+        error
+      );
+
+      return null;
+    }
+
+
     return data;
   }
 
+
+  /* =========================================
+     جلب الـ Session
+     ========================================= */
+
   async getSession() {
-    const { data } = await this.supabase.auth.getSession();
+
+    const { data } =
+      await supabase.auth.getSession();
+
+
     return data.session;
   }
 
+
+  /* =========================================
+     تسجيل الخروج
+     ========================================= */
+
   async logout() {
-    await this.supabase.auth.signOut();
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+
+    await supabase.auth.signOut();
+
+
+    await this.router.navigateByUrl(
+      '/login',
+      {
+        replaceUrl: true
+      }
+    );
+
   }
+
 }

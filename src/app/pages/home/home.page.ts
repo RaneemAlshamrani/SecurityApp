@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth'; // استدعاء خدمة المصادقة
-import { CommonModule } from '@angular/common'; // مهم جداً لدعم *ngFor و async pipe
+import { AuthService } from '../../services/auth';
+import { CommonModule } from '@angular/common';
 
 import {
   IonContent,
@@ -13,6 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
+
 import {
   logInOutline,
   timeOutline,
@@ -24,17 +25,17 @@ import {
   logOutOutline
 } from 'ionicons/icons';
 
-// استيراد خدمة Supabase الخاصة بك (تأكد من مطابقة مسار الملف)
-import { SupabaseService } from 'src/app/services/supabase.services';
-import { Subscription } from 'rxjs';
+import { SupabaseService } from '../../services/supabase.services';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
+
   imports: [
-    CommonModule, // أُضيف هنا لدعم *ngFor والتنسيقات
+    CommonModule,
     RouterLink,
     IonContent,
     IonButton,
@@ -47,18 +48,22 @@ import { Subscription } from 'rxjs';
 export class HomePage implements OnInit, OnDestroy {
 
   currentDateTime = '';
+
   staffName = 'جاري التحميل...';
   gateNumber = '-';
 
-  latestOperations: any[] = []; // مصفوفة آخر العمليات الفعلية من Supabase
+  latestOperations: any[] = [];
+
+  private dateTimeInterval:
+    ReturnType<typeof setInterval>;
+
   
-  private dateTimeInterval: ReturnType<typeof setInterval>;
-  private realtimeSub?: Subscription;
+
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private supabaseService: SupabaseService // حقن خدمة سوبابيس (تمت إضافة الفاصلة الناقصة هنا)
+    private supabaseService: SupabaseService
   ) {
 
     addIcons({
@@ -72,145 +77,367 @@ export class HomePage implements OnInit, OnDestroy {
       logOutOutline
     });
 
-    // عرض التاريخ والوقت مباشرة عند فتح الصفحة
+
     this.updateDateTime();
 
-    // تحديث الوقت تلقائياً كل ثانية
-    this.dateTimeInterval = setInterval(() => {
-      this.updateDateTime();
-    }, 1000);
+
+    this.dateTimeInterval =
+      setInterval(() => {
+
+        this.updateDateTime();
+
+      }, 1000);
 
   }
 
-  // تم وضع استدعاء الدوال هنا داخل دالة ngOnInit النظامية
-  ngOnInit() {
-    this.loadLatestOperations();
-    this.setupRealtimeSubscription();
-  }
 
-
-  /* =========================
-     جلب آخر العمليات من Supabase
-     ========================= */
-  async loadLatestOperations() {
-    try {
-      this.latestOperations = await this.supabaseService.getLatestOperations(3); // جلب آخر 3 عمليات كما هو في التصميم
-    } catch (error) {
-      console.error('Error fetching latest operations:', error);
-    }
-  }
-
-
-  /* =========================
-     التحديث الفوري (Realtime)
-     ========================= */
-  setupRealtimeSubscription() {
-    this.realtimeSub = this.supabaseService.onNewRegistration().subscribe((payload: any) => {
-      // إضافة التسجيل الجديد فوراً وإبقائه في حدود آخر 3 عمليات
-      this.latestOperations = [payload.new, ...this.latestOperations].slice(0, 3);
-    });
-  }
-
-
-  /* =========================
-     دوال مساعدة للأيقونات والمسميات
-     ========================= */
-  getCategoryIcon(category: string): string {
-    switch (category) {
-      case 'employee': return 'briefcase-outline';
-      case 'visitor': return 'person-outline';
-      case 'trainee': return 'person-outline';
-      default: return 'person-outline';
-    }
-  }
-
-  getCategoryTitle(category: string): string {
-    switch (category) {
-      case 'employee': return 'دخول موظف';
-      case 'visitor': return 'دخول مراجع';
-      case 'trainee': return 'دخول متدرب';
-      case 'companion': return 'دخول مرافق';
-      default: return 'عملية تسجيل';
-    }
-  }
-
-
-  /* =========================
-     تحديث التاريخ والوقت
-     ========================= */
-  updateDateTime(): void {
-    const now = new Date();
-
-    const date = now.toLocaleDateString(
-      'ar-SA-u-ca-gregory',
-      {
-        timeZone: 'Asia/Riyadh',
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }
-    );
-
-    const time = now.toLocaleTimeString(
-      'ar-SA',
-      {
-        timeZone: 'Asia/Riyadh',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      }
-    );
-
-    this.currentDateTime = `${date} - ${time}`;
-  }
-
-  /* =========================
-     الانتقال لصفحة التسجيل
-     ========================= */
-  goToEntryMethod(): void {
-    this.router.navigateByUrl('/entry-method');
-  }
-
-onLogout(): void {
-    this.router.navigateByUrl('/login');
-  }
   /* =========================================
-     تنسيق التاريخ والوقت (مضاف حديثاً لمنع الأخطاء)
+     تشغيل الصفحة
      ========================================= */
-  formatDate(value: unknown): string {
+
+  async ngOnInit(): Promise<void> {
+
+    await this.loadStaffProfile();
+
+    const session =
+      await this.authService.getSession();
+
+
+    if (!session) {
+
+      console.error(
+        'لا توجد Session للمستخدم الحالي'
+      );
+
+      await this.router.navigateByUrl(
+        '/login',
+        {
+          replaceUrl: true
+        }
+      );
+
+      return;
+    }
+
+
+    await this.loadLatestOperations();
+
+    
+
+  }
+
+
+  /* =========================================
+     جلب بيانات موظف الأمن
+     ========================================= */
+
+  async loadStaffProfile(): Promise<void> {
+
+    try {
+
+      const profile =
+        await this.authService
+          .getStaffProfile();
+
+
+      if (!profile) {
+
+        this.staffName =
+          'موظف الأمن';
+
+        this.gateNumber =
+          '-';
+
+        return;
+      }
+
+
+      this.staffName =
+        profile.full_name ||
+        'موظف الأمن';
+
+
+      this.gateNumber =
+        profile.gate_number ||
+        '-';
+
+
+      console.log(
+        'بيانات موظف الأمن:',
+        profile
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        'خطأ أثناء تحميل بيانات موظف الأمن:',
+        error
+      );
+
+
+      this.staffName =
+        'موظف الأمن';
+
+      this.gateNumber =
+        '-';
+
+    }
+
+  }
+
+
+  /* =========================================
+     جلب آخر العمليات
+     ========================================= */
+
+  async loadLatestOperations(): Promise<void> {
+
+    try {
+
+      this.latestOperations =
+        await this.supabaseService
+          .getLatestOperations(3);
+
+
+      console.log(
+        'آخر العمليات:',
+        this.latestOperations
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        'Error fetching latest operations:',
+        error
+      );
+
+
+      this.latestOperations = [];
+
+    }
+
+  }
+
+
+  
+
+
+  /* =========================================
+     أيقونة الفئة
+     ========================================= */
+
+  getCategoryIcon(
+    category: string
+  ): string {
+
+    switch (category) {
+
+      case 'employee':
+        return 'briefcase-outline';
+
+      case 'visitor':
+        return 'person-outline';
+
+      case 'trainee':
+        return 'person-outline';
+
+      case 'companion':
+        return 'person-outline';
+
+      default:
+        return 'person-outline';
+
+    }
+
+  }
+
+
+  /* =========================================
+     اسم الفئة
+     ========================================= */
+
+  getCategoryTitle(
+    category: string
+  ): string {
+
+    switch (category) {
+
+      case 'employee':
+        return 'دخول موظف';
+
+      case 'visitor':
+        return 'دخول مراجع';
+
+      case 'trainee':
+        return 'دخول متدرب';
+
+      case 'companion':
+        return 'دخول مرافق';
+
+      default:
+        return 'عملية تسجيل';
+
+    }
+
+  }
+
+
+  /* =========================================
+     التاريخ والوقت
+     ========================================= */
+
+  updateDateTime(): void {
+
+    const now =
+      new Date();
+
+
+    const date =
+      now.toLocaleDateString(
+        'ar-SA-u-ca-gregory',
+        {
+          timeZone:
+            'Asia/Riyadh',
+
+          weekday:
+            'long',
+
+          year:
+            'numeric',
+
+          month:
+            'long',
+
+          day:
+            'numeric'
+        }
+      );
+
+
+    const time =
+      now.toLocaleTimeString(
+        'ar-SA',
+        {
+          timeZone:
+            'Asia/Riyadh',
+
+          hour:
+            '2-digit',
+
+          minute:
+            '2-digit',
+
+          hour12:
+            true
+        }
+      );
+
+
+    this.currentDateTime =
+     ` ${date} - ${time};`
+
+  }
+
+
+  /* =========================================
+     الانتقال للتسجيل
+     ========================================= */
+
+  goToEntryMethod(): void {
+
+    this.router.navigateByUrl(
+      '/entry-method'
+    );
+
+  }
+
+
+  /* =========================================
+     تسجيل الخروج
+     ========================================= */
+
+  async onLogout(): Promise<void> {
+
+    await this.authService.logout();
+
+  }
+
+
+  /* =========================================
+     تنسيق التاريخ
+     ========================================= */
+
+  formatDate(
+    value: unknown
+  ): string {
+
     if (!value) {
+
       return '-';
+
     }
 
-    const date = new Date(value as string);
 
-    if (Number.isNaN(date.getTime())) {
+    const date =
+      new Date(
+        value as string
+      );
+
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+
       return '-';
+
     }
+
 
     return date.toLocaleString(
       'ar-SA',
       {
-        timeZone: 'Asia/Riyadh',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
+        timeZone:
+          'Asia/Riyadh',
+
+        year:
+          'numeric',
+
+        month:
+          '2-digit',
+
+        day:
+          '2-digit',
+
+        hour:
+          '2-digit',
+
+        minute:
+          '2-digit',
+
+        second:
+          '2-digit'
       }
     );
+
   }
 
-  /* =========================
-     إيقاف المؤقتات عند إغلاق الصفحة
-     ========================= */
+
+  /* =========================================
+     تنظيف الاشتراكات
+     ========================================= */
+
   ngOnDestroy(): void {
-    clearInterval(this.dateTimeInterval);
-    if (this.realtimeSub) {
-      this.realtimeSub.unsubscribe();
-    }
+
+    clearInterval(
+      this.dateTimeInterval
+    );
+
+
+
   }
 
 }

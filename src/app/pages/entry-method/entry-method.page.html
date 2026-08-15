@@ -232,9 +232,9 @@
                 placeholder="اختر الإدارة"
                 [(ngModel)]="employeeDepartment">
 
-                @for (department of departments; track department) {
-                  <ion-select-option [value]="department">
-                    {{ department }}
+                @for (department of departments; track department.id) {
+                  <ion-select-option [value]="department.id">
+                    {{ department.name }}
                   </ion-select-option>
                 }
 
@@ -398,9 +398,9 @@
                 placeholder="اختر الإدارة"
                 [(ngModel)]="traineeDepartment">
 
-                @for (department of departments; track department) {
-                  <ion-select-option [value]="department">
-                    {{ department }}
+                @for (department of departments; track department.id) {
+                  <ion-select-option [value]="department.id">
+                    {{ department.name }}
                   </ion-select-option>
                 }
 
@@ -624,9 +624,9 @@
                 placeholder="اختر الإدارة"
                 [(ngModel)]="visitorDepartment">
 
-                @for (department of departments; track department) {
-                  <ion-select-option [value]="department">
-                    {{ department }}
+                @for (department of departments; track department.id) {
+                  <ion-select-option [value]="department.id">
+                    {{ department.name }}
                   </ion-select-option>
                 }
 
@@ -868,9 +868,9 @@
                   placeholder="اختر الإدارة"
                   [(ngModel)]="companion.department">
 
-                  @for (department of departments; track department) {
-                    <ion-select-option [value]="department">
-                      {{ department }}
+                  @for (department of departments; track department.id) {
+                    <ion-select-option [value]="department.id">
+                      {{ department.name }}
                     </ion-select-option>
                   }
 

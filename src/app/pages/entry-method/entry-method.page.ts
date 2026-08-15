@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { RegistrationService } from '../../services/registration.service';
+import { SupabaseService } from '../../services/supabase.services';
 
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 
@@ -49,7 +50,6 @@ import {
   IonLabel
 } from '@ionic/angular/standalone';
 
-
 @Component({
   selector: 'app-entry-method',
   templateUrl: './entry-method.page.html',
@@ -86,36 +86,17 @@ import {
     IonTabButton
   ]
 })
-
-
 export class EntryMethodPage {
 
   showCategories = false;
 
   submitted = false;
 
-
   /* =========================
      الإدارات
      ========================= */
 
-  departments = [
-    'الموارد البشرية',
-    'الإدارة المالية',
-    'تقنية المعلومات',
-    'إدارة المشاريع',
-    'الاستثمار',
-    'الصحة العامة',
-    'النظافة',
-    'الرقابة',
-    'التراخيص',
-    'خدمة العملاء',
-    'التخطيط الحضري',
-    'الأراضي والممتلكات',
-    'الإعلام والاتصال المؤسسي',
-    'الطوارئ والأزمات'
-  ];
-
+  departments: { id: string; name: string }[] = [];
 
   /* =========================
      الموظف
@@ -124,12 +105,9 @@ export class EntryMethodPage {
   employeeId = '';
   employeeName = '';
 
-  // اختيارية
   employeeDepartment = '';
 
-  // إجباري
   cardReason = '';
-
 
   /* =========================
      المتدرب
@@ -138,11 +116,9 @@ export class EntryMethodPage {
   traineeName = '';
   traineeNationalId = '';
 
-  // اختيارية
   traineeDepartment = '';
 
   traineeNotes = '';
-
 
   /* =========================
      المراجع
@@ -151,14 +127,11 @@ export class EntryMethodPage {
   visitorId = '';
   visitorName = '';
 
-  // اختياري
   visitorPhone = '';
 
   visitNumber = '';
 
-  // اختيارية
   visitorDepartment = '';
-
 
   /* =========================
      المرافق
@@ -169,50 +142,71 @@ export class EntryMethodPage {
       name: '',
       nationalId: '',
       visitNumber: '',
-
-      // اختياري
       companionType: '',
-
-      // اختيارية
       department: ''
     }
   ];
 
+  constructor(
+    private router: Router,
+    private registrationService: RegistrationService,
+    private supabaseService: SupabaseService
+  ) {
 
-constructor(
-  private router: Router,
-  private registrationService: RegistrationService
-) {
+    addIcons({
+      qrCodeOutline,
+      createOutline,
+      chevronDownOutline,
+      chevronUpOutline,
+      arrowForwardOutline,
+      addOutline,
+      removeCircleOutline,
+      optionsOutline,
+      documentTextOutline,
+      chatbubbleOutline
+    });
 
-  addIcons({
-    qrCodeOutline,
-    createOutline,
-    chevronDownOutline,
-    chevronUpOutline,
-    arrowForwardOutline,
-    addOutline,
-    removeCircleOutline,
-    optionsOutline,
-    documentTextOutline,
-    chatbubbleOutline
-  });
-
-}
-
+  }
 
   /* =========================
-     كل مرة ندخل الصفحة
-     نمسح البيانات القديمة
+     عند دخول الصفحة
      ========================= */
 
-  ionViewWillEnter(): void {
+  async ionViewWillEnter(): Promise<void> {
 
     this.resetForms();
 
     this.showCategories = false;
 
+    await this.loadDepartments();
   }
 
+  /* =========================
+     تحميل الإدارات من Supabase
+     ========================= */
+
+  private async loadDepartments(): Promise<void> {
+
+    try {
+
+      this.departments =
+        await this.supabaseService.getDepartments();
+
+      console.log(
+        'الإدارات من Supabase:',
+        this.departments
+      );
+
+    } catch (error) {
+
+      console.error(
+        'فشل تحميل الإدارات:',
+        error
+      );
+
+      this.departments = [];
+    }
+  }
 
   /* =========================
      تنظيف جميع الحقول
@@ -227,14 +221,12 @@ constructor(
     this.employeeDepartment = '';
     this.cardReason = '';
 
-
     /* المتدرب */
 
     this.traineeName = '';
     this.traineeNationalId = '';
     this.traineeDepartment = '';
     this.traineeNotes = '';
-
 
     /* المراجع */
 
@@ -243,7 +235,6 @@ constructor(
     this.visitorPhone = '';
     this.visitNumber = '';
     this.visitorDepartment = '';
-
 
     /* المرافق */
 
@@ -257,13 +248,22 @@ constructor(
       }
     ];
 
-
     /* Validation */
 
     this.submitted = false;
-
   }
 
+  addCompanion(): void {
+
+    this.companions.push({
+      name: '',
+      nationalId: '',
+      visitNumber: '',
+      companionType: '',
+      department: ''
+    });
+
+  }
 
   /* =========================
      فتح / إغلاق الفئات
@@ -278,77 +278,62 @@ constructor(
 
   }
 
-
   /* =========================
      Barcode
      ========================= */
 
- async scanBarcode(): Promise<void> {
+  async scanBarcode(): Promise<void> {
 
-  try {
+    try {
 
-    const support =
-      await BarcodeScanner.isSupported();
+      const support =
+        await BarcodeScanner.isSupported();
 
-    if (!support.supported) {
+      if (!support.supported) {
+
+        alert(
+          'الجهاز لا يدعم قراءة الباركود'
+        );
+
+        return;
+      }
+
+      const permission =
+        await BarcodeScanner.requestPermissions();
+
+      if (
+        permission.camera !== 'granted'
+      ) {
+
+        alert(
+          'يرجى السماح باستخدام الكاميرا'
+        );
+
+        return;
+      }
+
+      const result =
+        await BarcodeScanner.scan();
+
+      if (
+        result.barcodes.length > 0
+      ) {
+
+        alert(
+          'تمت قراءة الباركود بنجاح'
+        );
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
 
       alert(
-        'الجهاز لا يدعم قراءة الباركود'
+        'تعذر فتح الكاميرا'
       );
-
-      return;
     }
-
-    const permission =
-      await BarcodeScanner.requestPermissions();
-
-    if (
-      permission.camera !== 'granted'
-    ) {
-
-      alert(
-        'يرجى السماح باستخدام الكاميرا'
-      );
-
-      return;
-    }
-
-    const result =
-      await BarcodeScanner.scan();
-
-    if (
-      result.barcodes.length > 0
-    ) {
-
-
-const saved =
-  await this.registrationService
-    .addBarcodeEmployee();
-
-if (saved) {
-
-  alert('تم التسجيل بنجاح');
-
-} else {
-
-  alert('تعذر تسجيل العملية');
-
-}
-
-    }
-
-  } catch (error) {
-
-    console.error(error);
-
-    alert(
-      'تعذر فتح الكاميرا'
-    );
-
   }
-
-}
-
 
   /* =========================
      Employee Validation
@@ -362,7 +347,6 @@ if (saved) {
 
   }
 
-
   isEmployeeNameValid(): boolean {
 
     return !/[0-9]/.test(
@@ -371,15 +355,13 @@ if (saved) {
 
   }
 
-
   /* =========================
      Save Employee
      ========================= */
 
-  saveEmployee(): void {
+  async saveEmployee(): Promise<void> {
 
     this.submitted = true;
-
 
     if (
       !this.employeeId.trim() ||
@@ -395,35 +377,42 @@ if (saved) {
 
     }
 
+    try {
 
-    this.registrationService.addEmployee({
+      await this.registrationService.addEmployee({
 
-      employeeId:
-        this.employeeId,
+        employeeId:
+          this.employeeId,
 
-      employeeName:
-        this.employeeName,
+        employeeName:
+          this.employeeName,
 
-      department:
-        this.employeeDepartment,
+        department:
+          this.employeeDepartment,
 
-      cardReason:
-        this.cardReason
+        cardReason:
+          this.cardReason
 
-    });
+      });
 
+      this.resetForms();
 
-    /* تنظيف الخانات بعد التسجيل */
+      this.router.navigateByUrl(
+        '/success'
+      );
 
-    this.resetForms();
+    } catch (error) {
 
+      console.error(
+        'فشل تسجيل الموظف:',
+        error
+      );
 
-    this.router.navigateByUrl(
-      '/success'
-    );
-
+      alert(
+        'حدث خطأ أثناء حفظ التسجيل. لم يتم حفظ البيانات.'
+      );
+    }
   }
-
 
   /* =========================
      Trainee Validation
@@ -437,7 +426,6 @@ if (saved) {
 
   }
 
-
   isTraineeNationalIdValid(): boolean {
 
     return /^[0-9]+$/.test(
@@ -446,15 +434,13 @@ if (saved) {
 
   }
 
-
   /* =========================
      Save Trainee
      ========================= */
 
-  saveTrainee(): void {
+  async saveTrainee(): Promise<void> {
 
     this.submitted = true;
-
 
     if (
       !this.traineeName.trim() ||
@@ -468,35 +454,42 @@ if (saved) {
 
     }
 
+    try {
 
-    this.registrationService.addTrainee({
+      await this.registrationService.addTrainee({
 
-      traineeName:
-        this.traineeName,
+        traineeName:
+          this.traineeName,
 
-      nationalId:
-        this.traineeNationalId,
+        nationalId:
+          this.traineeNationalId,
 
-      department:
-        this.traineeDepartment,
+        department:
+          this.traineeDepartment,
 
-      notes:
-        this.traineeNotes
+        notes:
+          this.traineeNotes
 
-    });
+      });
 
+      this.resetForms();
 
-    /* تنظيف الخانات بعد التسجيل */
+      this.router.navigateByUrl(
+        '/success'
+      );
 
-    this.resetForms();
+    } catch (error) {
 
+      console.error(
+        'فشل تسجيل المتدرب:',
+        error
+      );
 
-    this.router.navigateByUrl(
-      '/success'
-    );
-
+      alert(
+        'حدث خطأ أثناء حفظ التسجيل. لم يتم حفظ البيانات.'
+      );
+    }
   }
-
 
   /* =========================
      Visitor Validation
@@ -510,7 +503,6 @@ if (saved) {
 
   }
 
-
   isVisitorNameValid(): boolean {
 
     return !/[0-9]/.test(
@@ -518,7 +510,6 @@ if (saved) {
     );
 
   }
-
 
   isVisitorPhoneValid(): boolean {
 
@@ -528,7 +519,6 @@ if (saved) {
 
   }
 
-
   isVisitNumberValid(): boolean {
 
     return /^[0-9]+$/.test(
@@ -537,15 +527,13 @@ if (saved) {
 
   }
 
-
   /* =========================
      Save Visitor
      ========================= */
 
-  saveVisitor(): void {
+  async saveVisitor(): Promise<void> {
 
     this.submitted = true;
-
 
     if (
       !this.visitorId.trim() ||
@@ -564,64 +552,45 @@ if (saved) {
     ) {
 
       return;
-
     }
 
+    try {
 
-    this.registrationService.addVisitor({
+      await this.registrationService.addVisitor({
 
-      visitorId:
-        this.visitorId,
+        visitorId:
+          this.visitorId,
 
-      visitorName:
-        this.visitorName,
+        visitorName:
+          this.visitorName,
 
-      visitorPhone:
-        this.visitorPhone,
+        visitorPhone:
+          this.visitorPhone,
 
-      visitNumber:
-        this.visitNumber,
+        visitNumber:
+          this.visitNumber,
 
-      department:
-        this.visitorDepartment
+        department:
+          this.visitorDepartment
 
-    });
+      });
 
+      this.resetForms();
 
-    /* تنظيف الخانات بعد التسجيل */
+      this.router.navigateByUrl('/success');
 
-    this.resetForms();
+    } catch (error) {
 
+      console.error(
+        'فشل حفظ المراجع في Supabase:',
+        error
+      );
 
-    this.router.navigateByUrl(
-      '/success'
-    );
-
+      alert(
+        'حدث خطأ أثناء حفظ التسجيل. لم يتم حفظ البيانات.'
+      );
+    }
   }
-
-
-  /* =========================
-     إضافة مرافق
-     ========================= */
-
-  addCompanion(): void {
-
-    this.companions.push({
-
-      name: '',
-
-      nationalId: '',
-
-      visitNumber: '',
-
-      companionType: '',
-
-      department: ''
-
-    });
-
-  }
-
 
   /* =========================
      إزالة مرافق
@@ -644,31 +613,18 @@ if (saved) {
 
   }
 
-
   /* =========================
      Save Companions
      ========================= */
 
-  saveCompanions(): void {
+  async saveCompanions(): Promise<void> {
 
     this.submitted = true;
-
 
     for (
       const companion
       of this.companions
     ) {
-
-      /*
-        الإجباري:
-        - اسم المرافق
-        - رقم الهوية
-        - رقم المراجعة
-
-        الاختياري:
-        - نوع المرافق
-        - الإدارة
-      */
 
       if (
         !companion.name.trim() ||
@@ -680,9 +636,6 @@ if (saved) {
 
       }
 
-
-      /* الاسم بدون أرقام */
-
       if (
         /[0-9]/.test(
           companion.name
@@ -692,9 +645,6 @@ if (saved) {
         return;
 
       }
-
-
-      /* الهوية أرقام فقط */
 
       if (
         !/^[0-9]+$/.test(
@@ -706,9 +656,6 @@ if (saved) {
 
       }
 
-
-      /* رقم المراجعة أرقام فقط */
-
       if (
         !/^[0-9]+$/.test(
           companion.visitNumber
@@ -718,13 +665,6 @@ if (saved) {
         return;
 
       }
-
-
-      /*
-        نوع المرافق اختياري
-        لكن إذا تمت كتابته
-        لا يسمح بالأرقام
-      */
 
       if (
         companion.companionType.trim() &&
@@ -739,23 +679,30 @@ if (saved) {
 
     }
 
+    try {
 
-    this.registrationService.addCompanions(
-      this.companions
-    );
+      await this.registrationService.addCompanions(
+        this.companions
+      );
 
+      this.resetForms();
 
-    /* تنظيف الخانات بعد التسجيل */
+      this.router.navigateByUrl(
+        '/success'
+      );
 
-    this.resetForms();
+    } catch (error) {
 
+      console.error(
+        'فشل تسجيل المرافقين:',
+        error
+      );
 
-    this.router.navigateByUrl(
-      '/success'
-    );
-
+      alert(
+        'حدث خطأ أثناء حفظ التسجيل. لم يتم حفظ البيانات.'
+      );
+    }
   }
-
 
   /* =========================
      Navigation
@@ -768,7 +715,6 @@ if (saved) {
     this.resetForms();
 
     this.showCategories = false;
-
 
     this.router.navigateByUrl(
       path

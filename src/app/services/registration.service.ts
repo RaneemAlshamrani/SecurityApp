@@ -1,340 +1,478 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment';
-import { Subject, Observable } from 'rxjs'; // تمت إضافة استيراد Subject و Observable هنا
+import { SupabaseService } from './supabase.services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrationService {
 
-  private supabase: SupabaseClient;
-  
   employees: any[] = [];
   visitors: any[] = [];
   trainees: any[] = [];
   companions: any[] = [];
 
   private loaded = false;
-  private newRegistrationSubject = new Subject<any>();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private supabaseService: SupabaseService
   ) {
-    this.supabase = createClient(
-      environment.supabaseUrl,
-      environment.supabaseKey
-    );
-
     this.loadSavedRegistrations();
-    this.initRealtimeListener(); // تم تفعيل مستمع التحديثات الحية تلقائياً
   }
 
-  /* =========================================
-     استماع التحديثات الحية (Realtime Listener)
-     ========================================= */
-  private initRealtimeListener() {
-    this.supabase
-      .channel('public:registrations')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'registrations' },
-        (payload) => {
-          this.newRegistrationSubject.next(payload);
-        }
-      )
-      .subscribe();
-  }
-
-  onNewRegistration(): Observable<any> {
-    return this.newRegistrationSubject.asObservable();
-  }
-
-
-  /* =========================================
-     تحميل البيانات المحفوظة محلياً
-     ========================================= */
   private loadSavedRegistrations(): void {
     try {
-      this.employees = JSON.parse(localStorage.getItem('employees') || '[]');
-      this.visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
-      this.trainees = JSON.parse(localStorage.getItem('trainees') || '[]');
-      this.companions = JSON.parse(localStorage.getItem('companions') || '[]');
+      this.employees = JSON.parse(
+        localStorage.getItem('employees') || '[]'
+      );
+
+      this.visitors = JSON.parse(
+        localStorage.getItem('visitors') || '[]'
+      );
+
+      this.trainees = JSON.parse(
+        localStorage.getItem('trainees') || '[]'
+      );
+
+      this.companions = JSON.parse(
+        localStorage.getItem('companions') || '[]'
+      );
+
     } catch (error) {
-      console.error('خطأ في قراءة البيانات المحفوظة', error);
+      console.error(
+        'خطأ في قراءة البيانات المحفوظة',
+        error
+      );
+
+      this.employees = [];
+      this.visitors = [];
+      this.trainees = [];
+      this.companions = [];
     }
   }
 
   private saveRegistrations(): void {
-    localStorage.setItem('employees', JSON.stringify(this.employees));
-    localStorage.setItem('visitors', JSON.stringify(this.visitors));
-    localStorage.setItem('trainees', JSON.stringify(this.trainees));
-    localStorage.setItem('companions', JSON.stringify(this.companions));
-  }
-
-
-  /* =========================================
-     جلب التقارير لصفحة التقارير
-     ========================================= */
-  async getReportsData(filters: any = {}): Promise<any[]> {
-    try {
-      const { data, error } = await this.supabase
-        .from('registrations')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Supabase fetch error:', error);
-        return this.getAllRegistrations();
-      }
-
-      return data || [];
-    } catch (err) {
-      console.error('Error fetching reports from Supabase:', err);
-      return this.getAllRegistrations();
-    }
-  }
-
-
-  /* =========================================
-     جلب آخر العمليات لصفحة الرئيسية (Home)
-     ========================================= */
-  async getLatestOperations(limit: number = 3): Promise<any[]> {
-    try {
-      const { data, error } = await this.supabase
-        .from('registrations')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(limit);
-
-      if (error) {
-        console.error('Error fetching latest operations:', error);
-        return [];
-      }
-
-      return data || [];
-    } catch (err) {
-      console.error('Unexpected error fetching latest operations:', err);
-      return [];
-    }
-  }
-
-
-  /* =========================================
-     إضافة موظف
-     ========================================= */
-  async addEmployee(employee: any): Promise<void> {
-    const newEmployee = {
-      name: employee.employeeName || employee.name || '',
-      employee_id: employee.employeeId || null,
-      department: employee.department || null,
-      card_reason: employee.cardReason || null,
-      category: 'employee',
-      created_at: new Date().toISOString()
-    };
-
-    this.employees.push(newEmployee);
-    this.saveRegistrations();
-
-    try {
-      const { error } = await this.supabase.from('registrations').insert([newEmployee]);
-      if (error) console.error('Supabase Error (Employee):', error);
-    } catch (err) {
-      console.error('Error inserting employee to Supabase:', err);
-    }
-  }
-
-
-  /* =========================================
-     إضافة مراجع
-     ========================================= */
-  async addVisitor(visitor: any): Promise<void> {
-    const newVisitor = {
-      name: visitor.visitorName || visitor.name || '',
-      national_id: visitor.visitorId || visitor.nationalId || null,
-      phone: visitor.visitorPhone || visitor.phone || null,
-      visit_number: visitor.visitNumber || null,
-      department: visitor.department || null,
-      category: 'visitor',
-      created_at: new Date().toISOString()
-    };
-
-    this.visitors.push(newVisitor);
-    this.saveRegistrations();
-
-    try {
-      const { error } = await this.supabase.from('registrations').insert([newVisitor]);
-      if (error) console.error('Supabase Error (Visitor):', error);
-    } catch (err) {
-      console.error('Error inserting visitor to Supabase:', err);
-    }
-  }
-
-
-  /* =========================================
-     إضافة متدرب
-     ========================================= */
-  async addTrainee(trainee: any): Promise<void> {
-    const newTrainee = {
-      name: trainee.traineeName || trainee.name || '',
-      national_id: trainee.nationalId || trainee.national_id || null, 
-      department: trainee.department || null,
-      category: 'trainee',
-      created_at: new Date().toISOString()
-    };
-
-    this.trainees.push(newTrainee);
-    this.saveRegistrations();
-
-    try {
-      const { error } = await this.supabase.from('registrations').insert([newTrainee]);
-      if (error) console.error('Supabase Error (Trainee):', error);
-    } catch (err) {
-      console.error('Error inserting trainee to Supabase:', err);
-    }
-  }
-
-
-  /* =========================================
-     إضافة مرافق
-     ========================================= */
-  async addCompanions(companions: any[]): Promise<void> {
-    const formattedCompanions: any[] = [];
-
-    companions.forEach(companion => {
-      const newCompanion = {
-        name: companion.name || '',
-        national_id: companion.nationalId || null,
-        visit_number: companion.visitNumber || null,
-        companion_type: companion.companionType || companion.type || null,
-        department: companion.department || null,
-        category: 'companion',
-        created_at: new Date().toISOString()
-      };
-
-      this.companions.push(newCompanion);
-      formattedCompanions.push(newCompanion);
-    });
-
-    this.saveRegistrations();
-
-    try {
-      const { error } = await this.supabase.from('registrations').insert(formattedCompanions);
-      if (error) console.error('Supabase Error (Companions):', error);
-    } catch (err) {
-      console.error('Error inserting companions to Supabase:', err);
-    }
-  }
-
-  loadInitialData() {
-    console.log('تم استدعاء بيانات التهيئة الأولية للتسجيل');
-  }
-
-
-  /* =========================================
-     تسجيل موظف عن طريق الباركود
-     ========================================= */
-  async addBarcodeEmployee(): Promise<boolean> {
-    const now = new Date().toISOString();
-
-    const { data: { user } } = await this.supabase.auth.getUser();
-
-    if (!user) {
-      console.error('لا يوجد مستخدم مسجل دخول');
-      return false;
-    }
-
-    const barcodeEmployee = {
-      category: 'employee',
-      name: 'أحمد محمد',
-      employee_id: '10025',
-      department_id: 4,
-      department: 'إدارة المشاريع',
-      national_id: '4567891234',
-      card_reason: 'دخول عبر الباركود',
-      created_by: user.id,
-      created_at: now
-    };
-
-    const { data, error } =
-      await this.supabase
-        .from('registrations')
-        .insert(barcodeEmployee)
-        .select()
-        .single();
-
-    if (error) {
-      console.error(
-        'خطأ في تسجيل موظف الباركود:',
-        JSON.stringify(error)
-      );
-      return false;
-    }
-
-    // منع تكرار نفس التسجيل في القائمة المحلية
-    const alreadyExists = this.employees.some(
-      employee => employee.id === data.id
+    localStorage.setItem(
+      'employees',
+      JSON.stringify(this.employees)
     );
 
-    if (!alreadyExists) {
-      this.employees.push({
-        ...data,
-        time: data.created_at
-      });
+    localStorage.setItem(
+      'visitors',
+      JSON.stringify(this.visitors)
+    );
 
-      this.saveRegistrations();
-    }
+    localStorage.setItem(
+      'trainees',
+      JSON.stringify(this.trainees)
+    );
 
-    console.log('تم تسجيل موظف الباركود:', data);
-    return true;
+    localStorage.setItem(
+      'companions',
+      JSON.stringify(this.companions)
+    );
   }
 
-  async loadEmployeesFromSupabase(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('registrations')
-      .select('*')
-      .eq('category', 'employee');
-
-    if (error) {
-      console.error(
-        'خطأ في تحميل الموظفين من Supabase:',
-        JSON.stringify(error)
-      );
+  loadInitialData(): void {
+    if (this.loaded) {
       return;
     }
 
-    const supabaseEmployees = (data ?? []).map(employee => ({
-      ...employee,
-      time: employee.time || employee.created_at
-    }));
+    this.loaded = true;
 
-    const allEmployees = [
-      ...this.employees,
-      ...supabaseEmployees
-    ];
+    this.http
+      .get<any>('assets/data/mock-data.json')
+      .subscribe({
+        next: (data) => {
 
-    this.employees = allEmployees.filter(
-      (employee, index, self) =>
-        index === self.findIndex(
-          e => e.employee_id === employee.employee_id
-        )
-    );
+          if (this.employees.length === 0) {
+            this.employees = [
+              ...(data.employees ?? [])
+            ];
+          }
 
-    this.saveRegistrations();
+          if (this.visitors.length === 0) {
+            this.visitors = [
+              ...(data.visitors ?? [])
+            ];
+          }
+
+          if (this.trainees.length === 0) {
+            this.trainees = [
+              ...(data.trainees ?? [])
+            ];
+          }
+
+          if (this.companions.length === 0) {
+            this.companions = [
+              ...(data.companions ?? [])
+            ];
+          }
+
+          this.saveRegistrations();
+        },
+
+        error: (error) => {
+          console.error(
+            'تعذر تحميل البيانات الأولية',
+            error
+          );
+        }
+      });
   }
 
+  /* =========================
+     الموظف
+     ========================= */
 
-  /* =========================================
-     كل التسجيلات
-     ========================================= */
+  async addEmployee(
+    employee: any
+  ): Promise<void> {
+
+    const newEmployee = {
+      category: 'employee',
+
+      employee_id:
+        employee.employeeId,
+
+      name:
+        employee.employeeName,
+
+      card_reason:
+        employee.cardReason,
+
+      phone: null,
+
+      visit_number: null,
+
+      department_id:
+        employee.department || null,
+
+      notes:
+        employee.notes || null,
+
+      companion_type: null,
+
+      created_at:
+        new Date().toISOString(),
+
+      national_id: null,
+
+      
+    };
+
+    try {
+      const result =
+        await this.supabaseService
+          .createRegistration(
+            newEmployee
+          );
+
+      console.log(
+        'تم حفظ الموظف في Supabase:',
+        result
+      );
+
+      const localEmployee = {
+        ...employee,
+        time: new Date().toISOString()
+      };
+
+      this.employees.push(
+        localEmployee
+      );
+
+      this.saveRegistrations();
+
+    } catch (error) {
+      console.error(
+        'فشل تسجيل الموظف:',
+        error
+      );
+
+      throw error;
+    }
+  }
+
+  /* =========================
+     المراجع
+     ========================= */
+
+  async addVisitor(
+    visitor: any
+  ): Promise<void> {
+
+    const visitorId =
+      visitor.visitorId
+        ? String(visitor.visitorId)
+        : '';
+
+    const newVisitor = {
+      category: 'visitor',
+
+      name:
+        visitor.visitorName,
+
+      phone:
+        visitor.visitorPhone || null,
+
+      national_id:
+        visitorId || null,
+
+      visit_number:
+        visitor.visitNumber,
+
+      department_id:
+        visitor.department || null,
+
+      employee_id: null,
+
+      card_reason: null,
+
+      notes:
+        visitor.notes || null,
+
+      companion_type: null,
+
+      created_at:
+        new Date().toISOString(),
+
+
+    };
+
+    try {
+      const result =
+        await this.supabaseService
+          .createRegistration(
+            newVisitor
+          );
+
+      console.log(
+        'تم حفظ المراجع في Supabase:',
+        result
+      );
+
+      const localVisitor = {
+        ...visitor,
+        time: new Date().toISOString()
+      };
+
+      this.visitors.push(
+        localVisitor
+      );
+
+      this.saveRegistrations();
+
+    } catch (error) {
+      console.error(
+        'فشل حفظ المراجع:',
+        error
+      );
+
+      throw error;
+    }
+  }
+
+  /* =========================
+     المتدرب
+     ========================= */
+
+  async addTrainee(
+    trainee: any
+  ): Promise<void> {
+
+    const traineeId =
+      trainee.nationalId
+        ? String(trainee.nationalId)
+        : '';
+
+    const newTrainee = {
+      category: 'trainee',
+
+      name:
+        trainee.traineeName,
+
+      phone:
+        trainee.traineePhone || null,
+
+      national_id:
+        traineeId || null,
+
+
+
+      visit_number:
+        trainee.visitNumber || null,
+
+      department_id:
+        trainee.department || null,
+
+      employee_id: null,
+
+      card_reason: null,
+
+      notes:
+        trainee.notes || null,
+
+      companion_type: null,
+
+      created_at:
+        new Date().toISOString()
+    };
+
+    try {
+      const result =
+        await this.supabaseService
+          .createRegistration(
+            newTrainee
+          );
+
+      console.log(
+        'تم حفظ المتدرب في Supabase:',
+        result
+      );
+
+      const localTrainee = {
+        ...trainee,
+        time: new Date().toISOString()
+      };
+
+      this.trainees.push(
+        localTrainee
+      );
+
+      this.saveRegistrations();
+
+    } catch (error) {
+      console.error(
+        'فشل تسجيل المتدرب:',
+        error
+      );
+
+      throw error;
+    }
+  }
+
+  /* =========================
+     المرافقون
+     ========================= */
+
+  async addCompanions(
+    companions: any[]
+  ): Promise<void> {
+
+    try {
+
+      for (const companion of companions) {
+
+        const nationalId =
+          companion.nationalId
+            ? String(companion.nationalId)
+            : '';
+
+        const newCompanion = {
+          category: 'companion',
+
+          name:
+            companion.name,
+
+          phone:
+            companion.phone || null,
+
+          national_id:
+            nationalId || null,
+
+
+          visit_number:
+            companion.visitNumber,
+
+          department_id:
+            companion.department || null,
+
+          employee_id: null,
+
+          card_reason: null,
+
+          notes:
+            companion.notes || null,
+
+          companion_type:
+            companion.companionType || null,
+
+          created_at:
+            new Date().toISOString()
+        };
+
+        const result =
+          await this.supabaseService
+            .createRegistration(
+              newCompanion
+            );
+
+        console.log(
+          'تم حفظ المرافق في Supabase:',
+          result
+        );
+
+        const localCompanion = {
+          ...companion,
+          time: new Date().toISOString()
+        };
+
+        this.companions.push(
+          localCompanion
+        );
+      }
+
+      this.saveRegistrations();
+
+      console.log(
+        'تم تسجيل المرافقين:',
+        this.companions
+      );
+
+    } catch (error) {
+      console.error(
+        'فشل تسجيل المرافقين:',
+        error
+      );
+
+      throw error;
+    }
+  }
+
   getAllRegistrations(): any[] {
+
     return [
-      ...this.employees.map(e => ({ ...e, type: 'موظف' })),
-      ...this.visitors.map(v => ({ ...v, type: 'مراجع' })),
-      ...this.trainees.map(t => ({ ...t, type: 'متدرب' })),
-      ...this.companions.map(c => ({ ...c, type: 'مرافق' }))
+
+      ...this.employees.map(
+        employee => ({
+          ...employee,
+          type: 'موظف'
+        })
+      ),
+
+      ...this.visitors.map(
+        visitor => ({
+          ...visitor,
+          type: 'مراجع'
+        })
+      ),
+
+      ...this.trainees.map(
+        trainee => ({
+          ...trainee,
+          type: 'متدرب'
+        })
+      ),
+
+      ...this.companions.map(
+        companion => ({
+          ...companion,
+          type: 'مرافق'
+        })
+      )
+
     ];
   }
-
 }
