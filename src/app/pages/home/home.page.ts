@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 import {
   IonContent,
@@ -13,6 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
+
 import {
   logInOutline,
   timeOutline,
@@ -25,7 +27,6 @@ import {
 } from 'ionicons/icons';
 
 import { SupabaseService } from 'src/app/services/supabase.services';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -48,10 +49,9 @@ export class HomePage implements OnInit, OnDestroy {
   currentDateTime = '';
   staffName = 'جاري التحميل...';
   gateNumber = '-';
-
   latestOperations: any[] = [];
-  
-  private dateTimeInterval: ReturnType<typeof setInterval>;
+
+  private dateTimeInterval: any;
   private realtimeSub?: Subscription;
 
   constructor(
@@ -59,7 +59,6 @@ export class HomePage implements OnInit, OnDestroy {
     private authService: AuthService,
     private supabaseService: SupabaseService
   ) {
-
     addIcons({
       logInOutline,
       timeOutline,
@@ -76,20 +75,59 @@ export class HomePage implements OnInit, OnDestroy {
     this.dateTimeInterval = setInterval(() => {
       this.updateDateTime();
     }, 1000);
-
   }
 
-  ngOnInit() {
-    this.loadUserProfile();
-    this.loadLatestOperations();
+  async ngOnInit(): Promise<void> {
+    const session = await this.authService.getSession();
+
+    if (!session) {
+      console.error('لا توجد Session للمستخدم الحالي');
+      await this.router.navigateByUrl('/login', { replaceUrl: true });
+      return;
+    }
+
+    await this.loadStaffProfile();
+    await this.loadLatestOperations();
     this.setupRealtimeSubscription();
   }
 
+  ngOnDestroy(): void {
+    if (this.dateTimeInterval) {
+      clearInterval(this.dateTimeInterval);
+    }
+    if (this.realtimeSub) {
+      this.realtimeSub.unsubscribe();
+    }
+  }
 
-  /* =========================
-     جلب بيانات الملف الشخصي (الاسم والبوابة)
+  /* =========================================
+     جلب بيانات الملف الشخصي لموظف الأمن
      ========================================= */
-  async loadUserProfile() {
+  async loadStaffProfile(): Promise<void> {
+    try {
+      const profile = await this.authService.getStaffProfile();
+
+      if (!profile) {
+        this.staffName = 'موظف الأمن';
+        this.gateNumber = '-';
+        return;
+      }
+
+      this.staffName = profile.full_name || 'موظف الأمن';
+      this.gateNumber = profile.gate_number || '-';
+
+      console.log('بيانات موظف الأمن:', profile);
+    } catch (error) {
+      console.error('خطأ أثناء تحميل بيانات موظف الأمن:', error);
+      this.staffName = 'موظف الأمن';
+      this.gateNumber = '-';
+    }
+  }
+
+  /* =========================================
+     جلب بيانات المستخدم البديلة من جدول Supabase مباشرة
+     ========================================= */
+  async loadUserProfileDirectly() {
     try {
       const client = (this.supabaseService as any).supabase;
       if (!client) return;
@@ -97,7 +135,6 @@ export class HomePage implements OnInit, OnDestroy {
       const { data: { user } } = await client.auth.getUser();
 
       if (user) {
-        // الاستعلام باستخدام الأعمدة المطلوبة: full_name و gate_number
         const { data: profile, error } = await client
           .from('security_staff_profiles')
           .select('full_name, gate_number')
@@ -116,59 +153,79 @@ export class HomePage implements OnInit, OnDestroy {
         this.gateNumber = '-';
       }
     } catch (error) {
-      console.error('Error loading user profile:', error);
+      console.error('Error loading user profile directly:', error);
       this.staffName = 'خطأ في التحميل';
     }
   }
 
-
-  /* =========================
+  /* =========================================
      جلب آخر العمليات من Supabase
      ========================================= */
-  async loadLatestOperations() {
+  async loadLatestOperations(): Promise<void> {
     try {
       this.latestOperations = await this.supabaseService.getLatestOperations(3);
+      console.log('آخر العمليات:', this.latestOperations);
     } catch (error) {
       console.error('Error fetching latest operations:', error);
+      this.latestOperations = [];
     }
   }
 
-
-  /* =========================
-     التحديث الفوري (Realtime)
+  /* =========================================
+     التحديث الفوري (Realtime) للعمليات الجديدة
      ========================================= */
   setupRealtimeSubscription() {
-    this.realtimeSub = this.supabaseService.onNewRegistration().subscribe((payload: any) => {
-      this.latestOperations = [payload.new, ...this.latestOperations].slice(0, 3);
-    });
+    try {
+      if (this.supabaseService.onNewRegistration) {
+        this.realtimeSub = this.supabaseService.onNewRegistration().subscribe((payload: any) => {
+          if (payload && payload.new) {
+            this.latestOperations = [payload.new, ...this.latestOperations].slice(0, 3);
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error setting up realtime subscription:', error);
+    }
   }
 
-
-  /* =========================
-     دوال مساعدة للأيقونات والمسميات
+  /* =========================================
+     أيقونة الفئة (Category Icon)
      ========================================= */
   getCategoryIcon(category: string): string {
     switch (category) {
-      case 'employee': return 'briefcase-outline';
-      case 'visitor': return 'person-outline';
-      case 'trainee': return 'person-outline';
-      default: return 'person-outline';
+      case 'employee':
+        return 'briefcase-outline';
+      case 'visitor':
+        return 'person-outline';
+      case 'trainee':
+        return 'person-outline';
+      case 'companion':
+        return 'person-outline';
+      default:
+        return 'person-outline';
     }
   }
 
+  /* =========================================
+     اسم الفئة بالعربي (Category Title)
+     ========================================= */
   getCategoryTitle(category: string): string {
     switch (category) {
-      case 'employee': return 'دخول موظف';
-      case 'visitor': return 'دخول مراجع';
-      case 'trainee': return 'دخول متدرب';
-      case 'companion': return 'دخول مرافق';
-      default: return 'عملية تسجيل';
+      case 'employee':
+        return 'دخول موظف';
+      case 'visitor':
+        return 'دخول مراجع';
+      case 'trainee':
+        return 'دخول متدرب';
+      case 'companion':
+        return 'دخول مرافق';
+      default:
+        return 'عملية تسجيل';
     }
   }
 
-
-  /* =========================
-     تحديث التاريخ والوقت
+  /* =========================================
+     تحديث التاريخ والوقت المحلي (بتوقيت الرياض)
      ========================================= */
   updateDateTime(): void {
     const now = new Date();
@@ -197,19 +254,29 @@ export class HomePage implements OnInit, OnDestroy {
     this.currentDateTime = `${date} - ${time}`;
   }
 
-
-  /* =========================
-     الانتقال لصفحة التسجيل والخروج
+  /* =========================================
+     الانتقال لصفحة خيارات طريقة التسجيل
      ========================================= */
   goToEntryMethod(): void {
     this.router.navigateByUrl('/entry-method');
   }
 
-  onLogout(): void {
-    this.router.navigateByUrl('/login');
+  /* =========================================
+     تسجيل الخروج
+     ========================================= */
+  async onLogout(): Promise<void> {
+    try {
+      await this.authService.logout();
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+    }
   }
 
-
+  /* =========================================
+     تنسيق التاريخ والوقت للعمليات المعروضة
+     ========================================= */
   formatDate(value: unknown): string {
     if (!value) {
       return '-';
@@ -234,13 +301,4 @@ export class HomePage implements OnInit, OnDestroy {
       }
     );
   }
-
-
-  ngOnDestroy(): void {
-    clearInterval(this.dateTimeInterval);
-    if (this.realtimeSub) {
-      this.realtimeSub.unsubscribe();
-    }
-  }
-
 }

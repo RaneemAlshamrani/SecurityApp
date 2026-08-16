@@ -26,7 +26,7 @@
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-    padding: 0; /* تم التعديل إلى 0 */
+    padding: 0;
     margin: 0;
     text-align: center;
     pointer-events: none;
@@ -160,25 +160,65 @@ ion-content.contact-content {
   }
 }
 
-.phone-row {
-  width: fit-content;
+/* تنسيق أزرار الخيارات (اتصال / واتساب) */
+.contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+
+  .phone-number {
+    color: #0077b6;
+    font-size: 15px;
+    font-weight: 700;
+    direction: ltr;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #0077b6;
-  font-size: 15px;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
-  direction: ltr;
+  transition: opacity 0.2s ease, transform 0.15s ease;
 
   ion-icon {
-    flex-shrink: 0;
-    color: #2a9d8f;
-    font-size: 20px;
+    font-size: 16px;
   }
 
   &:active {
-    opacity: 0.65;
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+
+  &.call-btn {
+    background-color: #e6f4f1;
+    color: #2a9d8f;
+
+    ion-icon {
+      color: #2a9d8f;
+    }
+  }
+
+  &.whatsapp-btn {
+    background-color: #e8f8ef;
+    color: #25d366;
+
+    ion-icon {
+      color: #25d366;
+    }
   }
 }
 
