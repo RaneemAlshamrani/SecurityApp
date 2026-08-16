@@ -15,20 +15,15 @@ export class AuthService {
     environment.supabaseKey
   );
 }
-async login(email: string, password: string) {
-    return await this.supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-  }
-  // إرسال رابط إعادة تعيين كلمة السر للإيميل
+
+// إرسال رابط إعادة تعيين كلمة السر للإيميل
   async resetPassword(email: string) {
     return await this.supabase.auth.resetPasswordForEmail(email, {
       redirectTo: 'http://172.20.10.3:8100/reset-password'
     });
   }
 
-  // حفظ كلمة السر الجديدة
+// حفظ كلمة السر الجديدة
   async updatePassword(newPassword: string) {
     return await this.supabase.auth.updateUser({
       password: newPassword
@@ -39,10 +34,9 @@ async checkStaffEmail(email: string) {
     'check-staff-email',
     {
       body: {
-        email: email
+       email: email
       }
     }
-  );
-}
-
+   );
+  }
 }

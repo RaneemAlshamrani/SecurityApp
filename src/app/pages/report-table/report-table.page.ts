@@ -67,6 +67,11 @@ export class ReportTablePage {
   issuerId =
     'EMP-9082';
 
+  // المتغيرات لاسم الموظف ورقم البوابة
+  staffName = 'موظف النظام (قسم الأمن)';
+  gateNumber = '3';
+  printTime = '';
+
   issueDate =
     new Date()
       .toLocaleString('ar-SA');
@@ -116,9 +121,63 @@ export class ReportTablePage {
       new Date()
         .toLocaleString('ar-SA');
 
+    // تحديث وقت الإصدار بالصيغة المحلية المناسبة للترويسة
+    this.printTime = new Date().toLocaleString('ar-SA', {
+      timeZone: 'Asia/Riyadh',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+
+    // جلب بيانات الملف الشخصي (الاسم والبوابة) من Supabase تماماً مثل الصفحة الرئيسية
+    await this.loadUserProfile();
+
     // استدعاء دالة جلب البيانات من Supabase عند دخول الصفحة
     await this.fetchDataFromSupabase();
 
+  }
+
+
+  /* =========================================
+     جلب بيانات الملف الشخصي (الاسم والبوابة)
+     ========================================= */
+  async loadUserProfile() {
+    try {
+      const client = (this.supabaseService as any).supabase;
+      if (!client) return;
+
+      const { data: { user } } = await client.auth.getUser();
+
+      if (user) {
+        // الاستعلام باستخدام الأعمدة المطلوبة: full_name و gate_number
+        const { data: profile, error } = await client
+          .from('security_staff_profiles')
+          .select('full_name, gate_number')
+          .eq('id', user.id)
+          .single();
+
+        if (profile && !error) {
+          this.staffName = profile.full_name || 'موظف الأمن';
+          this.issuerName = this.staffName;
+          this.gateNumber = profile.gate_number || '-';
+        } else {
+          this.staffName = user.email || 'مسؤول النظام';
+          this.issuerName = this.staffName;
+          this.gateNumber = '-';
+        }
+      } else {
+        this.staffName = 'زائر';
+        this.issuerName = this.staffName;
+        this.gateNumber = '-';
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+      this.staffName = 'موظف النظام (قسم الأمن)';
+      this.gateNumber = '3';
+    }
   }
 
 

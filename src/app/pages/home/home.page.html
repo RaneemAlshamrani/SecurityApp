@@ -64,7 +64,6 @@
         </h2>
       </div>
 
-      <!-- عرض العمليات ديناميكياً باستخدام *ngFor بدلاً من الكروت الثابتة -->
       <div class="activity-card" *ngFor="let op of latestOperations">
         <div class="card-right">
           <div class="avatar-box">
@@ -77,7 +76,7 @@
             <div class="type-row">
               <span class="status-dot"></span>
               <span class="role-title">
-                دخول مراجع
+               
                 {{ getCategoryTitle(op.category) }}
               </span>
             </div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
-import { Subject, Observable } from 'rxjs'; // تمت إضافة استيراد Subject و Observable هنا
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class RegistrationService {
     );
 
     this.loadSavedRegistrations();
-    this.initRealtimeListener(); // تم تفعيل مستمع التحديثات الحية تلقائياً
+    this.initRealtimeListener();
   }
 
   /* =========================================
@@ -122,15 +122,44 @@ export class RegistrationService {
 
 
   /* =========================================
+     دالة مساعده لجلب معلومات المستخدم الحالي
+     ========================================= */
+  private async getCurrentUserInfo() {
+    try {
+      const { data: { user } } = await this.supabase.auth.getUser();
+      if (!user) return { userId: null, departmentId: null };
+
+      // محاولة جلب رقم القسم من جدول الملفات الشخصية (security_staff_profiles) إن وجد
+      const { data: profile } = await this.supabase
+        .from('security_staff_profiles')
+        .select('department_id')
+        .eq('id', user.id)
+        .single();
+
+      return {
+        userId: user.id,
+        departmentId: profile?.department_id || null
+      };
+    } catch (e) {
+      return { userId: null, departmentId: null };
+    }
+  }
+
+
+  /* =========================================
      إضافة موظف
      ========================================= */
   async addEmployee(employee: any): Promise<void> {
+    const { userId, departmentId } = await this.getCurrentUserInfo();
+
     const newEmployee = {
       name: employee.employeeName || employee.name || '',
       employee_id: employee.employeeId || null,
       department: employee.department || null,
       card_reason: employee.cardReason || null,
       category: 'employee',
+      created_by: userId,          // تم الربط بالمعرف لمنع ظهور NULL
+      department_id: departmentId, // تم الربط برقم القسم لمنع ظهور NULL
       created_at: new Date().toISOString()
     };
 
@@ -150,6 +179,8 @@ export class RegistrationService {
      إضافة مراجع
      ========================================= */
   async addVisitor(visitor: any): Promise<void> {
+    const { userId, departmentId } = await this.getCurrentUserInfo();
+
     const newVisitor = {
       name: visitor.visitorName || visitor.name || '',
       national_id: visitor.visitorId || visitor.nationalId || null,
@@ -157,6 +188,8 @@ export class RegistrationService {
       visit_number: visitor.visitNumber || null,
       department: visitor.department || null,
       category: 'visitor',
+      created_by: userId,
+      department_id: departmentId,
       created_at: new Date().toISOString()
     };
 
@@ -176,11 +209,15 @@ export class RegistrationService {
      إضافة متدرب
      ========================================= */
   async addTrainee(trainee: any): Promise<void> {
+    const { userId, departmentId } = await this.getCurrentUserInfo();
+
     const newTrainee = {
       name: trainee.traineeName || trainee.name || '',
       national_id: trainee.nationalId || trainee.national_id || null, 
       department: trainee.department || null,
       category: 'trainee',
+      created_by: userId,
+      department_id: departmentId,
       created_at: new Date().toISOString()
     };
 
@@ -200,6 +237,7 @@ export class RegistrationService {
      إضافة مرافق
      ========================================= */
   async addCompanions(companions: any[]): Promise<void> {
+    const { userId, departmentId } = await this.getCurrentUserInfo();
     const formattedCompanions: any[] = [];
 
     companions.forEach(companion => {
@@ -210,6 +248,8 @@ export class RegistrationService {
         companion_type: companion.companionType || companion.type || null,
         department: companion.department || null,
         category: 'companion',
+        created_by: userId,
+        department_id: departmentId,
         created_at: new Date().toISOString()
       };
 
@@ -237,10 +277,9 @@ export class RegistrationService {
      ========================================= */
   async addBarcodeEmployee(): Promise<boolean> {
     const now = new Date().toISOString();
+    const { userId, departmentId } = await this.getCurrentUserInfo();
 
-    const { data: { user } } = await this.supabase.auth.getUser();
-
-    if (!user) {
+    if (!userId) {
       console.error('لا يوجد مستخدم مسجل دخول');
       return false;
     }
@@ -249,11 +288,11 @@ export class RegistrationService {
       category: 'employee',
       name: 'أحمد محمد',
       employee_id: '10025',
-      department_id: 4,
+      department_id: departmentId || 4,
       department: 'إدارة المشاريع',
       national_id: '4567891234',
       card_reason: 'دخول عبر الباركود',
-      created_by: user.id,
+      created_by: userId,
       created_at: now
     };
 
@@ -272,7 +311,6 @@ export class RegistrationService {
       return false;
     }
 
-    // منع تكرار نفس التسجيل في القائمة المحلية
     const alreadyExists = this.employees.some(
       employee => employee.id === data.id
     );

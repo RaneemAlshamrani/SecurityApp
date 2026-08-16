@@ -66,7 +66,7 @@ export class LoginPage {
       // تحويل للهوم مباشرة لو فيه توكن محفوط
       const session = await this.authService.getSession();
       if (session) {
-        this.router.navigateByUrl('/home', { replaceUrl: true });
+       this.router.navigateByUrl('/home', { replaceUrl: true });
       }
     } catch (e) {}
   }

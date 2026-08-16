@@ -51,6 +51,7 @@
     text-align: center;
   }
 }
+
 ion-content.report-content {
   --background: #f3f6fa;
   --color: #1f2d3d;
@@ -59,10 +60,8 @@ ion-content.report-content {
 .report-page {
   width: 100%;
   max-width: 1000px;
-
   margin: 0 auto;
   padding: 18px 14px 35px;
-
   color: #1f2d3d;
 }
 
@@ -70,30 +69,22 @@ ion-content.report-content {
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 18px;
-
   border-radius: 18px;
-
   background: #ffffff;
   box-shadow: 0 5px 18px rgba(31, 45, 61, 0.07);
 
   ion-icon {
     flex-shrink: 0;
-
     padding: 11px;
-
     border-radius: 14px;
-
     background: #dff6ff;
     color: #0077b6;
-
     font-size: 30px;
   }
 
   h1 {
     margin: 0;
-
     color: #1f2d3d;
     font-size: 20px;
     font-weight: 700;
@@ -101,7 +92,6 @@ ion-content.report-content {
 
   p {
     margin: 5px 0 0;
-
     color: #667384;
     font-size: 13px;
     line-height: 1.6;
@@ -124,12 +114,16 @@ ion-content.report-content {
 
 .table-card {
   margin: 0 0 18px;
-
   border: 1px solid #e1e7ed;
   border-radius: 18px;
-
   background: #ffffff;
   box-shadow: 0 5px 18px rgba(31, 45, 61, 0.06);
+
+  @media print {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 15px !important;
+  }
 
   ion-card-header {
     padding-bottom: 10px;
@@ -139,7 +133,6 @@ ion-content.report-content {
     display: flex;
     align-items: center;
     gap: 8px;
-
     color: #0077b6;
     font-size: 18px;
     font-weight: 700;
@@ -151,7 +144,6 @@ ion-content.report-content {
 
   ion-card-subtitle {
     margin-top: 6px;
-
     color: #687384;
     font-size: 13px;
   }
@@ -164,7 +156,6 @@ ion-content.report-content {
 .table-scroll {
   width: 100%;
   overflow-x: auto;
-
   border: 1px solid #e1e7ed;
   border-radius: 13px;
 }
@@ -172,39 +163,40 @@ ion-content.report-content {
 .report-table {
   width: 100%;
   min-width: 650px;
-
   border-collapse: collapse;
-
   color: #1f2d3d;
   text-align: center;
 
+  /* جعل ترويسة الجدول تتكرر تلقائياً في أعلى كل صفحة جدول جديدة في المتصفحات الداعمة */
+  thead {
+    display: table-header-group;
+  }
+
   th {
     padding: 13px 10px;
-
     border-bottom: 2px solid #b7e1ec;
-
-    background: #dff6ff;
+    background: #dff6ff !important;
     color: #005f8f;
-
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   td {
     padding: 12px 10px;
-
     border-bottom: 1px solid #e5eaef;
-
     background: #ffffff;
     color: #1f2d3d;
-
     font-size: 13px;
     white-space: nowrap;
   }
 
   tbody tr:nth-child(even) td {
-    background: #f8fafc;
+    background: #f8fafc !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   tbody tr:last-child td {
@@ -213,7 +205,6 @@ ion-content.report-content {
 
   .empty-cell {
     padding: 24px;
-
     color: #687384;
     text-align: center;
   }
@@ -223,14 +214,11 @@ ion-content.report-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-
   margin-top: 24px;
 
   ion-button {
     height: 50px;
-
     --border-radius: 14px;
-
     font-size: 16px;
     font-weight: 700;
   }
@@ -248,13 +236,11 @@ ion-content.report-content {
     #2a9d8f 0%,
     #0077b6 100%
   );
-
   --color: #ffffff;
 }
 
 .bottom-tabs {
   --background: #ffffff;
-
   border-top: 1px solid #e1e7ed;
 
   ion-tab-button {
@@ -269,13 +255,15 @@ ion-content.report-content {
   }
 }
 
+/* ==========================================================
+   تنسيقات الطباعة المحسنة (تثبيت الترويسة وإدارة الصفحات)
+   ========================================================== */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 15mm 10mm 15mm 10mm; /* تقليل الهامش العلوي قليلاً */
   }
 
-  /* إخفاء الأزرار وأشرطة التنقل فقط دون المساس بالمحتوى */
   ion-header,
   ion-footer,
   ion-toolbar,
@@ -287,8 +275,8 @@ ion-content.report-content {
     display: none !important;
   }
 
-  /* السماح لعنصر المحتوى بالظهور وعدم إخفائه */
-  ion-content, ion-content.report-content {
+  ion-content, 
+  ion-content.report-content {
     --background: #ffffff !important;
     background: #ffffff !important;
     color: #000000 !important;
@@ -303,15 +291,33 @@ ion-content.report-content {
     margin: 0 !important;
   }
 
+  /* ضبط الترويسة لتظهر بوضع طبيعي في أعلى المحتوى المطبوع لكل صفحة */
   .print-header {
     display: block !important;
+    position: relative !important; /* تغييرها من fixed إلى relative لكي تتبع تدفق الصفحة ولا تختفي */
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     width: 100% !important;
+    margin-bottom: 20px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  .report-heading,
-  .table-card {
-    box-shadow: none !important;
+  .print-header img {
+    display: block !important;
+    visibility: visible !important;
+    max-height: 45px !important;
+  }
+
+  .report-heading {
     break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-top: 10px !important;
+    margin-bottom: 15px !important;
   }
 
   .table-scroll {
@@ -322,8 +328,12 @@ ion-content.report-content {
   .report-table, table {
     width: 100% !important;
     min-width: 100% !important;
-    table-layout: fixed !important;
     font-size: 10px !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   a[href]:after {
@@ -336,22 +346,12 @@ ion-content.report-content {
   width: 100%;
 }
 
-empty-state-card {
-  margin: 20px 0;
-  border: 1px solid #e1e7ed;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 5px 18px rgba(31, 45, 61, 0.06);
-}
-
 .empty-state {
   min-height: 260px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   text-align: center;
 
   ion-icon {
@@ -377,8 +377,9 @@ empty-state-card {
     --border-color: #0077b6;
     --border-radius: 12px;
   }
-  
-  .id-cell {
+}
+
+.id-cell {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -399,6 +400,4 @@ empty-state-card {
       color: #0077b6;
     }
   }
-}
-
 }
