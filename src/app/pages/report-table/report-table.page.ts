@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { Printer } from '@capgo/capacitor-printer';
 
 import {
   ActivatedRoute,
@@ -612,21 +613,29 @@ get filteredEmployees(): any[] {
   }
 
 
-  exportReport(): void {
+async exportReport(): Promise<void> {
 
-    this.issueDate =
-      new Date()
-        .toLocaleString(
-          'ar-SA'
-        );
+  this.issueDate =
+    new Date()
+      .toLocaleString('ar-SA');
 
+  try {
 
-    setTimeout(() => {
+    await Printer.printWebView({
+      name: 'تقرير عمليات التسجيل'
+    });
 
-      window.print();
+  } catch (error) {
 
-    }, 300);
+    console.error(
+      'Error printing report:',
+      error
+    );
+
+    window.print();
 
   }
+
+}
 
 }
