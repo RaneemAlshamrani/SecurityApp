@@ -25,15 +25,20 @@
     right: auto;
   }
 
-  ion-title {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: max-content;
-    max-width: 65%;
-    text-align: center;
-  }
+  
+   ion-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: none;
+  text-align: center;
+  padding: 0 60px;
+  box-sizing: border-box;
+}
+  
 
   h2 {
     margin: 0;
