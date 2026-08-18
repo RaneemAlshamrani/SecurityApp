@@ -50,10 +50,15 @@ class SupabaseService {
 
 
     let query = supabase
-      .from('registrations')
-      .select('*')
-      .order('created_at', { ascending: false });
-
+  .from('registrations')
+  .select(`
+    *,
+    department:departments (
+      id,
+      name
+    )
+  `)
+  .order('created_at', { ascending: false });
 
     if (
       filters.category &&
